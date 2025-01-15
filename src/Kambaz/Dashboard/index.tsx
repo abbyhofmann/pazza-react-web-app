@@ -18,6 +18,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        {/* TODO: implement courses */}
         <div className="wd-dashboard-course"> ... </div>
         <div className="wd-dashboard-course"> ... </div>
       </div>
