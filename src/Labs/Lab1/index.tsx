@@ -156,12 +156,14 @@ export default function Lab1() {
         <form id="wd-text-fields">
           <h5>Text Fields</h5>
           <label htmlFor="wd-text-fields-username">Username:</label>
-          <input placeholder="jdoe" id="wd-text-fields-username" /> <br />
+          <input placeholder="jdoe" id="wd-text-fields-username" />
+          <br />
           <label htmlFor="wd-text-fields-password">Password:</label>
           <input type="password" value="123@#$asd" id="wd-text-fields-password" />
           <br />
           <label htmlFor="wd-text-fields-first-name">First name:</label>
-          <input type="text" title="John" id="wd-text-fields-first-name" /> <br />
+          <input type="text" title="John" id="wd-text-fields-first-name" />
+          <br />
           <label htmlFor="wd-text-fields-last-name">Last name:</label>
           <input type="text" placeholder="Doe"
             value="Wonderland"
@@ -211,7 +213,7 @@ export default function Lab1() {
           <h4 id="wd-dropdowns">Dropdowns</h4>
 
           <h5>Select one</h5>
-          <label htmlFor="wd-select-one-genre"> Favorite movie genre: </label><br />
+          <label htmlFor="wd-select-one-genre">Favorite movie genre:</label><br />
           <select id="wd-select-one-genre">
             <option value="COMEDY">Comedy</option>
             <option value="DRAMA">Drama</option>
@@ -221,35 +223,51 @@ export default function Lab1() {
           </select>
 
           <h5>Select many</h5>
-          <label htmlFor="wd-select-many-genre"> Favorite movie genres: </label><br />
+          <label htmlFor="wd-select-many-genre">Favorite movie genres:</label><br />
           <select multiple id="wd-select-many-genre">
-            <option value="COMEDY" selected> Comedy          </option>
-            <option value="DRAMA">           Drama           </option>
-            <option value="SCIFI" selected> Science Fiction </option>
-            <option value="FANTASY">         Fantasy         </option>
+            <option value="COMEDY" selected>
+              Comedy
+            </option>
+            <option value="DRAMA">
+              Drama
+            </option>
+            <option value="SCIFI" selected>
+              Science Fiction
+            </option>
+            <option value="FANTASY">
+              Fantasy
+            </option>
           </select>
 
           <h4>Other HTML field types</h4>
 
-          <label htmlFor="wd-text-fields-email"> Email: </label>
+          <label htmlFor="wd-text-fields-email">
+            Email:
+          </label>
           <input type="email"
             placeholder="jdoe@somewhere.com"
             id="wd-text-fields-email" /><br />
 
-          <label htmlFor="wd-text-fields-salary-start"> Starting salary:</label>
+          <label htmlFor="wd-text-fields-salary-start">
+            Starting salary:
+          </label>
           <input type="number"
             value="100000"
             placeholder="1000"
             id="wd-text-fields-salary-start" /><br />
 
-          <label htmlFor="wd-text-fields-rating"> Rating: </label>
+          <label htmlFor="wd-text-fields-rating">
+            Rating:
+          </label>
           <input type="range"
             value="4"
             max="5"
             placeholder="Doe"
             id="wd-text-fields-rating" /><br />
 
-          <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
+          <label htmlFor="wd-text-fields-dob">
+            Date of birth:
+          </label>
           <input type="date"
             value="2000-01-21"
             id="wd-text-fields-dob" /><br />

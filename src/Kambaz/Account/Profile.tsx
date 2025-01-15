@@ -11,8 +11,10 @@ export default function Profile() {
       <input defaultValue="2000-01-01" type="date" id="wd-dob" /><br />
       <input defaultValue="alice@wonderland" type="email" id="wd-email" /><br />
       <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option>       <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option> <option value="STUDENT">Student</option>
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+        <option value="FACULTY">Faculty</option>
+        <option value="STUDENT">Student</option>
       </select><br />
       <Link to="/Kambaz/Account/Signin" >Sign out</Link>
     </div>
