@@ -6,3 +6,21 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
     padding-left: 140px !important;
   }
 }
+
+#wd-kambaz-navigation .list-group-item {
+  background-color: black;
+  color: white;
+}
+
+#wd-kambaz-navigation .list-group-item:focus {
+  background-color: white;
+  color: red;
+}
+
+#wd-kambaz-navigation .list-group-item .fs-1 {
+  color: red;
+}
+
+#wd-kambaz-navigation .list-group-item .fs-1:focus {
+  color: white;
+}
