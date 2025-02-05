@@ -5,6 +5,7 @@ import Home from "./Home";
 import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import { Route, Routes } from "react-router";
+import PeopleTable from "./Assignments/Table";
 
 export default function Courses() {
   return (
@@ -22,6 +23,7 @@ export default function Courses() {
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+            <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>
       </div>

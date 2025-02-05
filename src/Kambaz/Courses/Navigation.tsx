@@ -52,8 +52,7 @@ export default function CourseNavigation() {
         Grades
       </Link>
       <Link
-        to="/Kambaz/People" id="
-      wd-course-people-link"
+        to="/Kambaz/Courses/1234/People" id="wd-course-people-link"
         className="list-group-item text-danger border border-0"
       >
         People
