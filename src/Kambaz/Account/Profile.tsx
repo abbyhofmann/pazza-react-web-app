@@ -36,6 +36,6 @@ export default function Profile() {
         </FormSelect>
       </div>
       <Button variant="danger" href="/Kambaz/Account/Signin">Sign Out</Button>
-    </div >
+    </div>
   );
 }
