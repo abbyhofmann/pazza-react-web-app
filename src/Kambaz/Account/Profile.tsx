@@ -1,22 +1,41 @@
-import { Link } from "react-router-dom";
+import { Button, Form, FormSelect } from "react-bootstrap";
+
 export default function Profile() {
   return (
     <div id="wd-profile-screen">
       <h3>Profile</h3>
-      <input defaultValue="alice" placeholder="username" className="wd-username" /><br />
-      <input defaultValue="123" placeholder="password" type="password"
-        className="wd-password" /><br />
-      <input defaultValue="Alice" placeholder="First Name" id="wd-firstname" /><br />
-      <input defaultValue="Wonderland" placeholder="Last Name" id="wd-lastname" /><br />
-      <input defaultValue="2000-01-01" type="date" id="wd-dob" /><br />
-      <input defaultValue="alice@wonderland" type="email" id="wd-email" /><br />
-      <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option>
-        <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option>
-        <option value="STUDENT">Student</option>
-      </select><br />
-      <Link to="/Kambaz/Account/Signin" >Sign out</Link>
-    </div>
+      <div className="my-4">
+        <Form.Control id="wd-username"
+          placeholder="username"
+          defaultValue="alice"
+          className="mb-2" />
+        <Form.Control id="wd-password"
+          placeholder="password"
+          defaultValue="123"
+          // type="password"
+          className="mb-2" />
+        <Form.Control id="wd-firstname"
+          placeholder="First Name"
+          defaultValue="Alice"
+          className="mb-2" />
+        <Form.Control id="wd-lastname"
+          placeholder="Last Name"
+          defaultValue="Wonderland"
+          className="mb-2" />
+        <Form.Control className="mb-2" id="wd-dob" type="date" value="2000-01-01" />
+        <Form.Control id="wd-email"
+          placeholder="Email"
+          defaultValue="alice@wonderland"
+          type="email"
+          className="mb-2" />
+        <FormSelect>
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+          <option selected value="FACULTY">Faculty</option>
+          <option value="STUDENT">Student</option>
+        </FormSelect>
+      </div>
+      <Button variant="danger" href="/Kambaz/Account/Signin">Sign Out</Button>
+    </div >
   );
 }

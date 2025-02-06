@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 
 export default function AssignmentEditor() {
   return (
@@ -29,28 +29,28 @@ export default function AssignmentEditor() {
         <Form.Group as={Row} className="my-4">
           <Col><Form.Label htmlFor="wd-group" column>Assignment Group</Form.Label></Col>
           <Col sm={5}>
-            <Form.Control id="wd-group" as="select">
+            <FormSelect id="wd-group">
               <option value="ASSIGNMENTS">Assignments</option>
               <option value="QUIZZES">Quizzes</option>
-            </Form.Control>
+            </FormSelect>
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="my-4">
           <Col><Form.Label htmlFor="wd-display-grade-as" column>Display Grade as</Form.Label></Col>
           <Col sm={5}>
-            <Form.Control id="wd-display-grade-as" as="select">
+            <FormSelect id="wd-display-grade-as">
               <option value="PERCENTAGE">Percentage</option>
               <option value="ABSOLUTE">Absolute</option>
-            </Form.Control>
+            </FormSelect>
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="my-4">
           <Col><Form.Label htmlFor="wd-submission-type" column>Submission Type</Form.Label></Col>
           <Col sm={5}>
-            <Form.Control id="wd-submission-type" as="select">
+            <FormSelect id="wd-submission-type">
               <option selected value="ONLINE">Online</option>
               <option value="PAPER">Paper</option>
-            </Form.Control>
+            </FormSelect>
             <Col><Form.Label column><b>Online Entry Options</b></Form.Label></Col>
             <Col>
               <Form.Check id="wd-text-entry" type="checkbox" label="Text Entry" />

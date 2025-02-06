@@ -15,9 +15,10 @@ export default function KambazNavigation() {
         <img src="/images/NEU.png" width="75px" />
       </a>
       <Link to="/Kambaz/Account" id="wd-account-link"
-        className="list-group-item text-center border-0 ">
-        <FaRegCircleUser className="fs-1 text-white" />
-        Account </Link>
+        className="list-group-item text-center border-0">
+        <FaRegCircleUser className="fs-1" />
+        Account
+      </Link>
       <Link to="/Kambaz/Dashboard" id="wd-dashboard-link"
         className="list-group-item text-center border-0">
         <AiOutlineDashboard className="fs-1" />

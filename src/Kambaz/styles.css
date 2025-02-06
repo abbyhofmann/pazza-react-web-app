@@ -21,6 +21,14 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
   color: red;
 }
 
+#wd-kambaz-navigation #wd-account-link .fs-1 {
+  color: white;
+}
+
+#wd-kambaz-navigation #wd-account-link:focus {
+  color: red;
+}
+
 #wd-kambaz-navigation .list-group-item .fs-1:focus {
   color: white;
 }
