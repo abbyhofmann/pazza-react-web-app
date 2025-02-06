@@ -20,28 +20,28 @@ export default function KambazNavigation() {
         Account
       </Link>
       <Link to="/Kambaz/Dashboard" id="wd-dashboard-link"
-        className="list-group-item text-center border-0">
+        className="list-group-item active text-center border-0">
         <AiOutlineDashboard className="fs-1" />
         Dashboard
       </Link>
       <Link to="/Kambaz/Dashboard" id="wd-course-link"
         className="list-group-item text-center border-0">
-        <LiaBookSolid className="fs-1" />
+        <LiaBookSolid className="fs-1 text-danger" />
         Courses
       </Link>
       <Link to="/Kambaz/Dashboard" id="wd-calendar-link"
         className="list-group-item text-center border-0">
-        <IoCalendarOutline className="fs-1" />
+        <IoCalendarOutline className="fs-1 text-danger " />
         Calendar
       </Link>
       <Link to="/Kambaz/Dashboard" id="wd-inbox-link"
         className="list-group-item text-center mx-2 border-0">
-        <FaInbox className="fs-1" />
+        <FaInbox className="fs-1 text-danger " />
         Inbox
       </Link>
       <Link to="/Labs" id="wd-labs-link"
         className="list-group-item text-center mx-4 border-0">
-        <LiaCogSolid className="fs-1" />
+        <LiaCogSolid className="fs-1 text-danger " />
         Labs
       </Link>
     </div>
