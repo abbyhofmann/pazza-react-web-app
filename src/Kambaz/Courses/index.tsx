@@ -5,7 +5,7 @@ import Home from "./Home";
 import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import { Route, Routes } from "react-router";
-import PeopleTable from "./Assignments/Table";
+import PeopleTable from "./People/Table";
 
 export default function Courses() {
   return (
