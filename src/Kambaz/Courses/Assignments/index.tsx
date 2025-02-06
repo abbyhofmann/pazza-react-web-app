@@ -1,4 +1,4 @@
-import { Button, ListGroup } from "react-bootstrap";
+import { Badge, Button, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
 import LessonControlButtons from "../Modules/LessonControlButtons";
@@ -26,11 +26,11 @@ export default function Assignments() {
         <ListGroup className="rounded-0" id="wd-assignments">
           <ListGroup.Item className="wd-assignment p-0 mb-5 fs-5 border-gray">
             <div className="wd-title p-3 ps-2 bg-secondary">
-              {/* TODO: 40% chip */}
               <BsGripVertical className="me-2 fs-3" />
-              Assignments 40% of total
+              Assignments
               <IoEllipsisVertical className="float-end fs-4" />
               <FaPlus className="float-end" />
+              <Badge pill bg="secondary" text="dark" className="me-2 border border-dark float-end">40% of Total</Badge>
             </div>
             <ListGroup className="wd-lessons rounded-0">
               <ListGroup.Item action href="#/Kambaz/Courses/1234/Assignments/1" className="wd-lesson p-3 ps-1">

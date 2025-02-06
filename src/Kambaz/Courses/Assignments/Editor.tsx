@@ -4,7 +4,6 @@ export default function AssignmentEditor() {
   return (
     <div id="wd-assignments-editor">
       <Form>
-        {/* TODO:  */}
         <Form.Group as={Row} className="mb-3">
           <Col sm={10}><Form.Label htmlFor="wd-name" column> Assignment Name </Form.Label></Col>
           <Col sm={10}>
