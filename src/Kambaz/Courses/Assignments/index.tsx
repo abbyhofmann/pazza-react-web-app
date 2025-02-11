@@ -3,8 +3,12 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
+import { assignments } from "../../Database";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const { pathname } = useLocation();
   return (
     <div id="wd-assignments">
       {/* TODO: magnifying glass icon + sizing */}
@@ -32,40 +36,23 @@ export default function Assignments() {
               <FaPlus className="float-end" />
               <Badge pill bg="secondary" text="dark" className="me-2 border border-dark float-end">40% of Total</Badge>
             </div>
-            <ListGroup className="wd-lessons rounded-0">
-              <ListGroup.Item action href="#/Kambaz/Courses/1234/Assignments/1" className="wd-lesson p-3 ps-1">
-                <LessonControlButtons />
-                <div style={{ width: "75%" }}>
-                  <BsGripVertical className="me-2 fs-3" />
-                  <FaPencilAlt className="text-success fs-4 me-4" />
-                  A1 - ENV + HTML
-                  <p className="ms-4 mt-2">
-                    <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00am | <b>Due</b> May 13 at 11:59pm | 100 pts
-                  </p>
-                </div>
-              </ListGroup.Item>
-              <ListGroup.Item action href="#/Kambaz/Courses/1234/Assignments/1" className="wd-lesson p-3 ps-1">
-                <LessonControlButtons />
-                <div style={{ width: "75%" }}>
-                  <BsGripVertical className="me-2 fs-3" />
-                  <FaPencilAlt className="text-success fs-4 me-4" />
-                  A2 - CSS + BOOTSTRAP
-                  <p className="ms-4 mt-2">
-                    <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 13 at 12:00am | <b>Due</b> May 20 at 11:59pm | 100 pts
-                  </p>
-                </div>
-              </ListGroup.Item>
-              <ListGroup.Item action href="#/Kambaz/Courses/1234/Assignments/1" className="wd-lesson p-3 ps-1">
-                <LessonControlButtons />
-                <div style={{ width: "75%" }}>
-                  <BsGripVertical className="me-2 fs-3" />
-                  <FaPencilAlt className="text-success fs-4 me-4" />
-                  A3 - JAVASCRIPT + REACT
-                  <p className="ms-4 mt-2">
-                    <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 20 at 12:00am | <b>Due</b> May 27 at 11:59pm | 100 pts
-                  </p>
-                </div>
-              </ListGroup.Item>
+            <ListGroup className="wd-assignments rounded-0">
+              {assignments.filter(a => a.course === cid).map((a, index) => {
+                const link = `${pathname}/${a._id}`;
+                return (
+                  <ListGroup.Item as={Link} to={link} className="wd-lesson p-3 ps-1" key={index}>
+                    <LessonControlButtons />
+                    <div style={{ width: "75%" }}>
+                      <BsGripVertical className="me-2 fs-3" />
+                      <FaPencilAlt className="text-success fs-4 me-4" />
+                      {a.title}
+                      <p className="ms-4 mt-2">
+                        <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00am | <b>Due</b> May 13 at 11:59pm | 100 pts
+                      </p>
+                    </div>
+                  </ListGroup.Item>
+                );
+              })}
             </ListGroup>
           </ListGroup.Item>
         </ListGroup>

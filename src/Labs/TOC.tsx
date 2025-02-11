@@ -25,12 +25,14 @@ export default function TOC() {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link as={Link} to="/Kambaz" id="wd-a3">
+        <Nav.Link as={Link} to="/Kambaz" id="wd-a3"
+          active={pathname.includes("Kambaz")}>
           Kambaz
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link href="https://github.com/sanjana-kashyap" target="_blank">
+        <Nav.Link href="https://github.com/sanjana-kashyap" target="_blank"
+          active={pathname.includes("Github")}>
           My GitHub
         </Nav.Link>
       </Nav.Item>
