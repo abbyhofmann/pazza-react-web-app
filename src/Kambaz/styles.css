@@ -17,6 +17,16 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
   color: red;
 }
 
+#wd-courses-navigation .list-group-item {
+  background-color: white;
+  color: red;
+}
+
+#wd-courses-navigation .list-group-item.active {
+  background-color: white;
+  color: black;
+}
+
 .list-group.wd > .list-group-item.active {
   color: black;
   background-color: white;
