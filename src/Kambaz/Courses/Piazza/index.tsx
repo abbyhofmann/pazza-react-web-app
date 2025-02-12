@@ -6,16 +6,17 @@ import PiazzaNavBarTop from "./PiazzaNavBarTop";
 import HwFolderNav from "./HwFolderNav";
 
 export default function Piazza() {
-    return (
-      <div id="wd-piazza">
-           <PiazzaNavBarTop />
-           <HwFolderNav/>
-   <div className="wd-main-content-offset p-3">       
+  return (
+    <div id="wd-piazza">
+      <PiazzaNavBarTop />
+      <HwFolderNav />
+      <div className="wd-main-content-offset p-3">
         <Routes>
-            <Route path="/" element={<Navigate to="RightSidePage" />} />
-            <Route path="RightSidePage" element={<RightSidePage />} />
-            <Route path="NewPostPage" element={<NewPostPage />} />
-            </Routes>
-</div>
+          <Route path="/" element={<Navigate to="RightSidePage" />} />
+          <Route path="RightSidePage" element={<RightSidePage />} />
+          <Route path="NewPostPage" element={<NewPostPage />} />
+        </Routes>
       </div>
-    );}
+    </div>
+  );
+}
