@@ -8,7 +8,7 @@ export default function PiazzaNavBarTop() {
       <div id="wd-piazza-nav" className="d-flex align-items-center justify-content-between width='100%' mb-3">
 
         <div className="d-flex align-items-start">
-          <img src="images/Piazza_logo_(white).png" width="90px" height="20px"
+          <img src="images/Piazzalogo.png" width="90px" height="20px"
             className="wd-logo-height" />
         </div>
 
