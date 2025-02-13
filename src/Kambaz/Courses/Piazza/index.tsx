@@ -4,12 +4,14 @@ import RightSidePage from "./RightSidePage";
 import NewPostPage from "./NewPost";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
 import HwFolderNav from "./HwFolderNav";
+import NoteQuestionSidebar from "./PostSidebar";
 
 export default function Piazza() {
   return (
     <div id="wd-piazza">
       <PiazzaNavBarTop />
       <HwFolderNav />
+      <NoteQuestionSidebar />
       <div className="wd-main-content-offset p-3">
         <Routes>
           <Route path="/" element={<Navigate to="RightSidePage" />} />
