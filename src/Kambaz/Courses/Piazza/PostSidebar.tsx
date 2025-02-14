@@ -1,4 +1,5 @@
 import { posts } from "../../Database";
+import "./PostSidebar.css";
 
 /**
  * Function for formatting the given date in dd/mm/yy format.
@@ -29,12 +30,8 @@ export default function PostSidebar() {
             </a>
             <div id="accordion">
                 <div className="card">
-                    <div className="card-header" id="headingOne">
-                        <h5 className="mb-0">
-                            <button className="btn" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                TODAY
-                            </button>
-                        </h5>
+                    <div data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" className="mb-0 bucket-header gray-bar">
+                        TODAY
                     </div>
 
                     <div id="collapseOne" className="collapse show">

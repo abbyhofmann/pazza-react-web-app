@@ -1,0 +1,15 @@
+.bucket-header {
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 5px 6px 3px;
+    text-transform: uppercase;
+}
+.gray-bar {
+    border-top: 1px solid rgba(255, 255, 255, .25);
+    background-color: #e8e8ea;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+    box-sizing: border-box;
+    color: #666;
+}
