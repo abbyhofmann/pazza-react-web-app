@@ -64,95 +64,109 @@ export default function PostSidebar() {
             <a className="d-flex align-items-center p-3 link-dark text-decoration-none border-bottom">
                 <span className="fs-5 fw-semibold">Posts</span>
             </a>
-
-            {/* Dropdown Section */}
-            <div className="accordion" id="postAccordion">
-                <div className="card border-0">
-                    {/* Today Dropdown Header */}
-                    <div
-                        className="mb-0 bucket-header gray-bar d-flex justify-content-between align-items-center px-3 py-2"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseToday"
-                        aria-expanded="true"
-                        aria-controls="collapseToday"
-                    >
-                        <span>TODAY</span>
+            <div id="feed_list_wrapper">
+                <div id="feed_search_bar">
+                    <button id="new_post_button" type="button">
+                        New Post
+                    </button>
+                    <div id="search_bar" role="search">
+                        <input type="text" placeholder="Search or add a post..." id="search-box" className="form-control" />
                     </div>
+                </div>
 
-                    {/* Today Collapsible Content */}
-                    <div id="collapseToday" className="collapse show" data-bs-parent="#postAccordion">
-                        <ul className="list-group list-group-flush">
-                            {posts
-                                .filter((post) => formatDate(post.datePosted) === today)
-                                .map((post) => (
-                                    <li className="list-group-item feed_item p-3" key={post._id}>
-                                        <div className="d-flex justify-content-between">
-                                            <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                            <small>{post.title}</small>
-                                            <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
-                                        </div>
-                                        <div className="text-muted small">{post.content}</div>
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
 
-                    {/* Yesterday Dropdown Header */}
-                    <div
-                        className="mb-0 bucket-header gray-bar d-flex justify-content-between align-items-center px-3 py-2"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseYesterday"
-                        aria-expanded="true"
-                        aria-controls="collapseYesterday"
-                    >
-                        <span>YESTERDAY</span>
-                    </div>
+                {/* Dropdown Section */}
+                <div className="accordion" id="postAccordion">
+                    <div className="card border-0">
+                        {/* Today Dropdown Header */}
+                        <div
+                            className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseToday"
+                            aria-expanded="true"
+                            aria-controls="collapseToday"
+                        >
+                            <span aria-hidden="true" className="me-1">▾</span>
+                            <span>TODAY</span>
+                        </div>
 
-                    {/* Yesterday Collapsible Content */}
-                    <div id="collapseYesterday" className="collapse show" data-bs-parent="#postAccordion">
-                        <ul className="list-group list-group-flush">
-                            {posts
-                                .filter((post) => formatDate(post.datePosted) === yesterday)
-                                .map((post) => (
-                                    <li className="list-group-item feed_item p-3" key={post._id}>
-                                        <div className="d-flex justify-content-between">
-                                            <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                            <small>{post.title}</small>
-                                            <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
-                                        </div>
-                                        <div className="text-muted small">{post.content}</div>
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
+                        {/* Today Collapsible Content */}
+                        <div id="collapseToday" className="collapse show" data-bs-parent="#postAccordion">
+                            <ul className="list-group list-group-flush">
+                                {posts
+                                    .filter((post) => formatDate(post.datePosted) === today)
+                                    .map((post) => (
+                                        <li className="list-group-item feed_item p-3" key={post._id}>
+                                            <div className="d-flex justify-content-between">
+                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
+                                                <small>{post.title}</small>
+                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            </div>
+                                            <div className="text-muted small">{post.content}</div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
 
-                    {/* This Week Dropdown Header */}
-                    <div
-                        className="mb-0 bucket-header gray-bar d-flex justify-content-between align-items-center px-3 py-2"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseThisWeek"
-                        aria-expanded="true"
-                        aria-controls="collapseThisWeek"
-                    >
-                        <span>THIS WEEK</span>
-                    </div>
+                        {/* Yesterday Dropdown Header */}
+                        <div
+                            className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseYesterday"
+                            aria-expanded="true"
+                            aria-controls="collapseYesterday"
+                        >
+                            <span aria-hidden="true" className="me-1">▾</span>
+                            <span>YESTERDAY</span>
+                        </div>
 
-                    {/* This Week Collapsible Content */}
-                    <div id="collapseThisWeek" className="collapse show" data-bs-parent="#postAccordion">
-                        <ul className="list-group list-group-flush">
-                            {posts
-                                .filter((post) => datesThisWeek.includes(formatDate(post.datePosted)))
-                                .map((post) => (
-                                    <li className="list-group-item feed_item p-3" key={post._id}>
-                                        <div className="d-flex justify-content-between">
-                                            <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                            <small>{post.title}</small>
-                                            <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
-                                        </div>
-                                        <div className="text-muted small">{post.content}</div>
-                                    </li>
-                                ))}
-                        </ul>
+                        {/* Yesterday Collapsible Content */}
+                        <div id="collapseYesterday" className="collapse show" data-bs-parent="#postAccordion">
+                            <ul className="list-group list-group-flush">
+                                {posts
+                                    .filter((post) => formatDate(post.datePosted) === yesterday)
+                                    .map((post) => (
+                                        <li className="list-group-item feed_item p-3" key={post._id}>
+                                            <div className="d-flex justify-content-between">
+                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
+                                                <small>{post.title}</small>
+                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            </div>
+                                            <div className="text-muted small">{post.content}</div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+
+                        {/* This Week Dropdown Header */}
+                        <div
+                            className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThisWeek"
+                            aria-expanded="true"
+                            aria-controls="collapseThisWeek"
+                        >
+                            <span aria-hidden="true" className="me-1">▾</span>
+                            <span>THIS WEEK</span>
+                        </div>
+
+                        {/* This Week Collapsible Content */}
+                        <div id="collapseThisWeek" className="collapse show" data-bs-parent="#postAccordion">
+                            <ul className="list-group list-group-flush">
+                                {posts
+                                    .filter((post) => datesThisWeek.includes(formatDate(post.datePosted)))
+                                    .map((post) => (
+                                        <li className="list-group-item feed_item p-3" key={post._id}>
+                                            <div className="d-flex justify-content-between">
+                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
+                                                <small>{post.title}</small>
+                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            </div>
+                                            <div className="text-muted small">{post.content}</div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
