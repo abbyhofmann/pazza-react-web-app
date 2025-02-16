@@ -2,19 +2,24 @@ import { posts } from "../../Database";
 import "./PostSidebar.css";
 
 /**
- * Function for formatting the given date in dd/mm/yy format.
+ * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
+ * older posts and for comparing today's date with the date of a certain post.
  * @returns Date as a string.
  */
 function formatDate(inputDate: string): string {
-    const [year, month, day] = inputDate.split("-");
-    return `${month}/${day}/${year.slice(-2)}`;
+    const date = new Date(inputDate);
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const year = String(date.getUTCFullYear()).slice(-2);
+
+    return `${month}/${day}/${year}`;
 }
 
 function getTodaysDate(): string {
     const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-    const day = String(today.getDate()).padStart(2, '0');
-    const year = String(today.getFullYear()).slice(-2); // Get last two digits of the year
+    const month = String(today.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(today.getUTCDate()).padStart(2, '0');
+    const year = String(today.getUTCFullYear()).slice(-2);
 
     return `${month}/${day}/${year}`;
 }
@@ -22,29 +27,39 @@ function getTodaysDate(): string {
 function getYesterdayDate(): string {
     const today = new Date();
     const yesterday = new Date(today);
+    
+    yesterday.setUTCDate(today.getUTCDate() - 1);
 
-    yesterday.setDate(today.getDate() - 1);
-
-    const month = String(yesterday.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-    const day = String(yesterday.getDate()).padStart(2, '0');
-    const year = String(yesterday.getFullYear()).slice(-2); // Get last two digits of the year
+    const month = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getUTCDate()).padStart(2, '0');
+    const year = String(yesterday.getUTCFullYear()).slice(-2);
 
     return `${month}/${day}/${year}`;
+}
+
+function extractTime(dateString: string): string {
+    const date = new Date(dateString);
+    let hours = date.getUTCHours();
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+
+    return `${hours}:${minutes} ${ampm}`;
 }
 
 // produces a list of strings of the days this week not including today or yesterday 
 function getThisWeekDates(): string[] {
     const today = new Date();
-    const dayThisWeek = new Date(today);
     const days: string[] = [];
 
     for (let i = 2; i < 7; i++) {
+        const dayThisWeek = new Date(today);
+        dayThisWeek.setUTCDate(today.getUTCDate() - i);
 
-        dayThisWeek.setDate(today.getDate() - i);
-
-        const month = String(dayThisWeek.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-        const day = String(dayThisWeek.getDate()).padStart(2, '0');
-        const year = String(dayThisWeek.getFullYear()).slice(-2); // Get last two digits of the year
+        const month = String(dayThisWeek.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(dayThisWeek.getUTCDate()).padStart(2, '0');
+        const year = String(dayThisWeek.getUTCFullYear()).slice(-2);
 
         days.push(`${month}/${day}/${year}`);
     }
@@ -91,7 +106,7 @@ export default function PostSidebar() {
                         </div>
 
                         {/* Today Collapsible Content */}
-                        <div id="collapseToday" className="collapse show" data-bs-parent="#postAccordion">
+                        <div id="collapseToday" className="collapse show">
                             <ul className="list-group list-group-flush">
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === today)
@@ -100,7 +115,7 @@ export default function PostSidebar() {
                                             <div className="d-flex justify-content-between">
                                                 <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
                                                 <small>{post.title}</small>
-                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
                                             </div>
                                             <div className="text-muted small">{post.content}</div>
                                         </li>
@@ -121,7 +136,7 @@ export default function PostSidebar() {
                         </div>
 
                         {/* Yesterday Collapsible Content */}
-                        <div id="collapseYesterday" className="collapse show" data-bs-parent="#postAccordion">
+                        <div id="collapseYesterday" className="collapse show">
                             <ul className="list-group list-group-flush">
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === yesterday)
@@ -130,7 +145,7 @@ export default function PostSidebar() {
                                             <div className="d-flex justify-content-between">
                                                 <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
                                                 <small>{post.title}</small>
-                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
                                             </div>
                                             <div className="text-muted small">{post.content}</div>
                                         </li>
@@ -151,7 +166,7 @@ export default function PostSidebar() {
                         </div>
 
                         {/* This Week Collapsible Content */}
-                        <div id="collapseThisWeek" className="collapse show" data-bs-parent="#postAccordion">
+                        <div id="collapseThisWeek" className="collapse show">
                             <ul className="list-group list-group-flush">
                                 {posts
                                     .filter((post) => datesThisWeek.includes(formatDate(post.datePosted)))
