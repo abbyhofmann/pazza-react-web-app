@@ -75,20 +75,20 @@ function getDayOfWeek(dateString: string): string {
 }
 
 /**
- * Function for producing a list of strings of the days this week (not including today or yesterday).
+ * Function for producing a list of strings of the days this past week (not including today or yesterday).
  * @returns List of strings in mm/dd/yy format.
  */
-function getThisWeekDates(): string[] {
+function getLastWeekDates(): string[] {
     const today = new Date();
     const days: string[] = [];
 
     for (let i = 2; i < 7; i++) {
-        const dayThisWeek = new Date(today);
-        dayThisWeek.setUTCDate(today.getUTCDate() - i);
+        const dayLastWeek = new Date(today);
+        dayLastWeek.setUTCDate(today.getUTCDate() - i);
 
-        const month = String(dayThisWeek.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(dayThisWeek.getUTCDate()).padStart(2, '0');
-        const year = String(dayThisWeek.getUTCFullYear()).slice(-2);
+        const month = String(dayLastWeek.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(dayLastWeek.getUTCDate()).padStart(2, '0');
+        const year = String(dayLastWeek.getUTCFullYear()).slice(-2);
 
         days.push(`${month}/${day}/${year}`);
     }
@@ -100,7 +100,7 @@ function getThisWeekDates(): string[] {
 export default function PostSidebar() {
     var today = getTodaysDate();
     var yesterday = getYesterdayDate();
-    var datesThisWeek = getThisWeekDates();
+    var datesLastWeek = getLastWeekDates();
 
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
@@ -182,23 +182,23 @@ export default function PostSidebar() {
                             </ul>
                         </div>
 
-                        {/* This Week Dropdown Header */}
+                        {/* Last Week Dropdown Header */}
                         <div
                             className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
                             data-bs-toggle="collapse"
-                            data-bs-target="#collapseThisWeek"
+                            data-bs-target="#collapseLastWeek"
                             aria-expanded="true"
-                            aria-controls="collapseThisWeek"
+                            aria-controls="collapseLastWeek"
                         >
                             <span aria-hidden="true" className="me-1">▾</span>
-                            <span>THIS WEEK</span>
+                            <span>LAST WEEK</span>
                         </div>
 
                         {/* This Week Collapsible Content */}
-                        <div id="collapseThisWeek" className="collapse show">
+                        <div id="collapseLastWeek" className="collapse show">
                             <ul className="list-group list-group-flush">
                                 {posts
-                                    .filter((post) => datesThisWeek.includes(formatDate(post.datePosted)))
+                                    .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
                                     .map((post) => (
                                         <li className="list-group-item feed_item p-3" key={post._id}>
                                             <div className="d-flex justify-content-between">
