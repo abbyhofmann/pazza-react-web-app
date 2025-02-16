@@ -4,7 +4,8 @@ import "./PostSidebar.css";
 /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
  * older posts and for comparing today's date with the date of a certain post.
- * @returns Date as a string.
+ * @param inputDate ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
+ * @returns Date as a string in mm/dd/yy format.
  */
 function formatDate(inputDate: string): string {
     const date = new Date(inputDate);
@@ -15,6 +16,10 @@ function formatDate(inputDate: string): string {
     return `${month}/${day}/${year}`;
 }
 
+/**
+ * Function for calculating today's date.
+ * @returns Today's date as a string in mm/dd/yy format.
+ */
 function getTodaysDate(): string {
     const today = new Date();
     const month = String(today.getUTCMonth() + 1).padStart(2, '0');
@@ -24,10 +29,14 @@ function getTodaysDate(): string {
     return `${month}/${day}/${year}`;
 }
 
+/**
+ * Function for calculating yesterday's date.
+ * @returns Yesterday's date as a string in mm/dd/yy format.
+ */
 function getYesterdayDate(): string {
     const today = new Date();
     const yesterday = new Date(today);
-    
+
     yesterday.setUTCDate(today.getUTCDate() - 1);
 
     const month = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
@@ -37,6 +46,11 @@ function getYesterdayDate(): string {
     return `${month}/${day}/${year}`;
 }
 
+/**
+ * Function for extracting the time (such as 8:45 AM or 9:27 PM) from a given ISO date.
+ * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
+ * @returns Human-readable string of the time of the given date.
+ */
 function extractTime(dateString: string): string {
     const date = new Date(dateString);
     let hours = date.getUTCHours();
@@ -48,7 +62,22 @@ function extractTime(dateString: string): string {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-// produces a list of strings of the days this week not including today or yesterday 
+/**
+ * Function for extracting the day of the week from a given ISO date.
+ * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
+ * @returns The day of the week corresponding to the given date.
+ */
+function getDayOfWeek(dateString: string): string {
+    const date = new Date(dateString);
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    return days[date.getUTCDay()];
+}
+
+/**
+ * Function for producing a list of strings of the days this week (not including today or yesterday).
+ * @returns List of strings in mm/dd/yy format.
+ */
 function getThisWeekDates(): string[] {
     const today = new Date();
     const days: string[] = [];
@@ -67,7 +96,7 @@ function getThisWeekDates(): string[] {
     return days;
 }
 
-
+// The post feed accordian-style sidebar.
 export default function PostSidebar() {
     var today = getTodaysDate();
     var yesterday = getYesterdayDate();
@@ -175,7 +204,7 @@ export default function PostSidebar() {
                                             <div className="d-flex justify-content-between">
                                                 <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
                                                 <small>{post.title}</small>
-                                                <small className="text-muted">{formatDate(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                                <small className="text-muted">{getDayOfWeek(post.datePosted)}</small>
                                             </div>
                                             <div className="text-muted small">{post.content}</div>
                                         </li>
