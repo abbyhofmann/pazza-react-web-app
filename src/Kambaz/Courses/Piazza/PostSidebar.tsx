@@ -96,11 +96,65 @@ function getLastWeekDates(): string[] {
     return days;
 }
 
+/**
+ * Generates the week range string for displaying older posts in the accordian posts dropdown.
+ * @param dateString 
+ * @returns 
+ */
+function getWeekRange(dateString: string): string {
+    const date = new Date(dateString);
+    // 0 (Sunday) - 6 (Saturday)
+    const dayOfWeek = date.getUTCDay();
+
+    // calculate Monday (start of the week)
+    const monday = new Date(date);
+    monday.setUTCDate(date.getUTCDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Adjust Sunday TODOOOO
+
+    // calculate Sunday (end of the week)
+    const sunday = new Date(monday);
+    sunday.setUTCDate(monday.getUTCDate() + 6);
+
+    // format dates as mm/dd
+    const format = (d: Date) => `${String(d.getUTCMonth() + 1).padStart(2, '0')}/${String(d.getUTCDate()).padStart(2, '0')}`;
+
+    return `${format(monday)} - ${format(sunday)}`;
+}
+
+function groupPostsByWeek(posts: { datePosted: string }[]): Map<string, { datePosted: string }[]> {
+    // map to keep track of which week each post belongs in
+    const groupedPosts: Map<string, { datePosted: string }[]> = new Map();
+
+    posts.forEach((post) => {
+        const postDate = new Date(post.datePosted);
+        
+        // get Monday of the post's week
+        const monday = new Date(postDate);
+        monday.setUTCDate(postDate.getUTCDate() - postDate.getUTCDay() + 1); // Move to Monday
+        monday.setUTCHours(0, 0, 0, 0);
+
+        // get Sunday of the post's week
+        const sunday = new Date(monday);
+        sunday.setUTCDate(monday.getUTCDate() + 6); // Move to Sunday
+
+        // format the week range in mm/dd - mm/dd format for label
+        const weekRange = `${monday.getUTCMonth() + 1}/${monday.getUTCDate()} - ${sunday.getUTCMonth() + 1}/${sunday.getUTCDate()}`;
+
+        // add post to the correct week in the map
+        if (!groupedPosts.has(weekRange)) {
+            groupedPosts.set(weekRange, []);
+        }
+        groupedPosts.get(weekRange)!.push(post);
+    });
+
+    return groupedPosts;
+}
+
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
     var today = getTodaysDate();
     var yesterday = getYesterdayDate();
     var datesLastWeek = getLastWeekDates();
+    var groupedPostsMap = groupPostsByWeek(posts);
 
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
@@ -211,6 +265,56 @@ export default function PostSidebar() {
                                     ))}
                             </ul>
                         </div>
+                        {/* need to not include this week's dates (today, yesterday, or any other days this week - not sure if logic of filtering should occur here or in the grouping function) */}
+                        {groupedPostsMap.forEach((dateRange, postsInRange) => 
+                        {
+                            <div id={`collapse${dateRange}`} className="collapse show">
+                            <ul className="list-group list-group-flush">
+                                {postsInRange
+                                    .map((post) => (
+                                        <li className="list-group-item feed_item p-3" key={post._id}>
+                                            <div className="d-flex justify-content-between">
+                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
+                                                <small>{post.title}</small>
+                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            </div>
+                                            <div className="text-muted small">{post.content}</div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+
+                        {/* Last Week Dropdown Header */}
+                        <div
+                            className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseLastWeek"
+                            aria-expanded="true"
+                            aria-controls="collapseLastWeek"
+                        >
+                            <span aria-hidden="true" className="me-1">▾</span>
+                            <span>LAST WEEK</span>
+                        </div>
+
+                        {/* This Week Collapsible Content */}
+                        <div id="collapseLastWeek" className="collapse show">
+                            <ul className="list-group list-group-flush">
+                                {posts
+                                    .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
+                                    .map((post) => (
+                                        <li className="list-group-item feed_item p-3" key={post._id}>
+                                            <div className="d-flex justify-content-between">
+                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
+                                                <small>{post.title}</small>
+                                                <small className="text-muted">{getDayOfWeek(post.datePosted)}</small>
+                                            </div>
+                                            <div className="text-muted small">{post.content}</div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+                        }
+                        )}
                     </div>
                 </div>
             </div>
