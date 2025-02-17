@@ -1,4 +1,5 @@
 import { posts } from "../../Database";
+import InstructorIcon from "./InstructorIcon";
 import "./PostSidebar.css";
 
 /**
@@ -96,56 +97,45 @@ function getLastWeekDates(): string[] {
     return days;
 }
 
+// TODO - once we have mongodb data types, posts will be of type Post[] instead of the json
 /**
- * Generates the week range string for displaying older posts in the accordian posts dropdown.
- * @param dateString 
- * @returns 
- */
-function getWeekRange(dateString: string): string {
-    const date = new Date(dateString);
-    // 0 (Sunday) - 6 (Saturday)
-    const dayOfWeek = date.getUTCDay();
-
-    // calculate Monday (start of the week)
-    const monday = new Date(date);
-    monday.setUTCDate(date.getUTCDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Adjust Sunday TODOOOO
-
-    // calculate Sunday (end of the week)
-    const sunday = new Date(monday);
-    sunday.setUTCDate(monday.getUTCDate() + 6);
-
-    // format dates as mm/dd
-    const format = (d: Date) => `${String(d.getUTCMonth() + 1).padStart(2, '0')}/${String(d.getUTCDate()).padStart(2, '0')}`;
-
-    return `${format(monday)} - ${format(sunday)}`;
-}
-
-function groupPostsByWeek(posts: { datePosted: string }[]): Map<string, { datePosted: string }[]> {
+ * Function for grouping posts by the week they were created in. This creates a mapping between string date range (such as 2/10-2/16) and
+ * a list of the post objects that fall within that week. The current week is excluded from this mapping, as posts from this week will
+ * already be displayed in the "today", "yesterday", or "last week" dropdowns of the posts sidebar.
+ * @param datesToExclude A list of string dates to exclude from the date mapping creation.
+ * @param posts The posts being grouped.
+ * @returns A mapping of string date range to list of posts that fall in that date range.
+ */ 
+function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
     // map to keep track of which week each post belongs in
-    const groupedPosts: Map<string, { datePosted: string }[]> = new Map();
+    const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
 
     posts.forEach((post) => {
-        const postDate = new Date(post.datePosted);
-        
-        // get Monday of the post's week
-        const monday = new Date(postDate);
-        monday.setUTCDate(postDate.getUTCDate() - postDate.getUTCDay() + 1); // Move to Monday
-        monday.setUTCHours(0, 0, 0, 0);
+        // add post to the week if it is not in the dates to exclude - for our use case, we do not want to display posts from this week,
+        // as they will already be displayed in other dropdowns
+        if (!datesToExclude.includes(formatDate(post.datePosted))) {
+            const postDate = new Date(post.datePosted);
 
-        // get Sunday of the post's week
-        const sunday = new Date(monday);
-        sunday.setUTCDate(monday.getUTCDate() + 6); // Move to Sunday
+            // get Monday of the post's week
+            const monday = new Date(postDate);
+            monday.setUTCDate(postDate.getUTCDate() - postDate.getUTCDay() + 1); // Move to Monday
+            monday.setUTCHours(0, 0, 0, 0);
 
-        // format the week range in mm/dd - mm/dd format for label
-        const weekRange = `${monday.getUTCMonth() + 1}/${monday.getUTCDate()} - ${sunday.getUTCMonth() + 1}/${sunday.getUTCDate()}`;
+            // get Sunday of the post's week
+            const sunday = new Date(monday);
+            sunday.setUTCDate(monday.getUTCDate() + 6); // Move to Sunday
 
-        // add post to the correct week in the map
-        if (!groupedPosts.has(weekRange)) {
-            groupedPosts.set(weekRange, []);
+            // format the week range in mm/dd - mm/dd format for label
+            const weekRange = `${monday.getUTCMonth() + 1}/${monday.getUTCDate()} - ${sunday.getUTCMonth() + 1}/${sunday.getUTCDate()}`;
+
+            // initialize week in the map if not already existing
+            if (!groupedPosts.has(weekRange)) {
+                groupedPosts.set(weekRange, []);
+            }
+            groupedPosts.get(weekRange)!.push(post);
         }
-        groupedPosts.get(weekRange)!.push(post);
-    });
 
+    });
     return groupedPosts;
 }
 
@@ -154,7 +144,8 @@ export default function PostSidebar() {
     var today = getTodaysDate();
     var yesterday = getYesterdayDate();
     var datesLastWeek = getLastWeekDates();
-    var groupedPostsMap = groupPostsByWeek(posts);
+    var thisWeekDates = datesLastWeek.concat(today, yesterday);
+    var groupedPostsMap = groupPostsByWeek(thisWeekDates, posts);
 
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
@@ -195,12 +186,14 @@ export default function PostSidebar() {
                                     .filter((post) => formatDate(post.datePosted) === today)
                                     .map((post) => (
                                         <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex justify-content-between">
-                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                                <small>{post.title}</small>
-                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
+                                                    {post.instructor === 0 && <InstructorIcon />}
+                                                    <small className="fw-bold me-1 small post-title">{post.title}</small>
+                                                </div>
+                                                <div className="text-muted small">{extractTime(post.datePosted)}</div>
                                             </div>
-                                            <div className="text-muted small">{post.content}</div>
+                                            <div className="text-muted small post-content">{post.content}</div>
                                         </li>
                                     ))}
                             </ul>
@@ -225,18 +218,20 @@ export default function PostSidebar() {
                                     .filter((post) => formatDate(post.datePosted) === yesterday)
                                     .map((post) => (
                                         <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex justify-content-between">
-                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                                <small>{post.title}</small>
-                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
+                                                    {post.instructor === 0 && <InstructorIcon />}
+                                                    <small className="fw-bold me-1 small post-title">{post.title}</small>
+                                                </div>
+                                                <div className="small text-muted">{extractTime(post.datePosted)}</div>
                                             </div>
-                                            <div className="text-muted small">{post.content}</div>
+                                            <div className="text-muted small post-content">{post.content}</div>
                                         </li>
                                     ))}
                             </ul>
                         </div>
 
-                        {/* Last Week Dropdown Header */}
+                        {/* Last Week Dropdown Header - TODO: may want to have the data sorted so the days appear in order of most to least recent */}
                         <div
                             className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
                             data-bs-toggle="collapse"
@@ -248,72 +243,59 @@ export default function PostSidebar() {
                             <span>LAST WEEK</span>
                         </div>
 
-                        {/* This Week Collapsible Content */}
+                        {/* Last Week Collapsible Content */}
                         <div id="collapseLastWeek" className="collapse show">
                             <ul className="list-group list-group-flush">
                                 {posts
                                     .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
                                     .map((post) => (
                                         <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex justify-content-between">
-                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                                <small>{post.title}</small>
-                                                <small className="text-muted">{getDayOfWeek(post.datePosted)}</small>
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
+                                                    {post.instructor === 0 && <InstructorIcon />}
+                                                    <div className="fw-bold me-1 small post-title">{post.title}</div>
+                                                </div>
+                                                <div className="small text-muted">{getDayOfWeek(post.datePosted)}</div>
                                             </div>
-                                            <div className="text-muted small">{post.content}</div>
-                                        </li>
-                                    ))}
-                            </ul>
-                        </div>
-                        {/* need to not include this week's dates (today, yesterday, or any other days this week - not sure if logic of filtering should occur here or in the grouping function) */}
-                        {groupedPostsMap.forEach((dateRange, postsInRange) => 
-                        {
-                            <div id={`collapse${dateRange}`} className="collapse show">
-                            <ul className="list-group list-group-flush">
-                                {postsInRange
-                                    .map((post) => (
-                                        <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex justify-content-between">
-                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                                <small>{post.title}</small>
-                                                <small className="text-muted">{extractTime(post.datePosted)}</small> {/* TODO - will need to change the date format to include the time */}
-                                            </div>
-                                            <div className="text-muted small">{post.content}</div>
+                                            <div className="text-muted small post-content">{post.content}</div>
                                         </li>
                                     ))}
                             </ul>
                         </div>
 
-                        {/* Last Week Dropdown Header */}
-                        <div
-                            className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseLastWeek"
-                            aria-expanded="true"
-                            aria-controls="collapseLastWeek"
-                        >
-                            <span aria-hidden="true" className="me-1">▾</span>
-                            <span>LAST WEEK</span>
-                        </div>
+                        {/* Date Range Display for Older Posts */}
+                        {Array.from(groupedPostsMap.entries()).map(([dateRange, postsInRange]) => (
+                            <div>
+                                <div
+                                    className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target={`#collapse${dateRange.replace(/[^a-zA-Z0-9]/g, "")}`} // remove the / and - characters from the date range string
+                                    aria-expanded="true"
+                                    aria-controls={`collapse${dateRange.replace(/[^a-zA-Z0-9]/g, "")}`}
+                                >
+                                    <span aria-hidden="true" className="me-1">▾</span>
+                                    <span>{dateRange}</span>
+                                </div>
 
-                        {/* This Week Collapsible Content */}
-                        <div id="collapseLastWeek" className="collapse show">
-                            <ul className="list-group list-group-flush">
-                                {posts
-                                    .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
-                                    .map((post) => (
-                                        <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex justify-content-between">
-                                                <strong>{post.instructor === 0 ? "Instr" : ""}</strong>
-                                                <small>{post.title}</small>
-                                                <small className="text-muted">{getDayOfWeek(post.datePosted)}</small>
-                                            </div>
-                                            <div className="text-muted small">{post.content}</div>
-                                        </li>
-                                    ))}
-                            </ul>
-                        </div>
-                        }
+                                <div id={`collapse${dateRange.replace(/[^a-zA-Z0-9]/g, "")}`} className="collapse show">
+                                    <ul className="list-group list-group-flush">
+                                        {postsInRange
+                                            .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
+                                                <li className="list-group-item feed_item p-3" key={post._id}>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <div className="d-flex align-items-center flex-grow-1 text-truncate">
+                                                            {post.instructor === 0 && <InstructorIcon />}
+                                                            <div className="fw-bold me-1 small post-title">{post.title}</div>
+                                                        </div>
+                                                        <div className="small text-muted">{formatDate(post.datePosted)}</div>
+                                                    </div>
+                                                    <div className="text-muted small post-content">{post.content}</div>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        )
                         )}
                     </div>
                 </div>
