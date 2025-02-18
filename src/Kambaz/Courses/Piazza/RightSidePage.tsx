@@ -1,6 +1,14 @@
-
+import { BsFileEarmarkPostFill } from "react-icons/bs";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function RightSidePage() {
+  const navigate = useNavigate();
+  const { cid } = useParams();
+
+  const navButton = () => {
+    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
+  }
+
   return (
 
 
@@ -23,10 +31,14 @@ export default function RightSidePage() {
           <img src="images/warning5.jpg" height={30} />
           <span>_ unanswered followups</span>
         </div>
-
       </div>
-
-
+      
+      <div>
+            <h5>New Post Button, will move later</h5>
+            <button className="wd-new-post-button" onClick={navButton}>
+              <BsFileEarmarkPostFill className="me-1 mb-1 fs-5"/>
+              New Post</button>
+        </div>
     </div>
 
   );

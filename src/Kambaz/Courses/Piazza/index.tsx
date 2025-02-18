@@ -1,5 +1,5 @@
 
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import RightSidePage from "./RightSidePage";
 import NewPostPage from "./NewPost";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
@@ -12,11 +12,15 @@ export default function Piazza() {
       <HwFolderNav />
       <div className="wd-main-content-offset p-3">
         <Routes>
-          <Route path="/" element={<Navigate to="RightSidePage" />} />
+          <Route path="/" element={<RightSidePage />} />
+
           <Route path="RightSidePage" element={<RightSidePage />} />
+          
           <Route path="NewPostPage" element={<NewPostPage />} />
+
         </Routes>
       </div>
     </div>
   );
 }
+
