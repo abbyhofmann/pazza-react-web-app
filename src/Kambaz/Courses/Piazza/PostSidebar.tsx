@@ -1,6 +1,8 @@
+import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { posts } from "../../Database";
 import InstructorIcon from "./InstructorIcon";
 import "./PostSidebar.css";
+import { useNavigate, useParams } from "react-router-dom";
 
 /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
@@ -147,6 +149,13 @@ export default function PostSidebar() {
     var thisWeekDates = datesLastWeek.concat(today, yesterday);
     var groupedPostsMap = groupPostsByWeek(thisWeekDates, posts);
 
+    const navigate = useNavigate();
+    const { cid } = useParams();
+  
+    const navButton = () => {
+      navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
+    }
+
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
             {/* Sidebar Header */}
@@ -155,10 +164,10 @@ export default function PostSidebar() {
             </a>
             <div id="feed_list_wrapper">
                 <div id="feed_search_bar">
-                    <button id="new_post_button" type="button">
-                        New Post
-                    </button>
-                    <div id="search_bar" role="search">
+                    <button className="wd-new-post-button" onClick={navButton}>
+                                  <BsFileEarmarkPostFill className="me-1 mb-1 fs-6"/>
+                                  New Post</button>
+                    <div id="search_bar" role="search" className="ms-1">
                         <input type="text" placeholder="Search or add a post..." id="search-box" className="form-control" />
                     </div>
                 </div>

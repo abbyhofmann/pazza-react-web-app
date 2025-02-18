@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 
 
-
 export default function NewPostPage() {
 const [selectedOption, setSelectedOption] = useState<string>('');
 const [selectedPostTo, setSelectedPostTo] = useState<string>('');
@@ -18,11 +17,11 @@ const navigate = useNavigate();
   const { cid } = useParams();
 
   const PostButton = () => {
-    navigate(`/Kambaz/Courses/${cid}/Piazza/RightSidePage`);
+    navigate(`/Kambaz/Courses/${cid}/Piazza/`);
   }
 
   const DeleteButton = () => {
-   navigate(`/Kambaz/Courses/${cid}/Piazza/RightSidePage`);
+   navigate(`/Kambaz/Courses/${cid}/Piazza/`);
  }
 
 
