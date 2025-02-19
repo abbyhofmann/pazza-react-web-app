@@ -1,5 +1,6 @@
 import { posts } from "../../Database";
 import InstructorIcon from "./InstructorIcon";
+import PostItem from "./PostItem";
 import "./PostSidebar.css";
 
 /**
@@ -18,47 +19,17 @@ function formatDate(inputDate: string): string {
 }
 
 /**
- * Function for calculating today's date.
- * @returns Today's date as a string in mm/dd/yy format.
- */
-function getTodaysDate(): string {
-    const today = new Date();
-    const month = String(today.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(today.getUTCDate()).padStart(2, '0');
-    const year = String(today.getUTCFullYear()).slice(-2);
-
-    return `${month}/${day}/${year}`;
-}
-
-/**
- * Function for calculating yesterday's date.
- * @returns Yesterday's date as a string in mm/dd/yy format.
- */
-function getYesterdayDate(): string {
-    const today = new Date();
-    const yesterday = new Date(today);
-
-    yesterday.setUTCDate(today.getUTCDate() - 1);
-
-    const month = String(yesterday.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(yesterday.getUTCDate()).padStart(2, '0');
-    const year = String(yesterday.getUTCFullYear()).slice(-2);
-
-    return `${month}/${day}/${year}`;
-}
-
-/**
- * Function for extracting the time (such as 8:45 AM or 9:27 PM) from a given ISO date.
- * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
- * @returns Human-readable string of the time of the given date.
- */
+     * Function for extracting the time (such as 8:45 AM or 9:27 PM) from a given ISO date.
+     * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
+     * @returns Human-readable string of the time of the given date.
+     */
 function extractTime(dateString: string): string {
     const date = new Date(dateString);
     let hours = date.getUTCHours();
     const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
 
-    hours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+    hours = hours % 12 || 12; // convert 24-hour to 12-hour format
 
     return `${hours}:${minutes} ${ampm}`;
 }
@@ -74,6 +45,35 @@ function getDayOfWeek(dateString: string): string {
 
     return days[date.getUTCDay()];
 }
+
+/**
+ * Function for calculating today's date.
+ * @returns Today's date as a string in mm/dd/yy format.
+ */
+function getTodaysDate(): string {
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const year = String(today.getFullYear()).slice(-2);
+
+    return `${month}/${day}/${year}`;
+}
+
+/**
+ * Function for calculating yesterday's date.
+ * @returns Yesterday's date as a string in mm/dd/yy format.
+ */
+function getYesterdayDate(): string {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getDate()).padStart(2, '0');
+    const year = String(yesterday.getFullYear()).slice(-2);
+
+    return `${month}/${day}/${year}`;
+}
+
 
 /**
  * Function for producing a list of strings of the days this past week (not including today or yesterday).
@@ -105,7 +105,7 @@ function getLastWeekDates(): string[] {
  * @param datesToExclude A list of string dates to exclude from the date mapping creation.
  * @param posts The posts being grouped.
  * @returns A mapping of string date range to list of posts that fall in that date range.
- */ 
+ */
 function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
     // map to keep track of which week each post belongs in
     const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
@@ -185,16 +185,7 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === today)
                                     .map((post) => (
-                                        <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex align-items-center justify-content-between">
-                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
-                                                    {post.instructor === 0 && <InstructorIcon />}
-                                                    <small className="fw-bold me-1 small post-title">{post.title}</small>
-                                                </div>
-                                                <div className="text-muted small">{extractTime(post.datePosted)}</div>
-                                            </div>
-                                            <div className="text-muted small post-content">{post.content}</div>
-                                        </li>
+                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
                                     ))}
                             </ul>
                         </div>
@@ -217,16 +208,7 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === yesterday)
                                     .map((post) => (
-                                        <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex align-items-center justify-content-between">
-                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
-                                                    {post.instructor === 0 && <InstructorIcon />}
-                                                    <small className="fw-bold me-1 small post-title">{post.title}</small>
-                                                </div>
-                                                <div className="small text-muted">{extractTime(post.datePosted)}</div>
-                                            </div>
-                                            <div className="text-muted small post-content">{post.content}</div>
-                                        </li>
+                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
                                     ))}
                             </ul>
                         </div>
@@ -249,16 +231,7 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
                                     .map((post) => (
-                                        <li className="list-group-item feed_item p-3" key={post._id}>
-                                            <div className="d-flex align-items-center justify-content-between">
-                                                <div className="d-flex align-items-center flex-grow-1 text-truncate">
-                                                    {post.instructor === 0 && <InstructorIcon />}
-                                                    <div className="fw-bold me-1 small post-title">{post.title}</div>
-                                                </div>
-                                                <div className="small text-muted">{getDayOfWeek(post.datePosted)}</div>
-                                            </div>
-                                            <div className="text-muted small post-content">{post.content}</div>
-                                        </li>
+                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={getDayOfWeek} />
                                     ))}
                             </ul>
                         </div>
@@ -281,16 +254,7 @@ export default function PostSidebar() {
                                     <ul className="list-group list-group-flush">
                                         {postsInRange
                                             .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
-                                                <li className="list-group-item feed_item p-3" key={post._id}>
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center flex-grow-1 text-truncate">
-                                                            {post.instructor === 0 && <InstructorIcon />}
-                                                            <div className="fw-bold me-1 small post-title">{post.title}</div>
-                                                        </div>
-                                                        <div className="small text-muted">{formatDate(post.datePosted)}</div>
-                                                    </div>
-                                                    <div className="text-muted small post-content">{post.content}</div>
-                                                </li>
+                                                <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={formatDate} />
                                             ))}
                                     </ul>
                                 </div>
