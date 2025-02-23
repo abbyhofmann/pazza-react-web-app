@@ -1,5 +1,4 @@
 import { posts } from "../../Database";
-import InstructorIcon from "./InstructorIcon";
 import PostItem from "./PostItem";
 import "./PostSidebar.css";
 
@@ -19,10 +18,10 @@ function formatDate(inputDate: string): string {
 }
 
 /**
-     * Function for extracting the time (such as 8:45 AM or 9:27 PM) from a given ISO date.
-     * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
-     * @returns Human-readable string of the time of the given date.
-     */
+ * Function for extracting the time (such as 8:45 AM or 9:27 PM) from a given ISO date.
+ * @param dateString ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
+ * @returns Human-readable string of the time of the given date.
+ */
 function extractTime(dateString: string): string {
     const date = new Date(dateString);
     let hours = date.getUTCHours();
