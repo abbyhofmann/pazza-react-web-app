@@ -8,15 +8,16 @@ interface PostListItemProps {
     datePosted: string;
     instructor: number;
     displayDate: (inputDate: string) => string; // determines if the day of the week should be displayed instead of time
+    onClick: () => void;
 }
 
 // Component for the individual post item in the sidebar. 
 export default function PostListItem(props: PostListItemProps) {
 
-    const { _id, title, content, datePosted, instructor, displayDate } = props;
+    const { _id, title, content, datePosted, instructor, displayDate, onClick } = props;
 
     return (
-        <li className="list-group-item feed_item p-3" key={_id}>
+        <li className="list-group-item feed_item p-3" key={_id} onClick={onClick} style={{ cursor: 'pointer' }}>
             <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center flex-grow-1 text-truncate">
                     {instructor === 0 && <InstructorIcon />}

@@ -2,13 +2,14 @@
 import "./ViewPost.css";
 
 interface PostBoxProps {
-
+    // TODO - update this to Post type once db and types are implemented
+    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
 }
 
 // Component for the individual post item in the sidebar. 
 export default function PostBox(props: PostBoxProps) {
 
-    const { } = props;
+    const { post } = props;
 
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
@@ -43,8 +44,8 @@ export default function PostBox(props: PostBoxProps) {
                         <div data-id="endorse_count_idx0" className="d-inline-block good_post_number ml-1" aria-label="0 endorsements">&nbsp;0</div>
                     </div>
                         <div className="text-right col">
-                            <div className="update_text" data-id="contributors">Updated 
-                            <time dateTime="2025-02-23T02:29:44.000Z" title="Sat Feb 22 2025 21:29:44 GMT-0500 (Eastern Standard Time)">11 hours ago</time> by <span data-id="contributors">
-                                <span>Anonymous Scale</span></span></div></div></div></footer></article>
+                            <div className="update_text" data-id="contributors">Updated
+                                <time dateTime="2025-02-23T02:29:44.000Z" title="Sat Feb 22 2025 21:29:44 GMT-0500 (Eastern Standard Time)">11 hours ago</time> by <span data-id="contributors">
+                                    <span>Anonymous Scale</span></span></div></div></div></footer></article>
     );
 }

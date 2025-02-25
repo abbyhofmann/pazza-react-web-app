@@ -149,10 +149,11 @@ export default function PostSidebar() {
 
     const navigate = useNavigate();
     const { cid } = useParams();
-  
-    const navButton = () => {
-    //   navigate(`/Kambaz/Courses/${cid}/Piazza/post/${pid}`);
-    }
+
+    // navigate when a post is clicked
+    const handlePostClick = (postId: string) => {
+        navigate(`/viewPost/${postId}`);
+    };
 
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
@@ -192,13 +193,14 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === today)
                                     .map((post) => (
-                                        <PostListItem 
-                                        _id={post._id} 
-                                        title={post.title} 
-                                        content={post.content} 
-                                        datePosted={post.datePosted} 
-                                        instructor={post.instructor} 
-                                        displayDate={extractTime} />
+                                        <PostListItem
+                                            _id={post._id}
+                                            title={post.title}
+                                            content={post.content}
+                                            datePosted={post.datePosted}
+                                            instructor={post.instructor}
+                                            displayDate={extractTime}
+                                            onClick={() => handlePostClick(post._id)} />
                                     ))}
                             </ul>
                         </div>
@@ -221,7 +223,14 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === yesterday)
                                     .map((post) => (
-                                        <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
+                                        <PostListItem
+                                            _id={post._id}
+                                            title={post.title}
+                                            content={post.content}
+                                            datePosted={post.datePosted}
+                                            instructor={post.instructor}
+                                            displayDate={extractTime}
+                                            onClick={() => handlePostClick(post._id)} />
                                     ))}
                             </ul>
                         </div>
@@ -244,7 +253,14 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
                                     .map((post) => (
-                                        <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={getDayOfWeek} />
+                                        <PostListItem
+                                            _id={post._id}
+                                            title={post.title}
+                                            content={post.content}
+                                            datePosted={post.datePosted}
+                                            instructor={post.instructor}
+                                            displayDate={getDayOfWeek}
+                                            onClick={() => handlePostClick(post._id)} />
                                     ))}
                             </ul>
                         </div>
@@ -267,7 +283,14 @@ export default function PostSidebar() {
                                     <ul className="list-group list-group-flush">
                                         {postsInRange
                                             .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
-                                                <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={formatDate} />
+                                                <PostListItem
+                                                    _id={post._id}
+                                                    title={post.title}
+                                                    content={post.content}
+                                                    datePosted={post.datePosted}
+                                                    instructor={post.instructor}
+                                                    displayDate={formatDate}
+                                                    onClick={() => handlePostClick(post._id)} />
                                             ))}
                                     </ul>
                                 </div>
