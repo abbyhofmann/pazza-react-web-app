@@ -1,6 +1,7 @@
 import { posts } from "../../Database";
-import PostItem from "./PostItem";
+import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
+import { useNavigate, useParams } from "react-router";
 
 /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
@@ -146,6 +147,13 @@ export default function PostSidebar() {
     var thisWeekDates = datesLastWeek.concat(today, yesterday);
     var groupedPostsMap = groupPostsByWeek(thisWeekDates, posts);
 
+    const navigate = useNavigate();
+    const { cid } = useParams();
+  
+    const navButton = () => {
+    //   navigate(`/Kambaz/Courses/${cid}/Piazza/post/${pid}`);
+    }
+
     return (
         <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
             {/* Sidebar Header */}
@@ -184,7 +192,13 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === today)
                                     .map((post) => (
-                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
+                                        <PostListItem 
+                                        _id={post._id} 
+                                        title={post.title} 
+                                        content={post.content} 
+                                        datePosted={post.datePosted} 
+                                        instructor={post.instructor} 
+                                        displayDate={extractTime} />
                                     ))}
                             </ul>
                         </div>
@@ -207,7 +221,7 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => formatDate(post.datePosted) === yesterday)
                                     .map((post) => (
-                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
+                                        <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={extractTime} />
                                     ))}
                             </ul>
                         </div>
@@ -230,7 +244,7 @@ export default function PostSidebar() {
                                 {posts
                                     .filter((post) => datesLastWeek.includes(formatDate(post.datePosted)))
                                     .map((post) => (
-                                        <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={getDayOfWeek} />
+                                        <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={getDayOfWeek} />
                                     ))}
                             </ul>
                         </div>
@@ -253,7 +267,7 @@ export default function PostSidebar() {
                                     <ul className="list-group list-group-flush">
                                         {postsInRange
                                             .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
-                                                <PostItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={formatDate} />
+                                                <PostListItem _id={post._id} title={post.title} content={post.content} datePosted={post.datePosted} instructor={post.instructor} displayDate={formatDate} />
                                             ))}
                                     </ul>
                                 </div>
