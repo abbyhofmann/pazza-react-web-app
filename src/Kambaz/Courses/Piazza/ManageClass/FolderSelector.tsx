@@ -22,6 +22,7 @@ interface Props {
 
 const Folder = ({ name }: Props) => {
   const [selected, setSelected] = useState(true);
+  // TODO: figure out how to float-end and float-start
   return (
     <div className="d-flex">
       <Form.Check type="checkbox" />
