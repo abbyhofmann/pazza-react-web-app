@@ -9,16 +9,16 @@ export default function ManageClassTab() {
   const { pathname } = useLocation();
 
   return (
-    <div className="row text-wrap l-2">
+    <div id="nav_tab" className="d-flex flex-row justify-content-around text-wrap">
       {tabs.map((tab, index) => {
         const link = path + links[index];
         return (
-          <div key={index} className="col-sm me-1 float-end px-4">
+          <div key={index} className="col-sm me-1 float-end">
             <Link
               key={index}
               to={link}
               id={`wd-course-${links[index]}-link`}
-              className={`list-group-item link-dark ${pathname.includes(link) ? "bg-secondary" : ""} border border-0`}
+              className={`list-group-item ${pathname.includes(link) ? "selected" : ""} border border-0`}
             >
               {tab}
             </Link>
