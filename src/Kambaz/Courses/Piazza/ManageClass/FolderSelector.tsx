@@ -6,9 +6,9 @@ import { FaBars, FaSave } from "react-icons/fa";
 
 export default function FolderSelector() {
   return (
-    <div className="d-flex flex-column">
+    <div className="d-flex flex-column gap-2">
       {folders.map((folder, index) => (
-        <div key={index} className="d-flex row justify-space-center">
+        <div key={index} className="d-flex flex-row justify-space-center">
           <Folder name={folder.name} />
         </div>
       ))}

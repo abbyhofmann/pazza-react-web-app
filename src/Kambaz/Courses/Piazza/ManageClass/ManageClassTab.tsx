@@ -9,7 +9,7 @@ export default function ManageClassTab() {
   const { pathname } = useLocation();
 
   return (
-    <div id="nav_tab" className="d-flex flex-row justify-content-around text-wrap">
+    <div id="nav_tab" className="d-flex flex-row justify-content-around gap-2 text-wrap">
       {tabs.map((tab, index) => {
         const link = path + links[index];
         return (

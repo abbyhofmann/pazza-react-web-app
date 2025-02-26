@@ -18,14 +18,26 @@
     "posts": []
   },
   {
-    "id": "4",
-    "name": "hw4",
+    "id": "5",
+    "name": "hw5",
     "course_id": "101",
     "posts": []
   },
   {
-    "id": "5",
-    "name": "hw5",
+    "id": "6",
+    "name": "office-hours",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "7",
+    "name": "logistics",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "8",
+    "name": "project",
     "course_id": "101",
     "posts": []
   }
