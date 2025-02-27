@@ -54,7 +54,26 @@ const handleFolderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
    };
 
    const postButton = async () => {
-      console.log("Button Pressed");
+      if (!selectedOption) {
+         alert("Please choose a post yype: Question/Note");
+         return;
+      }
+      if (!selectedPostTo) {
+         alert("Please choose post destination: Everyone/Instructor(s)");
+         return;
+      }
+      if (selectedFolders.length === 0) {
+         alert("Please choose a folder(s)");    
+         return;
+      }
+      if (!postSumary) {
+         alert("Please put a summary for your post");
+         return;
+      }
+      if (!editorValue) {
+         alert("Can't submit a post with no details");
+         return;
+      }
 
     const newPost = {
       _id: `P${Date.now()}`,

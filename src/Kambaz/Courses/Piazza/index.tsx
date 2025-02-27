@@ -11,8 +11,7 @@ export default function Piazza() {
       <HwFolderNav />
       <div className="wd-main-content-offset p-3">
         <Routes>
-          <Route path="/" element={<CombinedPage />} />
-          
+          <Route path="/" element={<CombinedPage/>} />
           <Route path="NewPostPage" element={<NewPostPage/>} />
 
         </Routes>

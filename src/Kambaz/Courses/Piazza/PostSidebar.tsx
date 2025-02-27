@@ -157,7 +157,8 @@ export default function PostSidebar() {
     }
 
     return (
-        <div className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
+        <div id="wd-left-padding"
+        className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end" style={{ width: "380px" }}>
             {/* Sidebar Header */}
             <a className="d-flex align-items-center p-3 link-dark text-decoration-none border-bottom">
                 <span className="fs-5 fw-semibold">Posts</span>

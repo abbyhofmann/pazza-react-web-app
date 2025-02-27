@@ -191,3 +191,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+#wd-left-padding {
+  padding-left: -10px !important;
+}

@@ -343,5 +343,35 @@
     "instructorResponse": "",
     "viewers": "",
     "courseId": "RS101"
+  },
+  {
+    "_id": "P1740605913719",
+    "folderId": "A1,A2",
+    "authorId": "user123",
+    "datePosted": "2025-02-26T21:38:33.719Z",
+    "type": 2,
+    "instructor": 1,
+    "title": "kek",
+    "content": "<p>fjej</p>",
+    "followUpQuestions": "",
+    "studentResponse": "",
+    "instructorResponse": "",
+    "viewers": "",
+    "courseId": "RS101"
+  },
+  {
+    "_id": "P1740606041139",
+    "folderId": "A1,A2",
+    "authorId": "user123",
+    "datePosted": "2025-02-26T21:40:41.139Z",
+    "type": 2,
+    "instructor": 1,
+    "title": "ss",
+    "content": "<p>ss</p>",
+    "followUpQuestions": "",
+    "studentResponse": "",
+    "instructorResponse": "",
+    "viewers": "",
+    "courseId": "RS101"
   }
 ]
