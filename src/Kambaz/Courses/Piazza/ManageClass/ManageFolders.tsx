@@ -1,4 +1,3 @@
-import { FaTrash } from "react-icons/fa";
 import FolderSelector from "./FolderSelector";
 
 export default function ManageFolders() {
@@ -16,7 +15,7 @@ export default function ManageFolders() {
       {/* Create new folders */}
       <div className="d-flex flex-column">
         <h3 className="fw-bold">Create new folders:</h3>
-        <p>Add folders that are relevant for your class. Selected "numbered" to create numbered folders (hw1-hw4).</p>
+        <p>Add folders that are relevant for your class.</p>
         <div className="d-flex flex-row justify-content-between">
           <input className="w-auto" placeholder="Add a folder(s)" />
           <button className="blue_button">Add folder</button>
@@ -25,15 +24,6 @@ export default function ManageFolders() {
 
       {/* Manage folders */}
       <div className="d-flex flex-column">
-        <h3 className="fw-bold">Manage folders:</h3>
-        <p>Delete or edit folder names. You can create up to 1 level of nesting, which means no subfolders.</p>
-        <div className="d-flex">
-          <button className="manage_folders_button" disabled>
-            <FaTrash />
-            Delete selected folders
-          </button>
-        </div>
-        <hr />
         <FolderSelector />
       </div>
     </div>
