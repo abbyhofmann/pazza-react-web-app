@@ -16,7 +16,7 @@ const ViewPostPage = () => {
 
     useEffect(() => {
         // TODO - fetch the post details via server based on the postId
-        setPost({ _id: pid!, folderId: 'fid', authorId: 'aid', datePosted: '2025-02-15T09:30:00.000Z', type: 0, instructor: 1, title: 'Web Dev', content: 'Build cool web apps', followUpQuestions: '', studentResponse: '', instructorResponse: '', viewers: '', courseId: '4550'});
+        setPost({ _id: pid!, folderId: 'fid', authorId: 'aid', datePosted: '2025-02-15T09:30:00.000Z', type: 0, instructor: 1, title: 'Do we need images for Dashboard??', content: 'Changing the data source for dashboard now has no photos rendering for each course, do we need to fix this by using assets/images/?', followUpQuestions: '', studentResponse: '', instructorResponse: '', viewers: '', courseId: '4550'});
       }, [pid]);
 
     //   const [selectedPost, setSelectedPost] = useState(null); // TODO - set Post type 

@@ -106,9 +106,9 @@ function getLastWeekDates(): string[] {
  * @param posts The posts being grouped.
  * @returns A mapping of string date range to list of posts that fall in that date range.
  */
-function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
+function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
     // map to keep track of which week each post belongs in
-    const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
+    const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
 
     posts.forEach((post) => {
         // add post to the week if it is not in the dates to exclude - for our use case, we do not want to display posts from this week,
@@ -282,7 +282,7 @@ export default function PostSidebar() {
                                 <div id={`collapse${dateRange.replace(/[^a-zA-Z0-9]/g, "")}`} className="collapse show">
                                     <ul className="list-group list-group-flush">
                                         {postsInRange
-                                            .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
+                                            .map((post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }) => (
                                                 <PostListItem
                                                     _id={post._id}
                                                     title={post.title}

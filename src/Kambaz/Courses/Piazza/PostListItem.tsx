@@ -6,7 +6,7 @@ interface PostListItemProps {
     title: string;
     content: string;
     datePosted: string;
-    instructor: number;
+    instructor: boolean;
     displayDate: (inputDate: string) => string; // determines if the day of the week should be displayed instead of time
     onClick: () => void;
 }
@@ -20,7 +20,7 @@ export default function PostListItem(props: PostListItemProps) {
         <li className="list-group-item feed_item p-3" key={_id} onClick={onClick} style={{ cursor: 'pointer' }}>
             <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center flex-grow-1 text-truncate">
-                    {instructor === 0 && <InstructorIcon />}
+                    {instructor === true && <InstructorIcon />}
                     <div className="fw-bold me-1 small post-title text-truncate">
                         {title}
                     </div>
