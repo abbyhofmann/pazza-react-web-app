@@ -44,8 +44,14 @@ export default function PostBox(props: PostBoxProps) {
                         <div data-id="endorse_count_idx0" className="d-inline-block good_post_number ml-1" aria-label="0 endorsements">&nbsp;0</div>
                     </div>
                         <div className="text-right col">
-                            <div className="update_text" data-id="contributors">Updated
+                            <div className="update_text" data-id="contributors">Date Posted
                                 <time dateTime="2025-02-23T02:29:44.000Z" title="Sat Feb 22 2025 21:29:44 GMT-0500 (Eastern Standard Time)">11 hours ago</time> by <span data-id="contributors">
-                                    <span>Anonymous Scale</span></span></div></div></div></footer></article>
+                                    <span>Name of Individual Who Posted</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+            </footer>
+        </article>
     );
 }

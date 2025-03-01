@@ -151,8 +151,8 @@ export default function PostSidebar() {
     const { cid } = useParams();
 
     // navigate when a post is clicked
-    const handlePostClick = (postId: string) => {
-        navigate(`/viewPost/${postId}`);
+    const handlePostClick = (pid: string) => {
+        navigate(`/Kambaz/Courses/${cid}/Piazza/post/${pid}`);
     };
 
     return (

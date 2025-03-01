@@ -224,3 +224,13 @@
     text-decoration: none !important;
   }
   
+  .post_type_snippet {
+    font-size: 11px;
+    color: grey;
+    max-height: 42px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+    white-space:  normal;
+    font-style: italic;
+  }

@@ -26,11 +26,9 @@ export default function InstructorAnswer() {
             </div>
             <footer className="border-top container-fluid">
                 <div className="row">
-                    <div className="text-left align-self-center py-0 col-auto">
-                        <button data-id="endorse_idx0" aria-label="mark this instructors answer as helpful" type="button" className="text-notrans btn btn-link">thanks!</button>
-                        <div data-id="endorse_count_idx0" className="d-inline-block good_post_number ml-1" aria-label="0 endorsements">&nbsp;0</div>
-                    </div><div className="text-right col"><div className="update_text" data-id="contributors">Updated <time dateTime="2025-02-23T02:31:36.000Z" title="Sat Feb 22 2025 21:31:36 GMT-0500 (Eastern Standard Time)">18 hours ago</time> by <span data-id="contributors">Heet Manish Kanani</span>
-                    </div>
+                    <div className="text-right col">
+                        <div className="update_text" data-id="contributors">Date posted hereeeee <time dateTime="2025-02-23T02:31:36.000Z" title="Sat Feb 22 2025 21:31:36 GMT-0500 (Eastern Standard Time)">18 hours ago</time> by <span data-id="contributors">Heet Manish Kanani</span>
+                        </div>
                     </div>
                 </div>
             </footer>
