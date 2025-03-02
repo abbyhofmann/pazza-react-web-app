@@ -6,6 +6,8 @@ import PiazzaNavBarTop from "./PiazzaNavBarTop";
 import HwFolderNav from "./HwFolderNav";
 import NoteQuestionSidebar from "./PostSidebar";
 import ManageClassScreen from "./ManageClass/ManageClass";
+import ViewPostPage from "./ViewPostPage";
+import "./index.css";
 
 export default function Piazza() {
   return (
@@ -18,6 +20,7 @@ export default function Piazza() {
           <Route path="/" element={<RightSidePage />} />
           <Route path="/NewPostPage" element={<NewPostPage />} />
           <Route path="/manage-class/*" element={<ManageClassScreen />} />
+          <Route path="post/:pid" element={<ViewPostPage />} />
         </Routes>
       </div>
     </div>
