@@ -1,4 +1,3 @@
-
 import "./ViewPost.css";
 
 interface PostBoxProps {

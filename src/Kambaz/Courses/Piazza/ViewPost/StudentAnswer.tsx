@@ -1,4 +1,5 @@
 export default function StudentAnswer() {
+    // TODO - add prop for the student answer that will come from the post object
     return (
         <article data-id="i_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
