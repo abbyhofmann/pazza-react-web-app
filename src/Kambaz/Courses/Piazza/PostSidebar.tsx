@@ -105,7 +105,7 @@ function getLastWeekDates(): string[] {
  * @param datesToExclude A list of string dates to exclude from the date mapping creation.
  * @param posts The posts being grouped.
  * @returns A mapping of string date range to list of posts that fall in that date range.
- */ 
+ */
 function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
     // map to keep track of which week each post belongs in
     const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();

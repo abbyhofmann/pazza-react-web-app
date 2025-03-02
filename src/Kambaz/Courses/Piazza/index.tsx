@@ -1,10 +1,11 @@
 
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import RightSidePage from "./RightSidePage";
 import NewPostPage from "./NewPost";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
 import HwFolderNav from "./HwFolderNav";
 import NoteQuestionSidebar from "./PostSidebar";
+import ManageClassScreen from "./ManageClass/ManageClass";
 
 export default function Piazza() {
   return (
@@ -14,9 +15,9 @@ export default function Piazza() {
       <NoteQuestionSidebar />
       <div className="wd-main-content-offset p-3">
         <Routes>
-          <Route path="/" element={<Navigate to="RightSidePage" />} />
-          <Route path="RightSidePage" element={<RightSidePage />} />
-          <Route path="NewPostPage" element={<NewPostPage />} />
+          <Route path="/" element={<RightSidePage />} />
+          <Route path="/NewPostPage" element={<NewPostPage />} />
+          <Route path="/manage-class/*" element={<ManageClassScreen />} />
         </Routes>
       </div>
     </div>
