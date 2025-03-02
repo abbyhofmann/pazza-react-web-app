@@ -286,3 +286,69 @@ header .view-count b {
   font-size: 32px;
   color: #555;
 }
+
+footer {
+  background: rgba(240, 240, 240, 1); 
+  border-radius: 0 0 5px 5px;
+}
+
+footer a {
+  color: #004080;
+}
+
+footer span {
+  color: #666666;
+}
+
+footer .anonymity-selection {
+  width: 240px !important;
+  vertical-align: bottom;
+}
+
+footer .anonymity-selection [class$="control"] {
+  height: auto;
+  min-height: 30px;
+  width: inherit;
+}
+
+footer .anonymity-selection [class$="control"] [class$="ValueContainer"] {
+  height: 28px;
+  line-height: 25px;
+  position: relative;
+}
+
+footer .anonymity-selection [class$="control"] [class$="ValueContainer"] [class$="singleValue"] {
+  font-size: 14px;
+  height: 30px;
+}
+
+footer .anonymity-selection [class$="control"] [class$="ValueContainer"] [class$="Input"] {
+  height: 28px;
+}
+
+footer .anonymity-selection [class$="control"] [class$="IndicatorsContainer"] {
+  height: 28px;
+}
+
+footer .update_text {
+  padding: 10px 0;
+  font-size: 11px;
+  color: #333; 
+  font-weight: 400;
+}
+
+footer .update_text .link_others {
+  margin: -1px 0 0 0;
+}
+
+footer .subfooter {
+  border-radius: inherit;
+}
+
+.similar-post-links {
+  margin-left: 5px;
+}
+
+.similar-post-links a {
+  color: grey;
+}

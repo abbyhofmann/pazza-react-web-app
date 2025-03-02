@@ -5,14 +5,9 @@ export default function StudentAnswer() {
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
                 <div className="row">
-                    <div className="text-left py-1 col-auto"><svg width="24px" height="24px" aria-hidden="true" focusable="false">
-                        <use xlinkHref="#Students">
 
-                        </use>
-                    </svg>
-                    </div>
                     <div className="text-left pl-0 col">
-                        <h2>the students' answer,</h2>
+                        <h2>the students' answer, </h2>
                         <span className="post_type_snippet">where students collectively construct a single answer</span>
                     </div>
                 </div>

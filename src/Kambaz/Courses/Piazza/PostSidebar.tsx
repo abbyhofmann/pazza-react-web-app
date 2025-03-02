@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { posts } from "../../Database";
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
@@ -150,8 +151,11 @@ export default function PostSidebar() {
     const navigate = useNavigate();
     const { cid } = useParams();
 
+    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
     // navigate when a post is clicked
     const handlePostClick = (pid: string) => {
+        setSelectedPostId(pid);
         navigate(`/Kambaz/Courses/${cid}/Piazza/post/${pid}`);
     };
 
@@ -200,7 +204,8 @@ export default function PostSidebar() {
                                             datePosted={post.datePosted}
                                             instructor={post.instructor}
                                             displayDate={extractTime}
-                                            onClick={() => handlePostClick(post._id)} />
+                                            onClick={() => handlePostClick(post._id)}
+                                            isSelected={selectedPostId === post._id} />
                                     ))}
                             </ul>
                         </div>
@@ -230,7 +235,8 @@ export default function PostSidebar() {
                                             datePosted={post.datePosted}
                                             instructor={post.instructor}
                                             displayDate={extractTime}
-                                            onClick={() => handlePostClick(post._id)} />
+                                            onClick={() => handlePostClick(post._id)}
+                                            isSelected={selectedPostId === post._id} />
                                     ))}
                             </ul>
                         </div>
@@ -260,7 +266,8 @@ export default function PostSidebar() {
                                             datePosted={post.datePosted}
                                             instructor={post.instructor}
                                             displayDate={getDayOfWeek}
-                                            onClick={() => handlePostClick(post._id)} />
+                                            onClick={() => handlePostClick(post._id)}
+                                            isSelected={selectedPostId === post._id} />
                                     ))}
                             </ul>
                         </div>
@@ -290,13 +297,13 @@ export default function PostSidebar() {
                                                     datePosted={post.datePosted}
                                                     instructor={post.instructor}
                                                     displayDate={formatDate}
-                                                    onClick={() => handlePostClick(post._id)} />
+                                                    onClick={() => handlePostClick(post._id)}
+                                                    isSelected={selectedPostId === post._id} />
                                             ))}
                                     </ul>
                                 </div>
                             </div>
-                        )
-                        )}
+                        ))}
                     </div>
                 </div>
             </div>
