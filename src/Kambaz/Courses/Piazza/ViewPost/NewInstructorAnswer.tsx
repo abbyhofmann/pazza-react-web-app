@@ -1,5 +1,6 @@
 import "./ViewPost.css";
 
+// Component for adding a new instructor answer to a post.
 export default function NewInstructorAnswer() {
     return (
         <article data-id="s_answer" className="answer" aria-label="Instructor Answer">

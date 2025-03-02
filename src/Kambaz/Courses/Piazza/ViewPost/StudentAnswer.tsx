@@ -1,3 +1,4 @@
+// Component for displaying a student answer to a post.
 export default function StudentAnswer() {
     // TODO - add prop for the student answer that will come from the post object
     return (

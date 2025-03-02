@@ -1,3 +1,4 @@
+// Component for starting a new followup discussion on a post.
 export default function NewFollowupDiscussions() {
     return (
         <article className="answer followup_container" aria-label="Followup Discussions">

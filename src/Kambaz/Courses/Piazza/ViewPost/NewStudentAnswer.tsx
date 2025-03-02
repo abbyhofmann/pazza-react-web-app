@@ -1,5 +1,6 @@
 import "./ViewPost.css";
 
+// Component for adding a student answer to a post.
 export default function NewStudentAnswer() {
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
