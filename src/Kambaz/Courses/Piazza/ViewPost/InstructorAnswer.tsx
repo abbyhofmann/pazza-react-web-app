@@ -1,9 +1,9 @@
 export default function InstructorAnswer() {
+    // TODO - fill in with instructor answer data from the post itself
     return (
         <article data-id="i_answer" className="answer" aria-label="Instructor Answer">
             <header className="border-bottom container-fluid">
                 <div className="row">
-
                     <div className="text-left pl-0 col">
                         <h2>the instructors' answer, </h2>
                         <span className="post_type_snippet">where instructors collectively construct a single answer</span>
@@ -14,6 +14,7 @@ export default function InstructorAnswer() {
                 <div className="g-0 row">
                     <div className="col">
                         <div className="py-3 history-selection">
+                            {/* content of the answer */}
                             <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">yes, you should have images on the dashboard page</div>
                         </div>
                     </div>

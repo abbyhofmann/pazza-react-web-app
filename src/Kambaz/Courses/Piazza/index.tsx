@@ -22,7 +22,7 @@ export default function Piazza() {
             <Route path="NewPostPage" element={<NewPostPage />} />
             {/* <Route path="viewPost" element={<ViewPostPage /> } /> TODO - this is temporary for testing UI */}
             <Route path="post/:pid" element={<ViewPostPage />} />
-            
+
           </Routes>
         </div>
       </div>
