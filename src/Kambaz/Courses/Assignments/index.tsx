@@ -1,7 +1,7 @@
 import { Badge, Button, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+import ModuleControlButtons from "../Modules/ModuleControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { assignments } from "../../Database";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -41,7 +41,7 @@ export default function Assignments() {
                 const link = `${pathname}/${a._id}`;
                 return (
                   <ListGroup.Item as={Link} to={link} className="wd-lesson p-3 ps-1" key={index}>
-                    <LessonControlButtons />
+                    <ModuleControlButtons />
                     <div style={{ width: "75%" }}>
                       <BsGripVertical className="me-2 fs-3" />
                       <FaPencilAlt className="text-success fs-4 me-4" />
