@@ -16,8 +16,8 @@ export default function TodoList() {
             key={index}
             todo={todo} />
         ))}
-      </ListGroup >
+      </ListGroup>
       <hr />
-    </div >
+    </div>
   );
 }

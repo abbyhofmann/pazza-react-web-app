@@ -25,7 +25,7 @@ export default function ModuleEditor(
           onClick={() => {
             addModule();
             handleClose();
-          }} > Add Module </Button>
+          }}> Add Module </Button>
       </Modal.Footer>
     </Modal>
   );

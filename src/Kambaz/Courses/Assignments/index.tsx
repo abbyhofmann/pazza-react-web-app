@@ -5,10 +5,15 @@ import ModuleControlButtons from "../Modules/ModuleControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { assignments } from "../../Database";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { pathname } = useLocation();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser.role === "FACULTY";
+
   return (
     <div id="wd-assignments">
       {/* TODO: magnifying glass icon + sizing */}
@@ -16,14 +21,18 @@ export default function Assignments() {
         <div className="m-4">
           <input placeholder="Search..."
             id="wd-search-assignment" />
-          <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment">
-            <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
-            Assignment
-          </Button>
-          <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-add-assignment-group">
-            <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
-            Group
-          </Button>
+          {isFaculty &&
+            <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment">
+              <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
+              Assignment
+            </Button>
+          }
+          {isFaculty &&
+            <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-add-assignment-group">
+              <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
+              Group
+            </Button>
+          }
         </div>
       </div>
       <div className="p-4">
@@ -33,7 +42,9 @@ export default function Assignments() {
               <BsGripVertical className="me-2 fs-3" />
               Assignments
               <IoEllipsisVertical className="float-end fs-4" />
-              <FaPlus className="float-end" />
+              {isFaculty &&
+                <FaPlus className="float-end" />
+              }
               <Badge pill bg="secondary" text="dark" className="me-2 border border-dark float-end">40% of Total</Badge>
             </div>
             <ListGroup className="wd-assignments rounded-0">
@@ -41,10 +52,20 @@ export default function Assignments() {
                 const link = `${pathname}/${a._id}`;
                 return (
                   <ListGroup.Item as={Link} to={link} className="wd-lesson p-3 ps-1" key={index}>
-                    <ModuleControlButtons />
+                    {isFaculty &&
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      <ModuleControlButtons moduleId={""} deleteModule={function (_moduleId: string): void {
+                        throw new Error("Function not implemented.");
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      }} editModule={function (_moduleId: string): void {
+                        throw new Error("Function not implemented.");
+                      }} />
+                    }
                     <div style={{ width: "75%" }}>
                       <BsGripVertical className="me-2 fs-3" />
-                      <FaPencilAlt className="text-success fs-4 me-4" />
+                      {isFaculty &&
+                        <FaPencilAlt className="text-success fs-4 me-4" />
+                      }
                       {a.title}
                       <p className="ms-4 mt-2">
                         <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00am | <b>Due</b> May 13 at 11:59pm | 100 pts
