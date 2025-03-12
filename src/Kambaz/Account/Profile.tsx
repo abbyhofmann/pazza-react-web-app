@@ -19,6 +19,7 @@ export default function Profile() {
     dispatch(setCurrentUser(null));
     navigate("/Kambaz/Account/Signin");
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProfile(); }, []);
 
   return (
