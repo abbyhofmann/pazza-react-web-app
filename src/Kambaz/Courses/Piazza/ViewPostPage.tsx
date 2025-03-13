@@ -7,6 +7,7 @@ import NewFollowupDiscussions from './ViewPost/NewFollowupDiscussions';
 import StudentAnswer from './ViewPost/StudentAnswer';
 import NewInstructorAnswer from './ViewPost/NewInstructorAnswer';
 import FollowupDiscussions from './ViewPost/FollowupDiscussions';
+import "./ViewPost/ViewPostPage.css";
 
 /**
  * Represents the profile page component. Routes to the right view based on the
@@ -25,14 +26,17 @@ const ViewPostPage = () => {
     if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
     return (
-        <div className="pb-4">
-            <PostBox post={post} />
-            {/* TODO - add logic for only creating a student response if the user is a student */}
-            {post.studentResponse !== "" ? <StudentAnswer /> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}
-            {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
-            {post.instructorResponse !== "" ? <InstructorAnswer /> : <NewInstructorAnswer />}
-            {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
-        </div>
+    <div className="view-post-content">
+        <PostBox post={post} />
+        {/* TODO - add logic for only creating a student response if the user is a student */}
+        {post.studentResponse !== "" ? <StudentAnswer /> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}
+        {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
+        {post.instructorResponse !== "" ? <InstructorAnswer /> : <NewInstructorAnswer />}
+        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+    </div>
     );
 };
 export default ViewPostPage;
