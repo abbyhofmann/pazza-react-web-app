@@ -4,6 +4,7 @@ import { Row, Col, Card, Button, Form, FormControl, Table } from "react-bootstra
 import { useDispatch, useSelector } from "react-redux";
 import { addCourse, deleteCourse, updateCourse } from "./Courses/reducer";
 import { useState } from "react";
+import { enroll, unenroll } from "./Dashboard/reducer";
 
 
 export default function Dashboard(
@@ -114,8 +115,8 @@ export default function Dashboard(
                       enrollment.user === currentUser._id &&
                       enrollment.course === c._id
                   ) ?
-                    <Button className="mx-4" variant="danger">Unenroll</Button> :
-                    <Button className="mx-4" variant="success">Enroll</Button>
+                    <Button className="mx-4" variant="danger" onClick={() => dispatch(unenroll({ courseId: c._id, userId: currentUser._id }))}>Unenroll</Button> :
+                    <Button className="mx-4" variant="success" onClick={() => dispatch(enroll({ courseId: c._id, userId: currentUser._id }))}>Enroll</Button>
                   }
                 </span></td>
             </tr>
