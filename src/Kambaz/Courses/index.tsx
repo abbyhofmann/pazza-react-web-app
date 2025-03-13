@@ -44,6 +44,10 @@ export default function Courses({ courses }: { courses: any[]; }) {
     );
   };
 
+  const deleteAssignment = (aId: string) => {
+    setAssignments(assignments.filter(a => a._id !== aId));
+  }
+
   return (
     <div id="wd-courses">
       <h2 className="">
@@ -57,7 +61,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <Routes>
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
-            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={addAssignment} />} />
+            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={addAssignment} deleteAssignment={deleteAssignment} />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor updateAssignment={updateAssignment} editAssignment={editAssignment} />} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>

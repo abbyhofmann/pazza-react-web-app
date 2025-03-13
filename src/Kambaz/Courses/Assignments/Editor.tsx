@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 export default function AssignmentEditor(
   {
-    updateAssignment, editAssignment
+    updateAssignment, editAssignment,
   }: {
     updateAssignment: (a: any) => void;
     editAssignment: (a: any) => void;
@@ -92,16 +92,16 @@ export default function AssignmentEditor(
                 </Col>
                 <Col>
                   <Form.Label htmlFor="wd-due-date" column><b>Due Date</b></Form.Label>
-                  <Form.Control id="wd-due-date" type="date" value="2024-05-13" />
+                  <Form.Control id="wd-due-date" type="date" defaultValue="2024-05-13" />
                 </Col>
                 <Col>
                   <Form.Label htmlFor="wd-available-from">
                     <b>Available From</b>
                   </Form.Label>
-                  <Form.Control id="wd-available-from" type="date" value="2024-05-06"
+                  <Form.Control id="wd-available-from" type="date" defaultValue="2024-05-06"
                     onChange={(e) => editAssignment({ ...assignmentEdited, from: e.target.value })} />
                   <Form.Label htmlFor="wd-available-until"><b>Until</b></Form.Label>
-                  <Form.Control id="wd-available-until" type="date" value="2024-05-20"
+                  <Form.Control id="wd-available-until" type="date" defaultValue="2024-05-20"
                     onChange={(e) => editAssignment({ ...assignmentEdited, until: e.target.value })} />
                 </Col>
               </Form.Group>

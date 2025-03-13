@@ -7,9 +7,10 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function Assignments({ assignments, addAssignment }: {
+export default function Assignments({ assignments, addAssignment, deleteAssignment }: {
   assignments: any[];
   addAssignment: () => void;
+  deleteAssignment: (a: any) => void;
 }) {
   const { cid } = useParams();
   const { pathname } = useLocation();
@@ -53,24 +54,23 @@ export default function Assignments({ assignments, addAssignment }: {
               {assignments.filter((a: any) => a.course === cid).map((a: any, index: number) => {
                 const link = `${pathname}/${a._id}`;
                 return (
-                  <ListGroup.Item as={Link} to={link} className="wd-lesson p-3 ps-1" key={index}>
+                  <ListGroup.Item className="wd-lesson p-3 ps-1" key={index}>
                     {isFaculty &&
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      <ModuleControlButtons moduleId={""} deleteModule={function (_moduleId: string): void {
-                        throw new Error("Function not implemented.");
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      }} editModule={function (_moduleId: string): void {
+                      <ModuleControlButtons moduleId={a._id} deleteModule={(aId) => deleteAssignment(aId)} editModule={function (_moduleId: string): void {
                         throw new Error("Function not implemented.");
                       }} />
                     }
                     <div style={{ width: "75%" }}>
                       <BsGripVertical className="me-2 fs-3" />
                       {isFaculty &&
-                        <FaPencilAlt className="text-success fs-4 me-4" />
+                        <Link to={link}>
+                          <FaPencilAlt className="text-success fs-4 me-4" />
+                        </Link>
                       }
                       {a.title}
                       <p className="ms-4 mt-2">
-                        <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00am | <b>Due</b> May 13 at 11:59pm | 100 pts
+                        <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> {a.from ?? "May 6 at 12:00am"} | <b>Due</b> {a.until ?? "May 13 at 11:59pm | 100 pts"}
                       </p>
                     </div>
                   </ListGroup.Item>
