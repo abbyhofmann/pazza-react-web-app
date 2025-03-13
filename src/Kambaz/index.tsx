@@ -14,7 +14,7 @@ export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>(db.courses);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [course, setCourse] = useState<any>({
-    _is: "0",
+    _id: "0",
     name: "New Course",
     number: "New Number",
     startDate: "2023-09-10",

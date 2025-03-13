@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaAlignJustify } from "react-icons/fa";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
@@ -6,12 +7,42 @@ import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import { Route, Routes, useLocation, useParams } from "react-router";
 import PeopleTable from "./People/Table";
+import { useState } from "react";
+import * as db from "../Database";
+import { v4 as uuidv4 } from 'uuid';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+  const [assignments, setAssignments] = useState<any[]>(db.assignments);
+  const [assignment, setAssignment] = useState({
+    _id: "0",
+    title: "New Assignment",
+    course: cid,
+  });
+
+  const addAssignment = () => {
+    const newAssignment = { ...assignment, _id: uuidv4() };
+    setAssignments([...assignments, newAssignment]);
+    setAssignment({ _id: "0", title: "New Assignment", course: cid });
+  };
+
+  const editAssignment = (a: any) => {
+    setAssignment(a);
+  };
+
+  const updateAssignment = () => {
+    setAssignments(
+      assignments.map((a) => {
+        if (a._id === assignment._id) {
+          return assignment;
+        } else {
+          return a;
+        }
+      })
+    );
+  };
 
   return (
     <div id="wd-courses">
@@ -26,8 +57,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <Routes>
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
-            <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={addAssignment} />} />
+            <Route path="Assignments/:aid" element={<AssignmentEditor updateAssignment={updateAssignment} editAssignment={editAssignment} />} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>

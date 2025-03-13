@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge, Button, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
 import ModuleControlButtons from "../Modules/ModuleControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { assignments } from "../../Database";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function Assignments() {
+export default function Assignments({ assignments, addAssignment }: {
+  assignments: any[];
+  addAssignment: () => void;
+}) {
   const { cid } = useParams();
   const { pathname } = useLocation();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
 
@@ -22,7 +24,7 @@ export default function Assignments() {
           <input placeholder="Search..."
             id="wd-search-assignment" />
           {isFaculty &&
-            <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment">
+            <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment" onClick={addAssignment}>
               <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
               Assignment
             </Button>
@@ -48,7 +50,7 @@ export default function Assignments() {
               <Badge pill bg="secondary" text="dark" className="me-2 border border-dark float-end">40% of Total</Badge>
             </div>
             <ListGroup className="wd-assignments rounded-0">
-              {assignments.filter(a => a.course === cid).map((a, index) => {
+              {assignments.filter((a: any) => a.course === cid).map((a: any, index: number) => {
                 const link = `${pathname}/${a._id}`;
                 return (
                   <ListGroup.Item as={Link} to={link} className="wd-lesson p-3 ps-1" key={index}>

@@ -66,23 +66,23 @@ export default function Dashboard(
                         Go
                       </Button>
                       {isFaculty &&
-                        <div>
-                          <button onClick={(event) => {
+                        <Button onClick={(event) => {
+                          event.preventDefault();
+                          deleteCourse(course._id);
+                        }} className="btn btn-danger float-end"
+                          id="wd-delete-course-click">
+                          Delete
+                        </Button>
+                      }
+                      {isFaculty &&
+                        <Button id="wd-edit-course-click"
+                          onClick={(event) => {
                             event.preventDefault();
-                            deleteCourse(course._id);
-                          }} className="btn btn-danger float-end"
-                            id="wd-delete-course-click">
-                            Delete
-                          </button>
-                          <button id="wd-edit-course-click"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              setCourse(course);
-                            }}
-                            className="btn btn-warning me-2 float-end">
-                            Edit
-                          </button>
-                        </div>
+                            setCourse(course);
+                          }}
+                          className="btn btn-warning me-2 float-end">
+                          Edit
+                        </Button>
                       }
                     </Card.Body>
                   </Link>
