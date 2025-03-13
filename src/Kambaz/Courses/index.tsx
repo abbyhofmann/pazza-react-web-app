@@ -8,45 +8,21 @@ import CourseNavigation from "./Navigation";
 import { Route, Routes, useLocation, useParams } from "react-router";
 import PeopleTable from "./People/Table";
 import { useState } from "react";
-import * as db from "../Database";
-import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from "react-redux";
+import { addAssignment, deleteAssignment, updateAssignment } from "./Assignments/reducer";
 
-export default function Courses({ courses }: { courses: any[]; }) {
+export default function Courses() {
+  const dispatch = useDispatch();
   const { cid } = useParams();
-  const course = courses.find((course) => course._id === cid);
+  const { courses } = useSelector((state: any) => state.courseReducer);
+  const course = courses.find((course: any) => course._id === cid);
   const { pathname } = useLocation();
-  const [assignments, setAssignments] = useState<any[]>(db.assignments);
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const [assignment, setAssignment] = useState({
     _id: "0",
     title: "New Assignment",
     course: cid,
   });
-
-  const addAssignment = () => {
-    const newAssignment = { ...assignment, _id: uuidv4() };
-    setAssignments([...assignments, newAssignment]);
-    setAssignment({ _id: "0", title: "New Assignment", course: cid });
-  };
-
-  const editAssignment = (a: any) => {
-    setAssignment(a);
-  };
-
-  const updateAssignment = () => {
-    setAssignments(
-      assignments.map((a) => {
-        if (a._id === assignment._id) {
-          return assignment;
-        } else {
-          return a;
-        }
-      })
-    );
-  };
-
-  const deleteAssignment = (aId: string) => {
-    setAssignments(assignments.filter(a => a._id !== aId));
-  }
 
   return (
     <div id="wd-courses">
@@ -61,8 +37,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <Routes>
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
-            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={addAssignment} deleteAssignment={deleteAssignment} />} />
-            <Route path="Assignments/:aid" element={<AssignmentEditor updateAssignment={updateAssignment} editAssignment={editAssignment} />} />
+            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={() => dispatch(addAssignment(assignment))} deleteAssignment={(aId) => dispatch(deleteAssignment(aId))} />} />
+            <Route path="Assignments/:aid" element={<AssignmentEditor updateAssignment={() => dispatch(updateAssignment(assignment))} editAssignment={setAssignment} />} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>

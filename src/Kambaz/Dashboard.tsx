@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useSelector } from "react-redux";
 import * as db from "./Database";
 import { Link } from "react-router-dom";
 import { Row, Col, Card, Button, Form, FormControl } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { addCourse, deleteCourse, updateCourse } from "./Courses/reducer";
 
 
 export default function Dashboard(
-  { courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
-      courses: any[]; course: any; setCourse: (course: any) => void;
-      addNewCourse: () => void; deleteCourse: (course: any) => void;
-      updateCourse: () => void;
-    }) {
+  { courses, course, setCourse }: {
+    courses: any[]; course: any; setCourse: (course: any) => void;
+  }) {
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = db;
   const isFaculty = currentUser.role === "FACULTY";
+  const dispatch = useDispatch();
 
   return (
     <div id="wd-dashboard">
@@ -26,11 +25,11 @@ export default function Dashboard(
             <button
               className="btn btn-primary float-end"
               id="wd-add-new-course-click"
-              onClick={addNewCourse}>
+              onClick={() => dispatch(addCourse(course))}>
               Add
             </button>
             <button className="btn btn-warning float-end me-2"
-              onClick={updateCourse} id="wd-update-course-click">
+              onClick={() => dispatch(updateCourse(course))} id="wd-update-course-click">
               Update
             </button>
           </h5><br />
@@ -68,7 +67,7 @@ export default function Dashboard(
                       {isFaculty &&
                         <Button onClick={(event) => {
                           event.preventDefault();
-                          deleteCourse(course._id);
+                          dispatch(deleteCourse(course._id));
                         }} className="btn btn-danger float-end"
                           id="wd-delete-course-click">
                           Delete
