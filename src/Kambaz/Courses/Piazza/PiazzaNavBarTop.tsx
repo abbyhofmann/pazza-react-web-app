@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
 import PostSidebar from "./PostSidebar";
+import { Link, useParams } from "react-router-dom";
 
 export default function PiazzaNavBarTop() {
 
@@ -21,6 +21,8 @@ export default function PiazzaNavBarTop() {
 
       <div className="d-flex align-items-start wd-q-a wd-nav-height">
         Q & A
+        <div className="d-flex align-items-start wd-q-a wd-nav-height">
+          Q & A
         </div>
         <div className="d-flex align-items-start wd-q-a wd-nav-height">
           Resources
@@ -35,6 +37,7 @@ export default function PiazzaNavBarTop() {
           >
             Manage Class
           </Link>
+        </div>
       </div>
 
     </div>

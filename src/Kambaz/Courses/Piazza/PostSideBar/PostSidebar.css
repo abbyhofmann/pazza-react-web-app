@@ -192,6 +192,11 @@
     white-space: nowrap;
 }
 
+.d-flex.flex-column.align-items-stretch {
+  height: calc(100vh - 50px); 
+  overflow-y: auto; 
+}
+
 #wd-left-padding {
   padding-left: -10px !important;
 }
