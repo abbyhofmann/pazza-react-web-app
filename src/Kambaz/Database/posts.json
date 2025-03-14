@@ -373,5 +373,20 @@
     "instructorResponse": "",
     "viewers": "",
     "courseId": "RS101"
+  },
+  {
+    "_id": "P1741896229958",
+    "folderId": "A1",
+    "authorId": "user123",
+    "datePosted": "2025-03-13T20:03:49.958Z",
+    "type": 2,
+    "instructor": 1,
+    "title": "Example Post",
+    "content": "<p>1</p>",
+    "followUpQuestions": "",
+    "studentResponse": "",
+    "instructorResponse": "",
+    "viewers": "",
+    "courseId": "RS101"
   }
 ]

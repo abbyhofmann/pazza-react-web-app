@@ -14,7 +14,7 @@ app.use(express.json());
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const postsFilePath = '/Users/katiewinkleblack/WEBDEV/pazza-react-web-app/src/Kambaz/Database/posts.json';
+const postsFilePath = '/Users/katiewinkleblack/Desktop/2025/WEBDEV_NEW/PazzaProject/ACTUAL/pazza-react-web-app/src/Kambaz/Database/posts.json';
 
 
 app.post('/api/post', (req, res) => {
