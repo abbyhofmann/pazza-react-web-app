@@ -1,9 +1,9 @@
-import "./../FollowupDiscussions.css";
+import "./ResolvedButtons.css";
 
 export default function ResolvedButtons() {
     return (
-        <div className="followup_content_wrapper">
-            <div className="unresolved">
+        <div className="">
+            <div className="unresolved resolved-buttons">
                 <div className="custom-control custom-radio custom-control-inline">
                     <input
                         name="followup_resolution_resolved-button"
