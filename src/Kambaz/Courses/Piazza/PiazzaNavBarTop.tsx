@@ -1,12 +1,3 @@
-import { Link, useParams } from "react-router-dom";
-
-export default function PiazzaNavBarTop() {
-
-  const { cid } = useParams();
-  const path = `/Kambaz/Courses/${cid}/Piazza`;
-
-  return (
-
 import PostSidebar from "./PostSidebar";
 
 export default function PiazzaNavBarTop() {
@@ -22,24 +13,6 @@ export default function PiazzaNavBarTop() {
         <img src="images/Piazzalogo.png" width="90px" height="20px"
           className="wd-logo-height" />
       </div>
-
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Q & A
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Resources
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Statistics
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          <Link
-            to={path + "/manage-class"}
-            id={`wd-course-piazza-link`}
-          >
-            Manage Class
-          </Link>
-        </div>
 
       <div className="d-flex align-items-start wd-q-a wd-nav-height">
         Q & A

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import { folders } from "../../Database";
@@ -6,7 +5,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-
 
 
 export default function NewPostPage() {
@@ -118,12 +116,6 @@ try {
 
 
    return (
-      <div id="wd-new-post">
-         <div className="wd-right-page-bg">
-            <div id="wd-class-stats"
-               className="wd-text-grey wd-font-family fs-3 wd-padding-left-class"
-               style={{ fontWeight: 500 }}>
-               Class at a Glance
 
 
 <div id="wd-new-post">
