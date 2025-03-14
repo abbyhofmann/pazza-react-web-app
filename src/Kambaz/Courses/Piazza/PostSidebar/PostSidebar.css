@@ -73,18 +73,6 @@
     border-color: #888;
   }
   
-  #feed_list_wrapper {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  #feed_list {
-    overflow: auto;
-    flex: 1;
-  }
-  
   .feed_item {
     padding: 8px;
     border-bottom: 1px solid #ddd;
@@ -190,4 +178,9 @@
     max-width: 75%; 
     overflow: hidden;
     white-space: nowrap;
+}
+
+.d-flex.flex-column.align-items-stretch {
+  height: calc(100vh - 50px); 
+  overflow-y: auto; 
 }
