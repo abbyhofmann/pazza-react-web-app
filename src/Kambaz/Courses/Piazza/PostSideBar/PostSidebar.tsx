@@ -1,8 +1,9 @@
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { posts } from "../../Database";
-import InstructorIcon from "./InstructorIcon";
+
 import "./PostSidebar.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { posts } from "../../../Database";
+import InstructorIcon from "../InstructorIcon";
 
 /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for

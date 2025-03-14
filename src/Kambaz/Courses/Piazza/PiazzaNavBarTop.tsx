@@ -1,4 +1,5 @@
-import PostSidebar from "./PostSidebar";
+import PostSidebar from "./PostSideBar/PostSidebar";
+
 
 export default function PiazzaNavBarTop() {
 
