@@ -38,7 +38,7 @@ export default function PiazzaNavBarTop() {
       </div>
     </div>
   </div>
-  </div>
+
 
 )
 }
