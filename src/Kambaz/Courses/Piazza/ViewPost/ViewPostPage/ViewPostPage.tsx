@@ -7,7 +7,7 @@ import NewFollowupDiscussions from '../NewFollowupDiscussions';
 import StudentAnswer from '../StudentAnswer';
 import NewInstructorAnswer from '../NewInstructorAnswer';
 import FollowupDiscussions from '../FollowupDiscussions';
-import "./ViewPost/ViewPostPage.css";
+import "./ViewPostPage.css";
 
 /**
  * Represents the profile page component. Routes to the right view based on the
@@ -32,9 +32,6 @@ const ViewPostPage = () => {
         {post.studentResponse !== "" ? <StudentAnswer /> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}
         {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
         {post.instructorResponse !== "" ? <InstructorAnswer /> : <NewInstructorAnswer />}
-        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
-        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
-        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
         {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
     </div>
     );
