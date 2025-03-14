@@ -5,7 +5,7 @@ import PiazzaNavBarTop from "./PiazzaNavBarTop";
 
 import ManageClassScreen from "./ManageClass/ManageClass";
 import ViewPostPage from "./ViewPost/ViewPostPage/ViewPostPage";
-import NoteQuestionSidebar from "./PostSideBar/PostSidebar";
+import NoteQuestionSidebar from "./PostSidebar/PostSidebar";
 import "./index.css";
 import NewPostPage from "./NewPost";
 import HwFolderNav from "./HwFolderNav";
