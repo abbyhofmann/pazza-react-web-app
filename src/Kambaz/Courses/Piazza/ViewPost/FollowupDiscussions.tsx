@@ -27,6 +27,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
       </header>
       {/* existing convo goes here  */}
       {convoExists && (
+        // will likely need a for-loop to loop through all of a post's followup discussions
         <div className="followup_content_wrapper col">
           <ResolvedButtons />
           <div className="g-1 row">
