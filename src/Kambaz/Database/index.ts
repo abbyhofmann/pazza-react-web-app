@@ -3,6 +3,10 @@ import modules from "./modules.json";
 import assignments from "./assignments.json";
 import users from "./users.json";
 import enrollments from "./enrollments.json";
+import posts from "./posts.json";
+import folders from "./folders.json";
+
+export { courses, modules, assignments, users, enrollments, posts, folders };
 import folders from "./Folders.json";
 import posts from "./posts.json";
 
