@@ -388,5 +388,20 @@
     "instructorResponse": "",
     "viewers": "",
     "courseId": "RS101"
+  },
+  {
+    "_id": "P1741989134850",
+    "folderId": "hw1",
+    "authorId": "user123",
+    "datePosted": "2025-03-14T21:52:14.850Z",
+    "type": 2,
+    "instructor": 1,
+    "title": "Example 2",
+    "content": "<p>Details of post</p>",
+    "followUpQuestions": "",
+    "studentResponse": "",
+    "instructorResponse": "",
+    "viewers": "",
+    "courseId": "RS101"
   }
 ]

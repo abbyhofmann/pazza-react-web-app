@@ -1,10 +1,45 @@
+
 [
-    { "id": "f1", "name": "A1"},
-    { "id": "f2", "name": "A2"},
-    { "id": "f3", "name": "A3"},
-    { "id": "f4", "name": "A4"},
-    { "id": "f5", "name": "A5"},
-    { "id": "f6", "name": "A6"},
-    { "id": "f7", "name": "A7"},
-    { "id": "f8", "name": "A8"}
-]
+    {
+      "id": "1",
+      "name": "hw1",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "2",
+      "name": "hw2",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "3",
+      "name": "hw3",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "5",
+      "name": "hw5",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "6",
+      "name": "office-hours",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "7",
+      "name": "logistics",
+      "course_id": "101",
+      "posts": []
+    },
+    {
+      "id": "8",
+      "name": "project",
+      "course_id": "101",
+      "posts": []
+    }
+  ]

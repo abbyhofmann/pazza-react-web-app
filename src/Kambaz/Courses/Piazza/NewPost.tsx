@@ -1,10 +1,13 @@
+
 import React, { useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
-import { folders } from "../../Database";
+
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
+import { folders } from "../../Database";
+
 
 
 export default function NewPostPage() {
@@ -116,7 +119,7 @@ try {
 
 
    return (
-
+   
 
 <div id="wd-new-post">
 
