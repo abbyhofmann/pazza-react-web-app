@@ -358,5 +358,5 @@ footer .subfooter {
 .content {
   flex: 1;
   overflow-y: auto;
-  max-height: calc(100vh - 100px); /* Adjust for header/footer */
+  max-height: calc(100vh - 100px);
 }

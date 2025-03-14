@@ -1,4 +1,4 @@
-import InstructorIcon from "./InstructorIcon";
+import InstructorIcon from "../InstructorIcon";
 import "./PostSidebar.css";
 
 interface PostListItemProps {

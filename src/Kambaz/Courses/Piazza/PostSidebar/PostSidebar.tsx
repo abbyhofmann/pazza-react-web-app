@@ -1,7 +1,7 @@
-import { posts } from "../../Database";
+import { posts } from "../../../Database";
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
-import usePostSidebar from "./hooks/usePostSidebar";
+import usePostSidebar from "../hooks/usePostSidebar";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {

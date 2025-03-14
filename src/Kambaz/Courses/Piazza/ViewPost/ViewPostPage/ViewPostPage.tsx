@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import PostBox from './ViewPost/PostBox';
-import NewStudentAnswer from './ViewPost/NewStudentAnswer';
-import InstructorAnswer from './ViewPost/InstructorAnswer';
-import NewFollowupDiscussions from './ViewPost/NewFollowupDiscussions';
-import StudentAnswer from './ViewPost/StudentAnswer';
-import NewInstructorAnswer from './ViewPost/NewInstructorAnswer';
-import FollowupDiscussions from './ViewPost/FollowupDiscussions';
+import PostBox from '../PostBox';
+import NewStudentAnswer from '../NewStudentAnswer';
+import InstructorAnswer from '../InstructorAnswer';
+import NewFollowupDiscussions from '../NewFollowupDiscussions';
+import StudentAnswer from '../StudentAnswer';
+import NewInstructorAnswer from '../NewInstructorAnswer';
+import FollowupDiscussions from '../FollowupDiscussions';
 import "./ViewPost/ViewPostPage.css";
 
 /**

@@ -10,8 +10,6 @@ export default function PostBox(props: PostBoxProps) {
 
     const { post } = props;
 
-    console.log('post: ', post)
-
     /**
      * Extracts the post number from the postId, where the postId is in the format of P{post#} (ex: P101).
      * @param postId The post id as a string.
