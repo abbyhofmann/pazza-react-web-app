@@ -1,28 +1,28 @@
-.content .instructor-edits-student-warning {
+.instructor-edits-student-warning {
     margin-top: 0.5rem;
     margin-bottom: 0;
   }
   
-  .content .resolved,
-  .content .unresolved {
+  .resolved,
+  .unresolved {
     padding: 3px 0 2px 7px;
     border-radius: 2px;
     background-color: #555555;
     width: max-content;
   }
   
-  .content .resolved label,
-  .content .unresolved label {
+  .resolved label,
+  .unresolved label {
     color: white;
   }
   
-  .content .resolved .form-check-input,
-  .content .unresolved .form-check-input {
+  .resolved .form-check-input,
+  .unresolved .form-check-input {
     margin-top: 3px;
   }
   
-  .content .unresolved {
-    background-color: #ffcccc; /* Replace with the actual red-15 equivalent */
+  .unresolved {
+    background-color: #a30505; 
   }
   
   .followup_content_wrapper .link_copied {
