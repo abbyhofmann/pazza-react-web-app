@@ -6,6 +6,10 @@ import NoteQuestionSidebar from "./PostSidebar/PostSidebar";
 import ManageClassScreen from "./ManageClass/ManageClass";
 import ViewPostPage from "./ViewPost/ViewPostPage/ViewPostPage";
 import "./index.css";
+import PiazzaNavBarTop from "./PiazzaNavBarTop";
+import HwFolderNav from "./HwFolderNav";
+import CombinedPage from "./RightAndLeft";
+import NewPostPage from "./NewPost";
 
 export default function Piazza() {
   return (
@@ -21,6 +25,14 @@ export default function Piazza() {
             <Route path="/post/:pid" element={<ViewPostPage />} />
           </Routes>
         </div>
+
+      <HwFolderNav />
+      <div className="wd-main-content-offset p-3">
+        <Routes>
+          <Route path="/" element={<CombinedPage/>} />
+          <Route path="NewPostPage" element={<NewPostPage/>} />
+
+        </Routes>
       </div>
     </div>
   );

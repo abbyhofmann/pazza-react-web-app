@@ -7,3 +7,7 @@ import posts from "./posts.json";
 import folders from "./folders.json";
 
 export { courses, modules, assignments, users, enrollments, posts, folders };
+import folders from "./Folders.json";
+import posts from "./posts.json";
+
+export { courses, modules, assignments, users, enrollments, folders, posts };
