@@ -1,0 +1,143 @@
+.content .instructor-edits-student-warning {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+  
+  .content .resolved,
+  .content .unresolved {
+    padding: 3px 0 2px 7px;
+    border-radius: 2px;
+    background-color: #555555;
+    width: max-content;
+  }
+  
+  .content .resolved label,
+  .content .unresolved label {
+    color: white;
+  }
+  
+  .content .resolved .form-check-input,
+  .content .unresolved .form-check-input {
+    margin-top: 3px;
+  }
+  
+  .content .unresolved {
+    background-color: #ffcccc; /* Replace with the actual red-15 equivalent */
+  }
+  
+  .followup_content_wrapper .link_copied {
+    padding: 0 2px;
+    background: #ffe599; /* Replace with the actual yellow-90 equivalent */
+    color: #7c6e47;
+    border: 1px solid #ffeb99; /* Replace with the actual yellow-15 equivalent */
+    margin-left: 5px;
+    font-size: 90%;
+  }
+  
+  .followup_content_wrapper .url_copy_link {
+    margin-left: 5px;
+    vertical-align: bottom;
+  }
+  
+  .followup_content_wrapper .btn-action {
+    margin: -5px -10px 0 0;
+    border-right: 1px solid #ccc;
+  }
+  
+  .followup_content_wrapper footer {
+    border-top: none !important;
+    border-radius: 0;
+    background: transparent;
+  }
+  
+  .followup_content_wrapper .followup_reply .btn-action {
+    border-top: 1px solid #ccc;
+    margin: -5px -7px 0 0;
+  }
+  
+  .followup_container .content.container-fluid {
+    padding-left: 12px;
+    padding-top: 12px;
+  }
+  
+  .followup_container .dropdown {
+    top: -5px;
+  }
+  
+  .avatar {
+    margin-top: 1px;
+    margin-right: 4px;
+    border-radius: 0;
+    width: 34px;
+    height: 34px;
+    border: 2px solid white;
+  }
+  
+  .followup {
+    background: #f6f7f6;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 5px 5px 5px;
+  }
+  
+  .followup.private {
+    border: 9px solid #666;
+  }
+  
+  .followup.summary {
+    border: 2px solid #007bff; /* Replace with the actual primary color */
+    border-radius: 2px;
+  }
+  
+  .followup.summary .btn-link {
+    font-size: 14px;
+  }
+  
+  .followup.summary .summary_footer {
+    gap: 0.5rem;
+    font-size: 11px;
+  }
+  
+  .followup_content_wrapper {
+    margin-left: 0;
+    padding: 5px;
+    padding-left: 0;
+  }
+  
+  .followup_reply {
+    background: #f2f2f2;
+    margin: 0 0 7px;
+    padding: 5px;
+  }
+  
+  .custom-radio {
+    margin-right: 10px;
+  }
+  
+  .custom-radio .custom-control-input:checked + .custom-control-label::before {
+    background-color: gray;
+    box-shadow: inset 0 0 0 3px #007bff;
+  }
+  
+  .custom-radio .custom-control-label {
+    font-weight: 500;
+    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  }
+  
+  .followup.comment {
+    background: transparent;
+  }
+  
+  .border-top {
+    border-top: 1px solid #ccc !important;
+  }
+  
+  .followup_reply .avatar {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .followup_reply .btn-link {
+    font-size: 12px;
+  }
+  
