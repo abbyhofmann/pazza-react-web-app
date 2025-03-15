@@ -1,3 +1,4 @@
+import React from "react";
 
 // Component for displaying an instructor answer to a post.
 export default function InstructorAnswer() {

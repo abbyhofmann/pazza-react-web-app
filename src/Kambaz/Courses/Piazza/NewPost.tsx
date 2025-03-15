@@ -6,10 +6,13 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { folders } from "../../Database";
-
+import "./NewPost.css";
 
 
 export default function NewPostPage() {
+
+   console.log("newpostpageeee");
+
    const [selectedOption, setSelectedOption] = useState<string>('');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
@@ -115,11 +118,9 @@ export default function NewPostPage() {
       }
    };
 
-
-
    return (
 
-      <div id="wd-new-post">
+      <div id="wd-new-post" className="new-post-content">
 
          <div className="wd-post-type d-flex">
             <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
