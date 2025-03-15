@@ -1,18 +1,25 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import RightSidePage from "./RightSidePage";
-import NewPostPage from "./NewPost";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
-import NoteQuestionSidebar from "./PostSidebar/PostSidebar";
+import CombinedPage from "./RightAndLeft";
+import HwFolderNav from "./HwFolderNav";
+
+
 import ManageClassScreen from "./ManageClass/ManageClass";
 import ViewPostPage from "./ViewPost/ViewPostPage/ViewPostPage";
+import NoteQuestionSidebar from "./PostSidebar/PostSidebar";
 import "./index.css";
+import NewPostPage from "./NewPost";
+import RightSidePage from "./RightSidePage";
 
 export default function Piazza() {
   return (
     <div>
       <PiazzaNavBarTop />
+      <HwFolderNav />
+      
       <div className="wd-layout">
-        <NoteQuestionSidebar />
+        <NoteQuestionSidebar/>
         <div className="wd-main-content">
           <Routes>
             <Route path="/" element={<RightSidePage />} />
