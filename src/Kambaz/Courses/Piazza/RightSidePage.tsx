@@ -1,4 +1,3 @@
-import { BsFileEarmarkPostFill } from "react-icons/bs";
 
 export default function RightSidePage() {
 
