@@ -1,11 +1,6 @@
-import React from "react";
 import PostSidebar from "./PostSidebar";
-import { Link, useParams } from "react-router-dom";
 
 export default function PiazzaNavBarTop() {
-
-  const { cid } = useParams();
-  const path = `/Kambaz/Courses/${cid}/Piazza`;
 
   return (
 
@@ -21,25 +16,8 @@ export default function PiazzaNavBarTop() {
 
       <div className="d-flex align-items-start wd-q-a wd-nav-height">
         Q & A
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Q & A
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Resources
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          Statistics
-        </div>
-        <div className="d-flex align-items-start wd-q-a wd-nav-height">
-          <Link
-            to={path + "/manage-class"}
-            id={`wd-course-piazza-link`}
-          >
-            Manage Class
-          </Link>
-        </div>
-      </div>
 
+      </div>
     </div>
     <div className="mt-5">
     <PostSidebar/>

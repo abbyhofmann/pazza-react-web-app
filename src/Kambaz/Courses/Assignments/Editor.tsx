@@ -1,6 +1,6 @@
 import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 import { assignments } from "../../Database";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
@@ -89,12 +89,8 @@ export default function AssignmentEditor() {
         <Button variant="danger" size="lg" className="me-1 float-end" id="wd-save-assignment-btn" href={backLink}>
           Save
         </Button>
-        <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-cancel-assignment-btn">
-          <Link
-            to={"../Assignments/"}
-            className="text">
-            Cancel
-          </Link>
+        <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-cancel-assignment-btn" href={backLink}>
+          Cancel
         </Button>
       </div>
     );

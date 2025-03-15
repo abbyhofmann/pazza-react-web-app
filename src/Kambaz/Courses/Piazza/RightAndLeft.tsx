@@ -1,5 +1,6 @@
 
 
+import PostSidebar from './PostSidebar';
 import RightSidePage from './RightSidePage';
 
 const CombinedPage = () => {
