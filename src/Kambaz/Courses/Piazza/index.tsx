@@ -1,7 +1,5 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
-import CombinedPage from "./RightAndLeft";
 import HwFolderNav from "./HwFolderNav";
 
 

@@ -1,5 +1,3 @@
-import React from "react";
-import PostSidebar from "./PostSidebar/PostSidebar";
 import { Link, useParams } from "react-router-dom";
 
 export default function PiazzaNavBarTop() {

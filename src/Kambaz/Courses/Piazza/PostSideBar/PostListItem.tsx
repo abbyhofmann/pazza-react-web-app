@@ -1,4 +1,3 @@
-
 import InstructorIcon from "../InstructorIcon";
 import "./PostSidebar.css";
 

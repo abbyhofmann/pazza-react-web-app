@@ -2,7 +2,6 @@ import { posts } from "../../../Database";
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
-import React from "react";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router";
 

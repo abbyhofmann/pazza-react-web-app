@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge, Button, ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
