@@ -1,6 +1,6 @@
-
-
 export default function RightSidePage() {
+
+
   return (
 
 
@@ -23,10 +23,8 @@ export default function RightSidePage() {
           <img src="images/warning5.jpg" height={30} />
           <span>_ unanswered followups</span>
         </div>
-
       </div>
-
-
+      
     </div>
 
   );
