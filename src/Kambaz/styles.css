@@ -201,7 +201,6 @@ gap:5px;
   margin-right: 0%;
   height: 100vh;
   width: 100%;
-  
 }
 
 input[type="radio"]:checked {
@@ -221,7 +220,7 @@ input[type="radio"] {
 
 .wd-checkbox-custom {
   display: grid;
-  grid-template-columns: repeat(6,1fr);
+  grid-template-columns: repeat(auto-fit, minmax(80px, auto));
   grid-gap: 7px;
   position:relative;
   column-gap: 1px;
@@ -230,18 +229,15 @@ input[type="radio"] {
   box-sizing: border-box;
 }
 
-
-
-
 @media (max-width: 768px) {
   .wd-checkbox-custom {
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(auto-fit, minmax(70px, auto));
   }
 }
 
 @media (max-width: 480px) {
   .wd-checkbox-custom {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(60px, auto));
   }
 }
 
@@ -274,7 +270,11 @@ input[type="radio"] {
   font-weight: 550;
   z-index: 1;
   box-sizing: border-box;
-
+  padding: 5px 10px;
+  min-width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
+  text-align: center;
 }
 
 
@@ -284,10 +284,12 @@ input[type="radio"] {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
+  min-width: fit-content;
   height: 30px;
   border-radius: 5px;
   border: 3px solid rgb(215, 228, 235);
+  width: 100%; 
+  height: 100%; 
 }
 
 .wd-checkbox-custom input[type="checkbox"]:checked + label::before {
@@ -345,3 +347,11 @@ input[type="radio"] {
   color: #333333;
   border-color: whitesmoke;
 }
+
+.new-post-content {
+  height: 100%;
+  overflow-y: auto;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
