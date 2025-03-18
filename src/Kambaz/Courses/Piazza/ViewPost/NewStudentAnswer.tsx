@@ -1,8 +1,18 @@
 
+import { useState } from "react";
 import "./ViewPost.css";
+interface NewStudentAnswerProps {
+    initialAnswer: string;
+    onSave: (updatedAnswer: string) => void;
+    onCancel: () => void;
+}
 
 // Component for adding a student answer to a post.
-export default function NewStudentAnswer() {
+export default function NewStudentAnswer(props: NewStudentAnswerProps) {
+
+    const { initialAnswer = "", onSave, onCancel } = props;
+    const [answerContent, setAnswerContent] = useState<string>(initialAnswer);
+
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
@@ -14,13 +24,28 @@ export default function NewStudentAnswer() {
                     </div>
                 </div>
             </header>
-            <div className="content container-fluid"><div className="g-0 row">
-                <div className="col">
-                    {/* input box for adding a new student answer */}
-                    <input placeholder="Click to start off the wiki answer" id="s_answerPlaceholderId" className="my-3 form-control" />
+            <div className="content container-fluid">
+                <div className="g-0 row">
+                    <div className="col">
+                        {/* input box for adding a new student answer */}
+                        <input
+                            placeholder="Click to start off the wiki answer"
+                            id="s_answerPlaceholderId"
+                            className="my-3 form-control"
+                            value={answerContent}
+                            onChange={(e) => setAnswerContent(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
-            </div>
+            <footer className="border-top container-fluid">
+                <div className="row">
+                    <div className="text-left align-self-center m-1 col-auto">
+                        <button className="btn btn-success btn-sm me-2" onClick={() => onSave(answerContent)}>Save</button>
+                        <button className="btn btn-secondary btn-sm" onClick={onCancel}>Cancel</button>
+                    </div>
+                </div>
+            </footer>
         </article>
     );
 };

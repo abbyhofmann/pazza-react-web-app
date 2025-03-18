@@ -36,7 +36,7 @@ const ViewPostPage = () => {
     //         console.error('Error fetching post:', error);
     //       }
     //     };
-    
+
     //     // eslint-disable-next-line no-console
     //     fetchData().catch(e => console.log(e));
     //   }, [postId]);
@@ -44,14 +44,20 @@ const ViewPostPage = () => {
     if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
     return (
-    <div className="view-post-content">
-        <PostBox post={post} />
-        {/* TODO - add logic for only creating a student response if the user is a student */}
-        {post.studentResponse !== "" ? <StudentAnswer studentAnswerId={post.studentResponse}/> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}
-        {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
-        {post.instructorResponse !== "" ? <InstructorAnswer instructorAnswerId={post.instructorResponse}/> : <NewInstructorAnswer />}
-        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
-    </div>
+        <div className="view-post-content">
+            <PostBox post={post} />
+            {/* TODO - add logic for only creating a student response if the user is a student */}
+            {post.studentResponse !== "" ? <StudentAnswer studentAnswerId={post.studentResponse} /> : <NewStudentAnswer initialAnswer=""
+                onSave={(newAnswer) => {
+                    // TODO: send newAnswer to the backend and update post state
+                    setPost((prevPost) => prevPost ? { ...prevPost, studentResponse: newAnswer } : null);
+                }}
+                onCancel={() => { }} />}
+            { /* TODO - equality check may need to change once we have the post data object finalized */}
+            {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
+            {post.instructorResponse !== "" ? <InstructorAnswer instructorAnswerId={post.instructorResponse} /> : <NewInstructorAnswer />}
+            {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+        </div>
     );
 };
 export default ViewPostPage;
