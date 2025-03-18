@@ -41,7 +41,7 @@ export default function NewStudentAnswer(props: NewStudentAnswerProps) {
             <footer className="border-top container-fluid">
                 <div className="row">
                     <div className="text-left align-self-center m-1 col-auto">
-                        <button className="btn btn-success btn-sm me-2" onClick={() => onSave(answerContent)}>Save</button>
+                        <button className="btn btn-primary btn-sm me-2" onClick={() => onSave(answerContent)}>Submit</button>
                         <button className="btn btn-secondary btn-sm" onClick={onCancel}>Cancel</button>
                     </div>
                 </div>

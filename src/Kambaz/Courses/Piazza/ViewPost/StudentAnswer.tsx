@@ -14,6 +14,9 @@ export default function StudentAnswer(props: StudentAnswerProps) {
     // keep track of if the user is editing the student answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
+    // keep track of if dropdown is showing 
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
     // useEffect(() => {
     //     /**
     //      * Function to fetch the student answer data based on the answer's ID.
@@ -56,6 +59,33 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                     <div className="content container-fluid">
                         <div className="g-0 row">
                             <div className="col">
+                                <div className="float-end dropdown">
+                                    {/* actions dropdown for edit and delete */}
+                                    <button
+                                        aria-haspopup="true"
+                                        aria-expanded={showDropdown}
+                                        data-id="postActionMenuId"
+                                        type="button"
+                                        className="dropdown-toggle btn btn-action"
+                                        onClick={() => setShowDropdown(!showDropdown)}
+                                    >Actions</button>
+                                    {showDropdown && (
+                                        <ul className="dropdown-menu show position-absolute">
+                                            <li>
+                                                <button className="dropdown-item" onClick={() => setIsEditing(true)}>
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button className="dropdown-item text-danger"
+                                                // onClick={handleDelete}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    )}
+                                </div>
                                 <div className="py-3 history-selection">
                                     <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{studentAnswer}</div> { /* TODO - replace hard-coded content with studentAnswer.content */}
                                 </div>
