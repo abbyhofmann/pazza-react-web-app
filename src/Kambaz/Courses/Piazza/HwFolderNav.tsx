@@ -5,8 +5,7 @@ export default function HwFolderNav() {
 
   return (
 
-    <div className="wd-hw-folder-nav-bar">
-      <div id="wd-hw-nav" className="d-flex align-items-start">
+      <div className="wd-hw-folder-nav-bar d-flex align-items-start">
 
         <div className="d-flex align-items-start wd-hw-height me-3">
           <FaFolder className="fs-5 me-2" />
@@ -20,6 +19,6 @@ export default function HwFolderNav() {
         </div>
 
       </div>
-    </div>
+  
   )
 }

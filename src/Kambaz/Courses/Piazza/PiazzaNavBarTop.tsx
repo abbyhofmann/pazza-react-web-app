@@ -7,7 +7,7 @@ export default function PiazzaNavBarTop() {
 
   return (
 
-    <div style={{ paddingRight: '15px' }}>
+    <div>
       <div className="wd-border-piazza-nav-bar">
         <div id="wd-piazza-nav" className="d-flex align-items-center justify-content-between width='100%' mb-3">
 
