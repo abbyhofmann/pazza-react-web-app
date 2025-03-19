@@ -1,5 +1,4 @@
 import "./FollowupDiscussions.css";
-import "./FollowupDiscussions.css";
 import FollowupDiscussion from "./FollowupDiscussion";
 
 interface FollowupDiscussionsProps {

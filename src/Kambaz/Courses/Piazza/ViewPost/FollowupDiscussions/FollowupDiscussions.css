@@ -148,3 +148,7 @@
   .followup_reply .btn-link {
     font-size: 12px;
   }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
