@@ -1,6 +1,4 @@
 import "./ViewPost.css";
-import React from "react";
-
 
 interface PostBoxProps {
     // TODO - update this to Post type once db and types are implemented

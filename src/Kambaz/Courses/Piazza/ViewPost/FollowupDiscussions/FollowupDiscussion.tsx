@@ -14,6 +14,9 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     const [fud, setFud] = useState<{ "id": string, "postId": string, "author": string, "datePosted": string, "content": string, "replies": string[] }>({ "id": fudId, "postId": "1234", "author": "Abby H", "datePosted": "2025-02-16T01:00:00.000Z", "content": "follow up discussion questionnnn", replies: ["rep1id", "rep2id"] }); // TODO - update to Reply datatype
 
+    // TODO - remove: just here to prevent build error
+    console.log(setFud);
+    
     const { formatDate } = usePostSidebar();
 
     // useEffect(() => {

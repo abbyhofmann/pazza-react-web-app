@@ -13,6 +13,9 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     const [reply, setReply] = useState<{ "id": string, "fuqId": string, "author": string, "datePosted": string, "content": string }>({ "id": replyId, "fuqId": "1234", "author": "Miazi", "datePosted": "2025-02-16T01:00:00.000Z", "content": "replyyyyyyy" }); // TODO - update to Reply datatype
 
+    // TODO - remove: just here to prevent build error
+    console.log(setReply);
+
     // useEffect(() => {
     //     /**
     //      * Function to fetch the reply data based on the reply's ID.

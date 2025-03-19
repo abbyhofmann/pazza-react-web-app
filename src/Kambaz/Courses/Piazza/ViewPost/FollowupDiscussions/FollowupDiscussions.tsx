@@ -1,4 +1,3 @@
-import React from "react";
 import "./FollowupDiscussions.css";
 import "./FollowupDiscussions.css";
 import FollowupDiscussion from "./FollowupDiscussion";

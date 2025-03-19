@@ -7,7 +7,6 @@ import StudentAnswer from "../StudentAnswer";
 import NewInstructorAnswer from "../NewInstructorAnswer";
 import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
-import React from "react";
 
 /**
  * Represents the profile page component. Routes to the right view based on the
