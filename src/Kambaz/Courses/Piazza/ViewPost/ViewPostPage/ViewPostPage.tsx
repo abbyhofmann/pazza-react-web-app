@@ -7,6 +7,7 @@ import StudentAnswer from "../StudentAnswer";
 import NewInstructorAnswer from "../NewInstructorAnswer";
 import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
+import React from "react";
 
 /**
  * Represents the profile page component. Routes to the right view based on the
@@ -24,7 +25,7 @@ const ViewPostPage = () => {
     instructor: number;
     title: string;
     content: string;
-    followUpQuestions: string;
+    followUpQuestions: string[];
     studentResponse: string;
     instructorResponse: string;
     viewers: string;
@@ -43,7 +44,7 @@ const ViewPostPage = () => {
       title: "Do we need images for Dashboard??",
       content:
         "Changing the data source for dashboard now has no photos rendering for each course, do we need to fix this by using assets/images/?",
-      followUpQuestions: "question",
+      followUpQuestions: ["fud1Id", "fud2Id", "fud3Id"],
       studentResponse: "",
       instructorResponse: "haiii",
       viewers: "",
@@ -65,7 +66,7 @@ const ViewPostPage = () => {
       ) : (
         <NewInstructorAnswer />
       )}
-      <FollowupDiscussions convoExists={post.followUpQuestions !== ""} />
+      <FollowupDiscussions convoExists={post.followUpQuestions.length !== 0} fudIds={post.followUpQuestions} />
     </div>
   );
 };

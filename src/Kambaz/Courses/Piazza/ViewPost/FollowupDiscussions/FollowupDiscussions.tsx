@@ -1,15 +1,16 @@
+import React from "react";
 import "./FollowupDiscussions.css";
-import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
 import "./FollowupDiscussions.css";
 import FollowupDiscussion from "./FollowupDiscussion";
 
 interface FollowupDiscussionsProps {
     convoExists: boolean;
+    fudIds: string[];
   }
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
-  const { convoExists } = props;
+  const { convoExists, fudIds } = props;
 
   return (
     <article
@@ -30,9 +31,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
       {convoExists && (
         // will likely need a for-loop to loop through all of a post's followup discussions
         <div className="followup_content_wrapper col mx-3">
-          <ResolvedButtons />
-          <FollowupDiscussion />
-          
+          {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId}/>))}
         </div>
       )}
 

@@ -1,34 +1,65 @@
 import FollowupReply from "./FollowupReply";
 import "./FollowupDiscussions.css";
+import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
+import { useState } from "react";
+import usePostSidebar from "../../hooks/usePostSidebar";
 
-export default function FollowupDiscussion() {
+interface FollowupDiscussionProps {
+    fudId: string;
+}
+
+export default function FollowupDiscussion(props: FollowupDiscussionProps) {
+
+    const { fudId } = props;
+
+    const [fud, setFud] = useState<{ "id": string, "postId": string, "author": string, "datePosted": string, "content": string, "replies": string[] }>({ "id": fudId, "postId": "1234", "author": "Abby H", "datePosted": "2025-02-16T01:00:00.000Z", "content": "follow up discussion questionnnn", replies: ["rep1id", "rep2id"] }); // TODO - update to Reply datatype
+
+    const { formatDate } = usePostSidebar();
+
+    // useEffect(() => {
+    //     /**
+    //      * Function to fetch the discussion data based on the discussion's ID.
+    //      */
+    //     const fetchData = async () => {
+    //       try {
+    //         const res = await getFollowupDiscussionById(fudId);
+    //         setFud(res || null);
+    //       } catch (error) {
+    //         // eslint-disable-next-line no-console
+    //         console.error('Error fetching followup discussion:', error);
+    //       }
+    //     };
+
+    //     // eslint-disable-next-line no-console
+    //     fetchData().catch(e => console.log(e));
+    //   }, [fudId]);
+
+
     return (
         <div className="g-1 row">
+            <ResolvedButtons />
             <div className="mx-0 col-auto">
                 <div className="avatar" aria-hidden="true" style={{ backgroundImage: `url("images/anonProfilePic.png")` }}></div>
             </div>
             <div className="col">
                 <span data-id="contributors">
-                    <b>Anonymous Beaker</b>
+                    <b>{fud.author}</b>
                 </span>
                 &nbsp;
                 <span className="helper-text">
                     <time
-                        dateTime="2025-02-27T05:06:15.000Z"
-                        title="Thu Feb 27 2025 00:06:15 GMT-0500 (Eastern Standard Time)"
                     >
-                        2 weeks ago
+                        {formatDate(fud.datePosted)}
                     </time>
                 </span>
                 <div
                     id="m7mvt9ipcj61pk_render"
-                    data-id="renderHtmlId"
                     className="render-html-content overflow-hidden latex_process"
                 >
-                    Is this for rule 45 for 100% for all sections?
+                    {fud.content}
                 </div>
-                {/* TODO - loop through the replies list */}
-                <FollowupReply replyId={'1234'}/>
+                {/* loop through the replies list to render each reply */}
+                {fud.replies.map((replyId => (<FollowupReply replyId={replyId} />)))}
 
                 <div className="gx-1 followup comment pr-0 pl-0 pb-0 row">
                     <div className="pr-0 mr-0 pl-0 pb-0 col">

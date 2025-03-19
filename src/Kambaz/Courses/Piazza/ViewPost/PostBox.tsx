@@ -1,8 +1,10 @@
 import "./ViewPost.css";
+import React from "react";
+
 
 interface PostBoxProps {
     // TODO - update this to Post type once db and types are implemented
-    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
+    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string[]; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
 }
 
 // Component for the individual post item in the sidebar. 

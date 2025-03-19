@@ -46,17 +46,13 @@ export default function FollowupReply(props: FollowupReplyProps) {
                     <span data-id="contributors">{reply.author} </span>
                 </b>
                 <span className="helper-text">
-                    <time
-                        dateTime="2025-02-27T05:07:36.000Z"
-                        title="Thu Feb 27 2025 00:07:36 GMT-0500 (Eastern Standard Time)"
-                    >
+                    <time>
                         {/* TODO - is the MM/DD/YYYY the format we want here? */}
                         {formatDate(reply.datePosted)}
                     </time>
                 </span>
                 <div
                     id="m7mvuzhntd4fj_render"
-                    data-id="renderHtmlId"
                     className="render-html-content overflow-hidden latex_process"
                 >
                     {reply.content}
