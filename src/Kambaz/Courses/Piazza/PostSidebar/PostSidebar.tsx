@@ -2,6 +2,8 @@ import { posts } from "../../../Database";
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
+import { BsFileEarmarkPostFill } from "react-icons/bs";
+import { useNavigate, useParams } from "react-router";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -17,18 +19,22 @@ export default function PostSidebar() {
     yesterday,
   } = usePostSidebar();
 
+  const navigate = useNavigate();
+    const { cid } = useParams();
+
+  const navButton = () => {
+    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
+  }
+
   return (
     <div
       className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end"
       style={{ width: "380px" }}
     >
-      {/* Sidebar Header */}
-      <a className="d-flex align-items-center p-3 link-dark text-decoration-none border-bottom">
-        <span className="fs-5 fw-semibold">Posts</span>
-      </a>
       <div>
         <div id="feed_search_bar">
-          <button id="new_post_button" type="button">
+          <button id="new_post_button" type="button" onClick={navButton}>
+          <BsFileEarmarkPostFill className="me-1 mb-1 fs-6"/>
             New Post
           </button>
           <div id="search_bar" role="search">

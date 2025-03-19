@@ -1,5 +1,3 @@
-import React from "react";
-
 // Icon for indicating if a post was created by an instructor.
 const InstructorIcon: React.FC = () => {
     return (

@@ -3,8 +3,8 @@ import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
 import "./FollowupDiscussions.css";
 
 interface FollowupDiscussionsProps {
-  convoExists: boolean;
-}
+    convoExists: boolean;
+  }
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
