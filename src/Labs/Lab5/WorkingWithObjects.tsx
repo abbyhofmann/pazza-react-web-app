@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormControl } from "react-bootstrap";
+import { Form, FormControl } from "react-bootstrap";
 
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export default function WorkingWithObjects() {
@@ -24,15 +24,51 @@ export default function WorkingWithObjects() {
         Get Assignment Title
       </a><hr />
       <h4>Modifying Properties</h4>
-      <a id="wd-update-assignment-title"
-        className="btn btn-primary float-end"
-        href={`${ASSIGNMENT_API_URL}/title/${assignment.title}`}>
-        Update Title
-      </a>
-      <FormControl className="w-75" id="wd-assignment-title"
-        defaultValue={assignment.title} onChange={(e) =>
-          setAssignment({ ...assignment, title: e.target.value })} />
+      <div className="mb-3">
+        <a id="wd-update-assignment-title"
+          className="btn btn-primary float-end"
+          href={`${ASSIGNMENT_API_URL}/title/${assignment.title}`}>
+          Update Title
+        </a>
+        <FormControl className="w-75" id="wd-assignment-title"
+          defaultValue={assignment.title} onChange={(e) =>
+            setAssignment({ ...assignment, title: e.target.value })} />
+      </div>
+      <div className="mb-3">
+        <a id="wd-update-assignment-score"
+          className="btn btn-primary float-end"
+          href={`${ASSIGNMENT_API_URL}/score/${assignment.score}`}>
+          Update Score
+        </a>
+        <Form.Group className="w-75" controlId="formBasicNumber">
+          <Form.Control type="number" placeholder="Enter New Score" onChange={(e) => {
+            const score = parseInt(e.target.value);
+            console.log(score);
+            setAssignment({ ...assignment, score: score })
+          }} />
+        </Form.Group>
+      </div>
+      <div>
+        <a id="wd-update-assignment-completed"
+          className="btn btn-primary float-end"
+          href={`${ASSIGNMENT_API_URL}/completed/${assignment.completed}`}>
+          Update Completed
+        </a>
+        Check for Complete and Uncheck for Incomplete
+        <input type="checkbox"
+          className="ms-4"
+          onChange={(e) => setAssignment({ ...assignment, completed: e.target.checked })} />
+      </div>
       <hr />
+      <h4>New Endpoint with Modules</h4>
+      <a id="wd-retrieve-module" className="btn btn-primary"
+        href={`${REMOTE_SERVER}/lab5/module`}>
+        Get Module
+      </a><hr />
+      <a id="wd-retrieve-module-name" className="btn btn-primary"
+        href={`${REMOTE_SERVER}/lab5/module/name`}>
+        Get Module Name
+      </a><hr />
     </div>
   );
 }
