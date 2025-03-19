@@ -16,7 +16,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     // TODO - remove: just here to prevent build error
     console.log(setFud);
-    
+
     const { formatDate } = usePostSidebar();
 
     // useEffect(() => {
@@ -42,7 +42,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         <div className="g-1 row">
             <ResolvedButtons />
             <div className="mx-0 col-auto">
-                <div className="avatar" aria-hidden="true" style={{ backgroundImage: `url("images/anonProfilePic.png")` }}></div>
+                <img className="avatar" width="30px" height="30px" aria-hidden="true" src="images/anonProfilePic.jpg" />
             </div>
             <div className="col">
                 <span data-id="contributors">

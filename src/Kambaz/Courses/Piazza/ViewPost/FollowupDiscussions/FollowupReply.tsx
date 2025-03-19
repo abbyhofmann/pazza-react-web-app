@@ -13,6 +13,10 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     const [reply, setReply] = useState<{ "id": string, "fuqId": string, "author": string, "datePosted": string, "content": string }>({ "id": replyId, "fuqId": "1234", "author": "Miazi", "datePosted": "2025-02-16T01:00:00.000Z", "content": "replyyyyyyy" }); // TODO - update to Reply datatype
 
+    // TODO - will need function to fetch author and determine if they are a student or instructor 
+    // variable for determining which icon to display alongside reply 
+    const isStudent = false;
+
     // TODO - remove: just here to prevent build error
     console.log(setReply);
 
@@ -41,11 +45,13 @@ export default function FollowupReply(props: FollowupReplyProps) {
             className="followup_reply gx-1 gy-0 row"
         >
             <div className="mx-0 col-auto">
-                <div className="avatar" aria-hidden="true"></div>
+                <img width="30px" height="30px" aria-hidden="true" src="images/profilePic.jpg" />
+            </div>
+            <div className="mx-0 col-auto">
+                <img className="" width="14px" height="16px" aria-hidden="true" src={isStudent ? "images/studentIcon.jpg" : "images/instructorIcon.jpg"} />
             </div>
             <div className="col">
                 <b>
-                    <span className="instructor-label-icon"></span>
                     <span data-id="contributors">{reply.author} </span>
                 </b>
                 <span className="helper-text">
