@@ -3,6 +3,7 @@ import "./ResolvedButtons.css";
 export default function ResolvedButtons() {
     return (
         <div className="">
+            {/* TODO - add logic to toggle between resolved and unresolved selection */}
             <div className="unresolved resolved-buttons">
                 <div className="custom-control custom-radio custom-control-inline">
                     <input

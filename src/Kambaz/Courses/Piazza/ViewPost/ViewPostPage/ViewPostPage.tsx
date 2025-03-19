@@ -5,7 +5,7 @@ import NewStudentAnswer from "../NewStudentAnswer";
 import InstructorAnswer from "../InstructorAnswer";
 import StudentAnswer from "../StudentAnswer";
 import NewInstructorAnswer from "../NewInstructorAnswer";
-import FollowupDiscussions from "../FollowupDiscussions";
+import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
 
 /**
