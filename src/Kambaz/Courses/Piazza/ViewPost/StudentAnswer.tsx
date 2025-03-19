@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NewStudentAnswer from "./NewStudentAnswer";
 
 interface StudentAnswerProps {
@@ -7,6 +7,9 @@ interface StudentAnswerProps {
 
 // Component for displaying a student answer to a post.
 export default function StudentAnswer(props: StudentAnswerProps) {
+
+    // TODO - remove: this is just a placeholder to prevent the "declared but value never read" build error
+    console.log(props);
 
     // const { studentAnswerId } = props;
     const [studentAnswer, setStudentAnswer] = useState<string>("here is a sample student answer"); // TODO - update state variable to have Response datatype

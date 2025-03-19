@@ -5,9 +5,11 @@ interface InstructorAnswerProps {
 // Component for displaying an instructor answer to a post.
 export default function InstructorAnswer(props: InstructorAnswerProps) {
 
+    // TODO - remove: this is just a placeholder to prevent the "declared but value never read" build error
+    console.log(props);
+
     // const { instructorAnswerId } = props; 
     //
-    // const { instructorAnswerId } = props;
     // const [instructorAnswer, setInstructorAnswer] = useState<String>(""); // TODO - update to Response datatype
 
     // useEffect(() => {
