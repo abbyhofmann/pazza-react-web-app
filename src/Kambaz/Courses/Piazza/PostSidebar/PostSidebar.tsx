@@ -17,10 +17,11 @@ export default function PostSidebar() {
     groupedPostsMap,
     today,
     yesterday,
+    isUnanswered,
   } = usePostSidebar();
 
   const navigate = useNavigate();
-    const { cid } = useParams();
+  const { cid } = useParams();
 
   const navButton = () => {
     navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
@@ -34,7 +35,7 @@ export default function PostSidebar() {
       <div>
         <div id="feed_search_bar">
           <button id="new_post_button" type="button" onClick={navButton}>
-          <BsFileEarmarkPostFill className="me-1 mb-1 fs-6"/>
+            <BsFileEarmarkPostFill className="me-1 mb-1 fs-6" />
             New Post
           </button>
           <div id="search_bar" role="search">
@@ -79,6 +80,7 @@ export default function PostSidebar() {
                       displayDate={extractTime}
                       onClick={() => handlePostClick(post._id)}
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -113,6 +115,7 @@ export default function PostSidebar() {
                       displayDate={extractTime}
                       onClick={() => handlePostClick(post._id)}
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -149,6 +152,7 @@ export default function PostSidebar() {
                       displayDate={getDayOfWeek}
                       onClick={() => handlePostClick(post._id)}
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -207,6 +211,7 @@ export default function PostSidebar() {
                             displayDate={formatDate}
                             onClick={() => handlePostClick(post._id)}
                             isSelected={selectedPostId === post._id}
+                            isUnanswered={isUnanswered(post)}
                           />
                         )
                       )}
