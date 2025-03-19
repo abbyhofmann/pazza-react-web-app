@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import PiazzaNavBarTop from "./PiazzaNavBarTop";
 import HwFolderNav from "./HwFolderNav";
 
@@ -10,14 +10,23 @@ import "./index.css";
 import NewPostPage from "./NewPost";
 import RightSidePage from "./RightSidePage";
 
+const SideBar = () => {
+  const location = useLocation();
+  if (location.pathname.includes("manage-class")) {
+    return <></>;
+  }
+  return <NoteQuestionSidebar />;
+
+}
+
 export default function Piazza() {
   return (
     <div>
       <PiazzaNavBarTop />
       <HwFolderNav />
-      
+
       <div className="wd-layout">
-        <NoteQuestionSidebar/>
+        <SideBar />
         <div className="wd-main-content">
           <Routes>
             <Route path="/" element={<RightSidePage />} />
