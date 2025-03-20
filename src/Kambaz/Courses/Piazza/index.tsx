@@ -12,7 +12,8 @@ import RightSidePage from "./RightSidePage";
 
 const SideBar = () => {
   const location = useLocation();
-  if (location.pathname.includes("manage-class")) {
+  if (location.pathname.includes("Manage-Class")
+    || location.pathname.includes("manage-class")) {
     return <></>;
   }
   return <NoteQuestionSidebar />;

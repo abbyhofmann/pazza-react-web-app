@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import "./navbar.css";
 
 export default function PiazzaNavBarTop() {
 
@@ -6,43 +7,39 @@ export default function PiazzaNavBarTop() {
   const path = `/Kambaz/Courses/${cid}/Piazza`;
 
   return (
-
-    <div style={{ paddingRight: '15px' }}>
-      <div className="wd-border-piazza-nav-bar">
-        <div id="wd-piazza-nav" className="d-flex align-items-center justify-content-between width='100%' mb-3">
-
-
-          <div className="d-flex align-items-start">
-            <img src="images/Piazzalogo.png" width="90px" height="20px"
-              className="wd-logo-height" />
-          </div>
-
-          <div className="d-flex align-items-start wd-q-a wd-nav-height">
-            Q & A
-            <div className="d-flex align-items-start wd-q-a wd-nav-height">
+    <nav className="navbar navbar-expand-lg wd-border-piazza-nav-bar d-flex">
+      <Link to={path}>
+        <img src="/images/Piazzalogo.png" height="20px"
+          className="wd-logo-height ps-4 w-1/4" />
+      </Link>
+      <div className="ps-4 d-flex">
+        <ul className="navbar-nav d-flex">
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to={path}
+              id={`wd-q-a-link`}
+            >
               Q & A
-            </div>
-            <div className="d-flex align-items-start wd-q-a wd-nav-height">
-              Resources
-            </div>
-            <div className="d-flex align-items-start wd-q-a wd-nav-height">
-              Statistics
-            </div>
-            <div className="d-flex align-items-start wd-q-a wd-nav-height">
-              <Link
-                to={path + "/manage-class"}
-                id={`wd-course-piazza-link`}
-              >
-                Manage Class
-              </Link>
-            </div>
-          </div>
-
-        </div>
-        <div className="mt-5">
-        </div>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link">Resources</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link">Statistics</a>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to={path + "/manage-class"}
+              id={`wd-manage-class-link`}
+            >
+              Manage Class
+            </Link>
+          </li>
+        </ul>
       </div>
-    </div>
-
-  )
+    </nav>
+  );
 }
