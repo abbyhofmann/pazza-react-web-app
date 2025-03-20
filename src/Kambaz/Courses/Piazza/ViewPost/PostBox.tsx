@@ -1,8 +1,9 @@
+import { Post } from "../../../types";
 import "./ViewPost.css";
 
 interface PostBoxProps {
     // TODO - update this to Post type once db and types are implemented
-    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
+    post: Post;
 }
 
 // Component for the individual post item in the sidebar. 
