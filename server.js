@@ -59,6 +59,20 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
+app.get('/api/folders', async (req, res) => {
+    try {
+        await client.connect();
+        const db = client.db("piazza");
+        const folders = db.collection("folders");
+        const allFolders = (await folders.find({}).toArray());
+
+        console.log('Connected to MongoDB');
+        res.status(200).send(allFolders);
+    } finally {
+        client.close();
+    }
+})
+
 app.listen(3000, 'localhost', () => {
     console.log('Server running on Port 3000');
 });
