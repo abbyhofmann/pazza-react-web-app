@@ -13,6 +13,16 @@ const usePostSidebar = () => {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   /**
+   * Function that determines if a post is unanswered (i.e. contains no student or instructor responses).
+   * @param post The post object itself.
+   * @returns Boolean - true if post does not contain any answers, false if it does.
+   */
+  function isUnanswered(post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }): boolean {
+    // TODO - update logic based on the length of the response lists once Post object is implemented in mongodb
+    return post.studentResponse === "" && post.instructorResponse === "";
+  }
+
+  /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
  * older posts and for comparing today's date with the date of a certain post.
  * @param inputDate ISODate string ("2025-02-16T01:00:00.000Z" format from mongodb).
@@ -171,7 +181,8 @@ const usePostSidebar = () => {
     datesLastWeek,
     groupedPostsMap,
     today,
-    yesterday
+    yesterday,
+    isUnanswered
   };
 };
 
