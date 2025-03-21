@@ -4,7 +4,6 @@ import api from "./api.ts";
 // we are using VITE, so import.meta.env is used instead of process.env for importing environment variables
 const POST_API_URL = `${import.meta.env.VITE_API_URL}/post`;
 
-
 /**
  * Gets a post by its ID.
  *
@@ -15,7 +14,7 @@ const getPostById = async (pid: string): Promise<Post> => {
   const res = await api.get(`${POST_API_URL}/${pid}`);
 
   if (res.status !== 200) {
-    throw new Error('Error while fetching post');
+    throw new Error("Error while fetching post");
   }
   return res.data;
 };
@@ -23,10 +22,9 @@ const getPostById = async (pid: string): Promise<Post> => {
 const getPosts = async (): Promise<Post[]> => {
   const res = await api.get(`${POST_API_URL}/posts`);
   if (res.status !== 200) {
-    throw new Error('Error while fetching posts');
+    throw new Error("Error while fetching posts");
   }
   return res.data;
-}
-
+};
 
 export { getPostById, getPosts };

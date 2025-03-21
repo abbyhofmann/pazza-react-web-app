@@ -15,9 +15,9 @@ export default function Piazza() {
     <div>
       <PiazzaNavBarTop />
       <HwFolderNav />
-      
+
       <div className="wd-layout">
-        <NoteQuestionSidebar/>
+        <NoteQuestionSidebar />
         <div className="wd-main-content">
           <Routes>
             <Route path="/" element={<RightSidePage />} />

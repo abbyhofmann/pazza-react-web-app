@@ -26,24 +26,24 @@ export default function StudentAnswer(props: StudentAnswerProps) {
          * Function to fetch the student answer data based on the answer's ID.
          */
         const fetchData = async () => {
-          try {
-            const res = await getAnswerById(studentAnswerId);
-            setStudentAnswer(res || null);
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Error fetching student answer:', error);
-          }
+            try {
+                const res = await getAnswerById(studentAnswerId);
+                setStudentAnswer(res || null);
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error fetching student answer:', error);
+            }
         };
 
         // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
-      }, [studentAnswerId]);
+    }, [studentAnswerId]);
 
     return (
         <div>
             {isEditing ? (
                 <NewStudentAnswer
-                    initialAnswer={studentAnswer ? studentAnswer.content :  ""} // TODO idk about this
+                    initialAnswer={studentAnswer ? studentAnswer.content : ""} // TODO idk about this
                     onSave={(updatedContent: string) => {
                         // TODO - endpoint call to update the answer object with the updatedContent on the backend 
                         if (studentAnswer) {

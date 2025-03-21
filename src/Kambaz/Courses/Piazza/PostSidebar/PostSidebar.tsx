@@ -2,10 +2,7 @@ import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router";
 import { Post } from "../../../types";
-import { useEffect, useState } from "react";
-import { getPosts } from "../services/postService";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -20,33 +17,11 @@ export default function PostSidebar() {
     today,
     yesterday,
     isUnanswered,
+    navButton,
+    posts
   } = usePostSidebar();
 
-  const navigate = useNavigate();
-  const { cid } = useParams();
 
-  const navButton = () => {
-    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
-  }
-
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-
-      try {
-        const res = await getPosts();
-        console.log('fetch posts res: ', res);
-        setPosts(res);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching posts:', error);
-      }
-    };
-
-    // eslint-disable-next-line no-console
-    fetchData().catch(e => console.log(e));
-  }, []);
 
   return (
     <div
@@ -93,7 +68,7 @@ export default function PostSidebar() {
                   .filter((post) => formatDate(post.datePosted) === today)
                   .map((post) => (
                     <PostListItem
-                      
+
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}

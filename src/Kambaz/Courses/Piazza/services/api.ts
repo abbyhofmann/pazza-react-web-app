@@ -1,4 +1,8 @@
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 
 /**
  * Function to handle successful responses
@@ -21,7 +25,7 @@ const api = axios.create();
  */
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => config,
-  (error: AxiosError) => handleErr(error),
+  (error: AxiosError) => handleErr(error)
 );
 
 /**
@@ -29,7 +33,7 @@ api.interceptors.request.use(
  */
 api.interceptors.response.use(
   (response: AxiosResponse) => handleRes(response),
-  (error: AxiosError) => handleErr(error),
+  (error: AxiosError) => handleErr(error)
 );
 
 export default api;

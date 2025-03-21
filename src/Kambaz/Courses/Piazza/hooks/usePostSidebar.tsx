@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { posts } from "../../../Database";
 import { Post } from "../../../types";
+import { getPosts } from "../services/postService";
 
 /**
  * Custom hook for managing post sidebar and date-related functionality.
@@ -13,13 +13,35 @@ const usePostSidebar = () => {
 
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
+  const navButton = () => {
+    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
+  }
+
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      try {
+        const res = await getPosts();
+        console.log('fetch posts res: ', res);
+        setPosts(res);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    // eslint-disable-next-line no-console
+    fetchData().catch(e => console.log(e));
+  }, []);
+
   /**
    * Function that determines if a post is unanswered (i.e. contains no student or instructor responses).
    * @param post The post object itself.
    * @returns Boolean - true if post does not contain any answers, false if it does.
    */
   function isUnanswered(post: Post): boolean {
-    // TODO - update logic based on the length of the response lists once Post object is implemented in mongodb
     return post.studentAnswer === null && post.instructorAnswer === null;
   }
 
@@ -117,7 +139,6 @@ const usePostSidebar = () => {
     return days;
   }
 
-  // TODO - once we have mongodb data types, posts will be of type Post[] instead of the json
   /**
   * Function for grouping posts by the week they were created in. This creates a mapping between string date range (such as 2/10-2/16) and
   * a list of the post objects that fall within that week. The current week is excluded from this mapping, as posts from this week will
@@ -183,7 +204,9 @@ const usePostSidebar = () => {
     groupedPostsMap,
     today,
     yesterday,
-    isUnanswered
+    isUnanswered,
+    navButton,
+    posts,
   };
 };
 

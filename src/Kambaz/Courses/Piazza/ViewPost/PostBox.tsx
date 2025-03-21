@@ -11,15 +11,6 @@ export default function PostBox(props: PostBoxProps) {
 
     const { post } = props;
 
-    /**
-     * Extracts the post number from the postId, where the postId is in the format of P{post#} (ex: P101).
-     * @param postId The post id as a string.
-     * @returns The post number extracted from the postId.
-     */
-    function extractPostNumber(postId: string): string {
-        return postId.substring(1);
-    }
-
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
             <header id="post-header" className="border-bottom container-fluid">

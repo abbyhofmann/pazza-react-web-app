@@ -13,11 +13,9 @@ const getAnswerById = async (aid: string): Promise<Answer> => {
   const res = await api.get(`${ANSWER_API_URL}/getAnswer/${aid}`);
 
   if (res.status !== 200) {
-    throw new Error('Error while fetching answer');
+    throw new Error("Error while fetching answer");
   }
   return res.data;
 };
-
-
 
 export { getAnswerById };
