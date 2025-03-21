@@ -96,14 +96,14 @@ app.get('/api/answer/:aid', async (req, res) => {
         const { aid } = req.params;
 
         // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(pid)) {
+        if (!mongoDB.ObjectId.isValid(aid)) {
             res.status(400).send('Invalid ID format');
             return;
         }
 
         const fetchedAnswer = (await answers.findOne({ _id: aid }));
         console.log('fetched answer: ', fetchedAnswer);
-        res.json(fetchedPost);
+        res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
     }

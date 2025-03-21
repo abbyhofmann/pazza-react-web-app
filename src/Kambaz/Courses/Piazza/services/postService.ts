@@ -1,7 +1,8 @@
 import { Post } from "./../../../types.tsx";
 import api from "./api.ts";
 
-const POST_API_URL = `${process.env.DB_CONN_STRING}/post`;
+// we are using VITE, so import.meta.env is used instead of process.env for importing environment variables
+const POST_API_URL = `${import.meta.env.VITE_API_URL}/post`;
 
 
 /**

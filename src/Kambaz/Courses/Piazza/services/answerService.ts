@@ -1,7 +1,7 @@
 import { Answer } from "../../../types.tsx";
 import api from "./api.ts";
 
-const STUDENT_ANSWER_API_URL = `${process.env.DB_CONN_STRING}/answer`;
+const ANSWER_API_URL = `${import.meta.env.VITE_API_URL}/answer`;
 
 /**
  * Gets an answer by its ID.
@@ -10,7 +10,7 @@ const STUDENT_ANSWER_API_URL = `${process.env.DB_CONN_STRING}/answer`;
  * @throws Error if there is an issue fetching the answer by ID.
  */
 const getAnswerById = async (aid: string): Promise<Answer> => {
-  const res = await api.get(`${STUDENT_ANSWER_API_URL}/getAnswer/${aid}`);
+  const res = await api.get(`${ANSWER_API_URL}/getAnswer/${aid}`);
 
   if (res.status !== 200) {
     throw new Error('Error while fetching answer');
