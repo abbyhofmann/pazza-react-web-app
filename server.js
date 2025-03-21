@@ -86,6 +86,32 @@ app.get('/api/post/:pid', async (req, res) => {
     }
 });
 
+app.get('/api/answer/:aid', async (req, res) => {
+    try {
+        await client.connect();
+
+        const db = client.db("piazza");
+        const answers = db.collection("answers");
+        // post id is a request parameter 
+        const { aid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedAnswer = (await answers.findOne({ _id: aid }));
+        console.log('fetched answer: ', fetchedAnswer);
+        res.json(fetchedPost);
+    } catch (err) {
+        res.status(500).send(`Error when fetching answer: ${err}`);
+    }
+    finally {
+        client.close();
+    }
+});
+
 app.listen(3000, 'localhost', () => {
     console.log('Server running on Port 3000');
 });

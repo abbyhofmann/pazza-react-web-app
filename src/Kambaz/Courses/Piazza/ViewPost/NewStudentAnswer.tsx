@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import "./ViewPost.css";
+
 interface NewStudentAnswerProps {
-    initialAnswer: string;
+    initialAnswer: string | null;
     onSave: (updatedAnswer: string) => void;
     onCancel: () => void;
 }
@@ -11,7 +12,7 @@ interface NewStudentAnswerProps {
 export default function NewStudentAnswer(props: NewStudentAnswerProps) {
 
     const { initialAnswer = "", onSave, onCancel } = props;
-    const [answerContent, setAnswerContent] = useState<string>(initialAnswer);
+    const [answerContent, setAnswerContent] = useState<string>(initialAnswer ? initialAnswer : ""); // TODO idk if this is right 
 
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">

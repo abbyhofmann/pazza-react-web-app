@@ -29,7 +29,7 @@ export default function PostBox(props: PostBoxProps) {
                             {/* post type */}
                             <span tabIndex={-1} data-id="post_type">{post.type === 0 ? "question" : "note"}</span>
                             {/* post number */}
-                            <button type="button" className="p-0 post_number_copy btn btn-link-text">@{extractPostNumber(post._id)}</button>
+                            <button type="button" className="p-0 post_number_copy btn btn-link-text">@{(post._id ? post._id : "unknown post id")}</button>
                         </b>
                     </div>
                     <div className="text-right col">

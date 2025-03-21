@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewStudentAnswer from "./NewStudentAnswer";
+import { Answer } from "../../../types";
+import { getAnswerById } from "../services/answerService";
 
 interface StudentAnswerProps {
     studentAnswerId: string;
@@ -8,11 +10,10 @@ interface StudentAnswerProps {
 // Component for displaying a student answer to a post.
 export default function StudentAnswer(props: StudentAnswerProps) {
 
-    // TODO - remove: this is just a placeholder to prevent the "declared but value never read" build error
-    console.log(props);
+    const { studentAnswerId } = props;
 
     // const { studentAnswerId } = props;
-    const [studentAnswer, setStudentAnswer] = useState<string>("here is a sample student answer"); // TODO - update state variable to have Response datatype
+    const [studentAnswer, setStudentAnswer] = useState<Answer | null>(null); // TODO - update state variable to have Response datatype
 
     // keep track of if the user is editing the student answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -20,31 +21,34 @@ export default function StudentAnswer(props: StudentAnswerProps) {
     // keep track of if dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     /**
-    //      * Function to fetch the student answer data based on the answer's ID.
-    //      */
-    //     const fetchData = async () => {
-    //       try {
-    //         const res = await getStudentAnswerById(studentAnswerId);
-    //         setStudentAnswer(res || null);
-    //       } catch (error) {
-    //         // eslint-disable-next-line no-console
-    //         console.error('Error fetching student answer:', error);
-    //       }
-    //     };
+    useEffect(() => {
+        /**
+         * Function to fetch the student answer data based on the answer's ID.
+         */
+        const fetchData = async () => {
+          try {
+            const res = await getAnswerById(studentAnswerId);
+            setStudentAnswer(res || null);
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error fetching student answer:', error);
+          }
+        };
 
-    //     // eslint-disable-next-line no-console
-    //     fetchData().catch(e => console.log(e));
-    //   }, [studentAnswerId]);
+        // eslint-disable-next-line no-console
+        fetchData().catch(e => console.log(e));
+      }, [studentAnswerId]);
 
     return (
         <div>
             {isEditing ? (
                 <NewStudentAnswer
-                    initialAnswer={studentAnswer}
-                    onSave={(updatedAnswer) => {
-                        setStudentAnswer(updatedAnswer);
+                    initialAnswer={studentAnswer ? studentAnswer.content :  ""} // TODO idk about this
+                    onSave={(updatedContent: string) => {
+                        // TODO - endpoint call to update the answer object with the updatedContent on the backend 
+                        if (studentAnswer) {
+                            setStudentAnswer({ ...studentAnswer, content: updatedContent });
+                        }
                         setIsEditing(false);
                     }}
                     onCancel={() => setIsEditing(false)}
@@ -90,7 +94,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                                     )}
                                 </div>
                                 <div className="py-3 history-selection">
-                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{studentAnswer}</div> { /* TODO - replace hard-coded content with studentAnswer.content */}
+                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{studentAnswer?.content}</div> { /* TODO - replace hard-coded content with studentAnswer.content */}
                                 </div>
                             </div>
                         </div>

@@ -1,67 +1,65 @@
-import { ObjectId } from "mongodb";
-
 export interface Post {
-    _id?: ObjectId;
-    folderId: Folder;
-    authorId: User;
-    datePosted: Date;
+    _id?: string; // MongoDB ObjectId stored as a string
+    folderId: string; 
+    authorId: string; 
+    datePosted: string; 
     type: number;
     instructor: boolean;
     title: string;
     content: string;
-    followupDiscussions: FollowupDiscussion[];
-    studentAnswer: Answer;
-    instructorAnswer: Answer;
-    viewers: User[];
-    courseId: Course;
+    followupDiscussions: string[]; 
+    studentAnswer: string | null; 
+    instructorAnswer: string | null; 
+    viewers: string[]; 
+    courseId: string; 
 }
 
 export interface User {
-    _id?: ObjectId;
+    _id?: string;
     name: string;
     email: string;
-    profilePhoto: string; // TODO - idk about this 
-    type: number; // TODO - do we want to do 0 for student, 1 for instructor, or something else? 
+    profilePhoto?: string; 
+    type: number; // 0 = student, 1 = instructor
 }
 
 export interface Course {
-    _id?: ObjectId;
+    _id?: string;
     name: string;
     term: string;
-    number: string; // TODO - is this what we want?
-    students: User[];
-    instructors: User[];
-    folders: Folder[];
+    number: string; 
+    students: string[]; 
+    instructors: string[]; 
+    folders: string[]; 
 }
 
 export interface Folder {
-    _id?: ObjectId;
+    _id?: string;
     name: string;
-    courseId: Course;
-    posts: Post[];
+    courseId: string; 
+    posts: string[]; 
 }
 
 export interface FollowupDiscussion {
-    _id?: ObjectId;
-    postId: Post;
-    authorId: User;
-    datePosted: Date;
+    _id?: string;
+    postId: string; 
+    authorId: string; 
+    datePosted: string;
     content: string;
-    replies: Reply[];
+    replies: string[]; 
 }
 
 export interface Answer {
-    _id?: ObjectId;
-    type: number; // TODO - is this what we want? currently using it as 0 for question and 1 for note 
-    authors: User[];
+    _id?: string;
+    type: number; // 0 = question, 1 = note
+    authors: string[]; 
     content: string;
-    dateEdited: Date;
+    dateEdited: string;
 }
 
 export interface Reply {
-    _id?: ObjectId;
-    followupDiscussionId: FollowupDiscussion;
-    authorId: User;
-    datePosted: Date;
+    _id?: string;
+    followupDiscussionId: string; 
+    authorId: string; 
+    datePosted: string;
     content: string;
 }
