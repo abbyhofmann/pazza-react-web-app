@@ -44,7 +44,7 @@ app.post('/api/post', (req, res) => {
 
 });
 
-app.get('/api/posts', async (req, res) => {
+app.get('/api/post/posts', async (req, res) => {
     try {
         await client.connect();
 

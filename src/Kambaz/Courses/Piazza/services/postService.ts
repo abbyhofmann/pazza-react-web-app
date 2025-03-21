@@ -12,7 +12,7 @@ const POST_API_URL = `${import.meta.env.VITE_API_URL}/post`;
  * @throws Error if there is an issue fetching the post by ID.
  */
 const getPostById = async (pid: string): Promise<Post> => {
-  const res = await api.get(`${POST_API_URL}/getPost/${pid}`);
+  const res = await api.get(`${POST_API_URL}/${pid}`);
 
   if (res.status !== 200) {
     throw new Error('Error while fetching post');
@@ -20,6 +20,13 @@ const getPostById = async (pid: string): Promise<Post> => {
   return res.data;
 };
 
+const getPosts = async (): Promise<Post[]> => {
+  const res = await api.get(`${POST_API_URL}/posts`);
+  if (res.status !== 200) {
+    throw new Error('Error while fetching posts');
+  }
+  return res.data;
+}
 
 
-export { getPostById };
+export { getPostById, getPosts };

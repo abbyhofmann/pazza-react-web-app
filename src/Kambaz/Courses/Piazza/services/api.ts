@@ -14,7 +14,7 @@ const handleErr = (err: AxiosError) => {
   return Promise.reject(err);
 };
 
-const api = axios.create({ withCredentials: true });
+const api = axios.create();
 
 /**
  * Add a request interceptor to the Axios instance.

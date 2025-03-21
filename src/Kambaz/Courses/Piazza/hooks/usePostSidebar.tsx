@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { posts } from "../../../Database";
+import { Post } from "../../../types";
 
 /**
  * Custom hook for managing post sidebar and date-related functionality.
@@ -17,9 +18,9 @@ const usePostSidebar = () => {
    * @param post The post object itself.
    * @returns Boolean - true if post does not contain any answers, false if it does.
    */
-  function isUnanswered(post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }): boolean {
+  function isUnanswered(post: Post): boolean {
     // TODO - update logic based on the length of the response lists once Post object is implemented in mongodb
-    return post.studentResponse === "" && post.instructorResponse === "";
+    return post.studentAnswer === null && post.instructorAnswer === null;
   }
 
   /**
@@ -125,9 +126,9 @@ const usePostSidebar = () => {
   * @param posts The posts being grouped.
   * @returns A mapping of string date range to list of posts that fall in that date range.
   */
-  function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
+  function groupPostsByWeek(datesToExclude: String[], posts: Post[]): Map<string, Post[]> {
     // map to keep track of which week each post belongs in
-    const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
+    const groupedPosts: Map<string, Post[]> = new Map();
 
     posts.forEach((post) => {
       // add post to the week if it is not in the dates to exclude - for our use case, we do not want to display posts from this week,
