@@ -1,20 +1,35 @@
 
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
 import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
-
-const app = express();
-
-app.use(cors());
-
-app.use(express.json());
+import path from 'path';
 
 dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.json());
+
 const dbConn = process.env.DB_CONN_STRING;
 const client = new mongoDB.MongoClient(dbConn);
+
+// connect to the DB once at startup
+async function connectDB() {
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB");
+    } catch (err) {
+        console.error("Failed to connect to MongoDB", err);
+        process.exit(1);
+    }
+}
+
+connectDB();
+
+const db = client.db("piazza");
+const posts = db.collection("posts");
+const answers = db.collection("answers");
+
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -44,18 +59,55 @@ app.post('/api/post', (req, res) => {
 
 });
 
-app.get('/api/posts', async (req, res) => {
+// get all posts in database
+app.get('/api/post/posts', async (req, res) => {
     try {
-        await client.connect();
-
-        const db = client.db("piazza");
-        const posts = db.collection("posts");
-        const allPosts = (await posts.find({}).toArray());
-
-        console.log('Connected to MongoDB');
+        const allPosts = await posts.find({}).toArray();
+        console.log('all posts: ', allPosts);
         res.status(200).send(allPosts);
-    } finally {
-        client.close();
+    } catch (err) {
+        res.status(500).send(`Error fetching posts: ${err}`);
+    }
+});
+
+// get an individual post by its post ID
+app.get('/api/post/:pid', async (req, res) => {
+    try {
+        // post id is a request parameter 
+        const { pid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        // fetch the post from the database - returns null if there is not a post with that id 
+        const fetchedPost = (await posts.findOne({ _id: pid }));
+        console.log('fetched post: ', fetchedPost);
+        res.json(fetchedPost);
+    } catch (err) {
+        res.status(500).send(`Error when fetching post: ${err}`);
+    }
+});
+
+// get an individual answer by its answer ID
+app.get('/api/answer/:aid', async (req, res) => {
+    try {
+        // post id is a request parameter 
+        const { aid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedAnswer = (await answers.findOne({ _id: aid }));
+        console.log('fetched answer: ', fetchedAnswer);
+        res.json(fetchedAnswer);
+    } catch (err) {
+        res.status(500).send(`Error when fetching answer: ${err}`);
     }
 });
 

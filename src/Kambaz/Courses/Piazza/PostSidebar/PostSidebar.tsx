@@ -1,9 +1,8 @@
-import { posts } from "../../../Database";
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router";
+import { Post } from "../../../types";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -18,14 +17,11 @@ export default function PostSidebar() {
     today,
     yesterday,
     isUnanswered,
+    navButton,
+    posts
   } = usePostSidebar();
 
-  const navigate = useNavigate();
-  const { cid } = useParams();
 
-  const navButton = () => {
-    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
-  }
 
   return (
     <div
@@ -72,13 +68,13 @@ export default function PostSidebar() {
                   .filter((post) => formatDate(post.datePosted) === today)
                   .map((post) => (
                     <PostListItem
-                      _id={post._id}
+
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)} // TODO - is this how to handle the undefined???
                       isSelected={selectedPostId === post._id}
                       isUnanswered={isUnanswered(post)}
                     />
@@ -107,13 +103,12 @@ export default function PostSidebar() {
                   .filter((post) => formatDate(post.datePosted) === yesterday)
                   .map((post) => (
                     <PostListItem
-                      _id={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)}
                       isSelected={selectedPostId === post._id}
                       isUnanswered={isUnanswered(post)}
                     />
@@ -144,13 +139,12 @@ export default function PostSidebar() {
                   )
                   .map((post) => (
                     <PostListItem
-                      _id={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={getDayOfWeek}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)}
                       isSelected={selectedPostId === post._id}
                       isUnanswered={isUnanswered(post)}
                     />
@@ -187,29 +181,14 @@ export default function PostSidebar() {
                   >
                     <ul className="list-group list-group-flush">
                       {postsInRange.map(
-                        (post: {
-                          _id: string;
-                          folderId: string;
-                          authorId: string;
-                          datePosted: string;
-                          type: number;
-                          instructor: boolean;
-                          title: string;
-                          content: string;
-                          followUpQuestions: string;
-                          studentResponse: string;
-                          instructorResponse: string;
-                          viewers: string;
-                          courseId: string;
-                        }) => (
+                        (post: Post) => (
                           <PostListItem
-                            _id={post._id}
                             title={post.title}
                             content={post.content}
                             datePosted={post.datePosted}
                             instructor={post.instructor}
                             displayDate={formatDate}
-                            onClick={() => handlePostClick(post._id)}
+                            onClick={() => handlePostClick(post._id!)}
                             isSelected={selectedPostId === post._id}
                             isUnanswered={isUnanswered(post)}
                           />
