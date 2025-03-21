@@ -1,20 +1,35 @@
 
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
 import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
-
-const app = express();
-
-app.use(cors());
-
-app.use(express.json());
+import path from 'path';
 
 dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.json());
+
 const dbConn = process.env.DB_CONN_STRING;
 const client = new mongoDB.MongoClient(dbConn);
+
+// connect to the DB once at startup
+async function connectDB() {
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB");
+    } catch (err) {
+        console.error("Failed to connect to MongoDB", err);
+        process.exit(1);
+    }
+}
+
+connectDB();
+
+const db = client.db("piazza");
+const posts = db.collection("posts");
+const answers = db.collection("answers");
+
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -44,27 +59,20 @@ app.post('/api/post', (req, res) => {
 
 });
 
+// get all posts in database
 app.get('/api/post/posts', async (req, res) => {
     try {
-        await client.connect();
-
-        const db = client.db("piazza");
-        const posts = db.collection("posts");
-        const allPosts = (await posts.find({}).toArray());
-
-        console.log('Connected to MongoDB');
+        const allPosts = await posts.find({}).toArray();
+        console.log('all posts: ', allPosts);
         res.status(200).send(allPosts);
-    } finally {
-        client.close();
+    } catch (err) {
+        res.status(500).send(`Error fetching posts: ${err}`);
     }
 });
 
+// get an individual post by its post ID
 app.get('/api/post/:pid', async (req, res) => {
     try {
-        await client.connect();
-
-        const db = client.db("piazza");
-        const posts = db.collection("posts");
         // post id is a request parameter 
         const { pid } = req.params;
 
@@ -81,17 +89,11 @@ app.get('/api/post/:pid', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when fetching post: ${err}`);
     }
-    finally {
-        client.close();
-    }
 });
 
+// get an individual answer by its answer ID
 app.get('/api/answer/:aid', async (req, res) => {
     try {
-        await client.connect();
-
-        const db = client.db("piazza");
-        const answers = db.collection("answers");
         // post id is a request parameter 
         const { aid } = req.params;
 
@@ -106,9 +108,6 @@ app.get('/api/answer/:aid', async (req, res) => {
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
-    }
-    finally {
-        client.close();
     }
 });
 
