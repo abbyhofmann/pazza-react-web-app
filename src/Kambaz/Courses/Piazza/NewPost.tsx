@@ -4,7 +4,7 @@ import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { folders } from "../../Database";
 import "./../../styles.css";
 
@@ -18,6 +18,8 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
+   const location = useLocation();
+   const handleNewPost = location.state?.handleNewPost;
 
 
    const DeleteButton = () => {
@@ -104,7 +106,12 @@ export default function NewPostPage() {
          });
 
          if (response.ok) {
-            console.log("New Post Added");
+            const savedPost = await response.json();
+            console.log("New Post Added", savedPost);
+
+            if (handleNewPost) {
+            handleNewPost(savedPost)
+            }
             navigate(`/Kambaz/Courses/${cid}/Piazza`);
          }
          else {
