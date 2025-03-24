@@ -1,5 +1,35 @@
+interface InstructorAnswerProps {
+    instructorAnswerId: string;
+}
+
 // Component for displaying an instructor answer to a post.
-export default function InstructorAnswer() {
+export default function InstructorAnswer(props: InstructorAnswerProps) {
+
+    // TODO - remove: this is just a placeholder to prevent the "declared but value never read" build error
+    console.log(props);
+
+    // const { instructorAnswerId } = props; 
+    //
+    // const [instructorAnswer, setInstructorAnswer] = useState<String>(""); // TODO - update to Response datatype
+
+    // useEffect(() => {
+    //     /**
+    //      * Function to fetch the instructor answer data based on the answer's ID.
+    //      */
+    //     const fetchData = async () => {
+    //       try {
+    //         const res = await getInstructorAnswerById(instructorAnswerId);
+    //         setInstructorAnswer(res || null);
+    //       } catch (error) {
+    //         // eslint-disable-next-line no-console
+    //         console.error('Error fetching instructor answer:', error);
+    //       }
+    //     };
+    
+    //     // eslint-disable-next-line no-console
+    //     fetchData().catch(e => console.log(e));
+    //   }, [instructorAnswerId]);
+
     // TODO - fill in with instructor answer data from the post itself
     return (
         <article data-id="i_answer" className="answer" aria-label="Instructor Answer">
@@ -17,7 +47,7 @@ export default function InstructorAnswer() {
                     <div className="col">
                         <div className="py-3 history-selection">
                             {/* content of the answer */}
-                            <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">yes, you should have images on the dashboard page</div>
+                            <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">yes, you should have images on the dashboard page</div> { /* TODO - replace with field of fetched instructor answer */}
                         </div>
                     </div>
                 </div>
@@ -26,7 +56,7 @@ export default function InstructorAnswer() {
                 <div className="row">
                     <div className="text-right col">
                         { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                        <div className="update_text float-end" data-id="contributors">Answered on <time>March 1, 2015 at 2:32 pm</time> by <span data-id="contributors">Heet Manish Kanani</span>
+                        <div className="update_text float-end" data-id="contributors">Answered on <time>March 1, 2015 at 2:32 pm</time> by <span data-id="contributors">Heet Manish Kanani</span> { /* TODO - replace with fields of fetched instructor answer */}
                         </div>
                     </div>
                 </div>

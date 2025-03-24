@@ -86,6 +86,10 @@
   background: #fff7ce;
 }
 
+.feed_item.unanswered {
+  background: rgba(255, 0, 0, 0.2);
+}
+
 .content {
   display: flex;
   flex-direction: column;
