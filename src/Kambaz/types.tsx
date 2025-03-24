@@ -50,7 +50,8 @@ export interface FollowupDiscussion {
 
 export interface Answer {
     _id?: string;
-    type: number; // 0 = question, 1 = note
+    postId: string;
+    type: number; // 0 = student, 1 = instructor
     authors: string[];
     content: string;
     dateEdited: string;
