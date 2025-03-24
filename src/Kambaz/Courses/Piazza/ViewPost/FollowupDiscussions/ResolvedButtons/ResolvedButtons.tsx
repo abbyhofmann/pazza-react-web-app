@@ -1,16 +1,26 @@
 import "./ResolvedButtons.css";
 
-export default function ResolvedButtons() {
+export interface ResolvedButtonsProps {
+    resolved: boolean;
+    setResolved: (resolvedStatus: boolean) => void;
+}
+
+export default function ResolvedButtons(props: ResolvedButtonsProps) {
+
+    const { resolved, setResolved } = props;
+
     return (
         <div className="">
-            {/* TODO - add logic to toggle between resolved and unresolved selection */}
-            <div className="unresolved resolved-buttons">
+            <div className={`${resolved ? "resolved" : "unresolved"} resolved-buttons`}>
                 <div className="custom-control custom-radio custom-control-inline">
                     <input
-                        name="followup_resolution_resolved-button"
+                        // key added to force a re-render and show the radio button selection
+                        key={String(resolved)}
+                        name="followup_resolution"
                         type="radio"
                         className="custom-control-input"
-                        checked
+                        checked={resolved}
+                        onChange={() => (setResolved(true))}
                     />
                     <label
                         title=""
@@ -21,9 +31,12 @@ export default function ResolvedButtons() {
                 </div>
                 <div className="custom-control custom-radio custom-control-inline">
                     <input
-                        name="followup_resolution_unresolved-button"
+                        key={String(resolved)}
+                        name="followup_resolution"
                         type="radio"
                         className="custom-control-input"
+                        checked={!resolved}
+                        onChange={() => (setResolved(false))}
                     />
                     <label
                         title=""

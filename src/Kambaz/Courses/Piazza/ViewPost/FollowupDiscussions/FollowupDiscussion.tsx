@@ -14,6 +14,8 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     const [fud, setFud] = useState<{ "id": string, "postId": string, "author": string, "datePosted": string, "content": string, "replies": string[] }>({ "id": fudId, "postId": "1234", "author": "Abby H", "datePosted": "2025-02-16T01:00:00.000Z", "content": "follow up discussion questionnnn", replies: ["rep1id", "rep2id"] }); // TODO - update to Reply datatype
 
+    const [resolved, setResolved] = useState<boolean>(false);
+
     // TODO - remove: just here to prevent build error
     console.log(setFud);
 
@@ -40,7 +42,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     return (
         <div className="g-1 row">
-            <ResolvedButtons />
+            <ResolvedButtons resolved={resolved} setResolved={setResolved} />
             <div className="mx-0 col-auto">
                 <img className="avatar" width="30px" height="30px" aria-hidden="true" src="images/anonProfilePic.jpg" />
             </div>

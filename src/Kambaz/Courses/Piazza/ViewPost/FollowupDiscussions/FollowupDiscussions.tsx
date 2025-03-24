@@ -2,9 +2,9 @@ import "./FollowupDiscussions.css";
 import FollowupDiscussion from "./FollowupDiscussion";
 
 interface FollowupDiscussionsProps {
-    convoExists: boolean;
-    fudIds: string[];
-  }
+  convoExists: boolean;
+  fudIds: string[];
+}
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
@@ -29,7 +29,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
       {convoExists && (
         // will likely need a for-loop to loop through all of a post's followup discussions
         <div className="followup_content_wrapper col mx-3">
-          {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId}/>))}
+          {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId} />))}
         </div>
       )}
 
