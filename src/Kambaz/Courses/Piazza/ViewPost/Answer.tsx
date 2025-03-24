@@ -14,7 +14,6 @@ export default function Answer(props: AnswerProps) {
 
     const { answerId, type } = props;
 
-    // const { answerId } = props;
     const [answer, setAnswer] = useState<Answer | null>(null); // TODO - update state variable to have Response datatype
 
     // keep track of if the user is editing the answer 
@@ -31,7 +30,6 @@ export default function Answer(props: AnswerProps) {
         const date = new Date(dateString);
 
         return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
-
     }
 
     useEffect(() => {
@@ -75,6 +73,7 @@ export default function Answer(props: AnswerProps) {
                     }}
                     onCancel={() => setIsEditing(false)}
                     type={type}
+                    editing={isEditing}
                 />
             ) :
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">

@@ -51,7 +51,8 @@ const ViewPostPage = () => {
           setPost((prevPost) => prevPost ? { ...prevPost, studentAnswer: newAnswer } : null);
         }}
         onCancel={() => { }}
-        type={"student"} />)}
+        type={"student"}
+        editing={false} />)}
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
       {post.type === 0 && (post.instructorAnswer !== null ? <Answer answerId={post.instructorAnswer} type={"instructor"} /> : <NewAnswer initialAnswer=""
         onSave={(newAnswer) => {
@@ -59,7 +60,8 @@ const ViewPostPage = () => {
           setPost((prevPost) => prevPost ? { ...prevPost, instructorAnswer: newAnswer } : null);
         }}
         onCancel={() => { }}
-        type="instructor" />)}
+        type="instructor"
+        editing={false} />)}
       {post.followupDiscussions.length !== 0 ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
     </div>
   );

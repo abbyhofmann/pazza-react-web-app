@@ -7,12 +7,13 @@ interface NewAnswerProps {
     onSave: (updatedAnswer: string) => void;
     onCancel: () => void;
     type: string;
+    editing: boolean;
 }
 
 // Component for adding a new answer to a post.
 export default function NewAnswer(props: NewAnswerProps) {
 
-    const { initialAnswer = "", onSave, onCancel, type } = props;
+    const { initialAnswer = "", onSave, onCancel, type, editing } = props;
     const [answerContent, setAnswerContent] = useState<string>(initialAnswer ? initialAnswer : ""); // TODO idk if this is right 
 
     return (
@@ -40,14 +41,16 @@ export default function NewAnswer(props: NewAnswerProps) {
                     </div>
                 </div>
             </div>
-            <footer className="border-top container-fluid">
-                <div className="row">
-                    <div className="text-left align-self-center m-1 col-auto">
-                        <button className="btn btn-primary btn-sm me-2" onClick={() => onSave(answerContent)}>Submit</button>
-                        <button className="btn btn-secondary btn-sm" onClick={onCancel}>Cancel</button>
+            {editing &&
+                <footer className="border-top container-fluid">
+                    <div className="row">
+                        <div className="text-left align-self-center m-1 col-auto">
+                            <button className="btn btn-primary btn-sm me-2" onClick={() => onSave(answerContent)}>Submit</button>
+                            <button className="btn btn-secondary btn-sm" onClick={onCancel}>Cancel</button>
+                        </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            }
         </article>
     );
 };
