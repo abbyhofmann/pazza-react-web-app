@@ -130,6 +130,9 @@ app.get('/api/user/:uid', async (req, res) => {
     }
 });
 
-app.listen(3000, 'localhost', () => {
-    console.log('Server running on Port 3000');
+// app.listen(3000, 'localhost', () => {
+//     console.log('Server running on Port 3000');
+// });
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+    console.log(`Server running on Port ${process.env.PORT || 3000}`);
 });
