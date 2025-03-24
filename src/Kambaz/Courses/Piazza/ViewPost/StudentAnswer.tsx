@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import NewStudentAnswer from "./NewStudentAnswer";
-import { Answer } from "../../../types";
+import { Answer, User } from "../../../types";
 import { getAnswerById } from "../services/answerService";
+import { getUser } from "../services/userService";
 
 interface StudentAnswerProps {
     studentAnswerId: string;
@@ -21,6 +22,17 @@ export default function StudentAnswer(props: StudentAnswerProps) {
     // keep track of if dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
+    // author(s) of the answer 
+    const [authors, setAuthors] = useState<User[]>([]);
+
+    // formats the date for the answer component 
+    function formatAnswerDate(dateString: string): string {
+        const date = new Date(dateString);
+
+        return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
+
+    }
+
     useEffect(() => {
         /**
          * Function to fetch the student answer data based on the answer's ID.
@@ -29,6 +41,21 @@ export default function StudentAnswer(props: StudentAnswerProps) {
             try {
                 const res = await getAnswerById(studentAnswerId);
                 setStudentAnswer(res || null);
+                console.log('student ans res: ', res)
+                const fetchedAuthors: User[] = [];
+                await Promise.all(
+                    res.authors.map(async authorId => {
+                        const fetchedAuthor = await getUser(authorId);
+                        console.log('fetched author: ', fetchedAuthor);
+
+                        if (fetchedAuthor._id !== undefined) {
+                            fetchedAuthors.push(fetchedAuthor);
+                        }
+                    }));
+
+                console.log('fetched authors: ', fetchedAuthors);
+
+                setAuthors(fetchedAuthors);
             } catch (error) {
                 // eslint-disable-next-line no-console
                 console.error('Error fetching student answer:', error);
@@ -116,7 +143,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                             </div>
                             <div className="text-right col">
                                 { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                                <div className="update_text float-end" data-id="contributors">Answered on <time>February 28, 2025 at 8:11 am</time> by <span data-id="contributors">Abby Hofmann</span> { /* TODO - replace hard-coded content with studentAnswer.authors and studentAnswer.dateEdited */}
+                                <div className="update_text float-end" data-id="contributors">Answered on <time>{studentAnswer?.dateEdited ? formatAnswerDate(studentAnswer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors[0]?.firstName} {authors[0]?.lastName}</span> { /* TODO - format when there are multiple authors */}
                                 </div>
                             </div>
                         </div>

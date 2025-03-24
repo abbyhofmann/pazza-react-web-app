@@ -29,6 +29,7 @@ connectDB();
 const db = client.db("piazza");
 const posts = db.collection("posts");
 const answers = db.collection("answers");
+const users = db.collection("users");
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -108,6 +109,27 @@ app.get('/api/answer/:aid', async (req, res) => {
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
+    }
+});
+
+// get an individual user by their user ID
+app.get('/api/user/:uid', async (req, res) => {
+    try {
+        // user id is a request parameter 
+        const { uid } = req.params;
+        console.log('uid: ', uid);
+
+        // ensure that the id is a valid id - user IDs are not ObjectIds right now
+        // if (!mongoDB.ObjectId.isValid(uid)) {
+        //     res.status(400).send('Invalid ID format');
+        //     return;
+        // }
+
+        const fetchedUser = (await users.findOne({ _id: uid }));
+        console.log('fetched user: ', fetchedUser);
+        res.json(fetchedUser);
+    } catch (err) {
+        res.status(500).send(`Error when fetching ansuserwer: ${err}`);
     }
 });
 
