@@ -105,7 +105,6 @@ app.get('/api/answer/:aid', async (req, res) => {
         }
 
         const fetchedAnswer = (await answers.findOne({ _id: aid }));
-        console.log('fetched answer: ', fetchedAnswer);
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
@@ -117,7 +116,6 @@ app.get('/api/user/:uid', async (req, res) => {
     try {
         // user id is a request parameter 
         const { uid } = req.params;
-        console.log('uid: ', uid);
 
         // ensure that the id is a valid id - user IDs are not ObjectIds right now
         // if (!mongoDB.ObjectId.isValid(uid)) {
@@ -126,7 +124,6 @@ app.get('/api/user/:uid', async (req, res) => {
         // }
 
         const fetchedUser = (await users.findOne({ _id: uid }));
-        console.log('fetched user: ', fetchedUser);
         res.json(fetchedUser);
     } catch (err) {
         res.status(500).send(`Error when fetching ansuserwer: ${err}`);

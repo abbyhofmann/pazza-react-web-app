@@ -14,5 +14,13 @@
     "authors": ["123"],
     "content": "See student answer",
     "dateEdited": "2025-02-18T04:00:00.000Z"
+  },
+  {
+    "_id": "67e1689e3b313d8f2faa5d99",
+    "postId": "67dc37fe978d92187857ac31",
+    "type": 1,
+    "authors": ["678"],
+    "content": "I'd strongly recommend Visual Studio Code",
+    "dateEdited": "2025-02-01T02:30:00.000Z"
   }
 ]

@@ -24,7 +24,6 @@ const usePostSidebar = () => {
 
       try {
         const res = await getPosts();
-        console.log('fetch posts res: ', res);
         setPosts(res);
       } catch (error) {
         // eslint-disable-next-line no-console

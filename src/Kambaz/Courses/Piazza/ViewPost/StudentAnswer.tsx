@@ -41,20 +41,14 @@ export default function StudentAnswer(props: StudentAnswerProps) {
             try {
                 const res = await getAnswerById(studentAnswerId);
                 setStudentAnswer(res || null);
-                console.log('student ans res: ', res)
                 const fetchedAuthors: User[] = [];
                 await Promise.all(
                     res.authors.map(async authorId => {
                         const fetchedAuthor = await getUser(authorId);
-                        console.log('fetched author: ', fetchedAuthor);
-
                         if (fetchedAuthor._id !== undefined) {
                             fetchedAuthors.push(fetchedAuthor);
                         }
                     }));
-
-                console.log('fetched authors: ', fetchedAuthors);
-
                 setAuthors(fetchedAuthors);
             } catch (error) {
                 // eslint-disable-next-line no-console
@@ -143,7 +137,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                             </div>
                             <div className="text-right col">
                                 { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                                <div className="update_text float-end" data-id="contributors">Answered on <time>{studentAnswer?.dateEdited ? formatAnswerDate(studentAnswer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors[0]?.firstName} {authors[0]?.lastName}</span> { /* TODO - format when there are multiple authors */}
+                                <div className="update_text float-end" data-id="contributors">Answered on <time>{studentAnswer?.dateEdited ? formatAnswerDate(studentAnswer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors.map(a => `${a.firstName} ${a.lastName}`).join(", ")}</span> { /* TODO - format when there are multiple authors */}
                                 </div>
                             </div>
                         </div>

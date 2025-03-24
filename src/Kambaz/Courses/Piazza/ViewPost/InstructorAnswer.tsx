@@ -23,21 +23,15 @@ export default function InstructorAnswer(props: InstructorAnswerProps) {
         const fetchData = async () => {
             try {
                 const res = await getAnswerById(instructorAnswerId);
-                console.log('instr ans res: ', res, " prop: ", instructorAnswer);
                 setInstructorAnswer(res || null);
                 const fetchedAuthors: User[] = [];
                 await Promise.all(
                     res.authors.map(async authorId => {
                         const fetchedAuthor = await getUser(authorId);
-                        console.log('fetched instr post author: ', fetchedAuthor);
-
                         if (fetchedAuthor._id !== undefined) {
                             fetchedAuthors.push(fetchedAuthor);
                         }
                     }));
-
-                console.log('fetched instr post authors: ', fetchedAuthors);
-
                 setAuthors(fetchedAuthors);
             } catch (error) {
                 // eslint-disable-next-line no-console
@@ -82,7 +76,7 @@ export default function InstructorAnswer(props: InstructorAnswerProps) {
                 <div className="row">
                     <div className="text-right col">
                         { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                        <div className="update_text float-end" data-id="contributors">Answered on <time>{instructorAnswer?.dateEdited ? formatAnswerDate(instructorAnswer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors[0]?.firstName} {authors[0]?.lastName}</span> { /* TODO - format for when there are multiple authors/editors */}
+                        <div className="update_text float-end" data-id="contributors">Answered on <time>{instructorAnswer?.dateEdited ? formatAnswerDate(instructorAnswer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors.map(a => `${a.firstName} ${a.lastName}`).join(", ")}</span> { /* TODO - format for when there are multiple authors/editors */}
                         </div>
                     </div>
                 </div>

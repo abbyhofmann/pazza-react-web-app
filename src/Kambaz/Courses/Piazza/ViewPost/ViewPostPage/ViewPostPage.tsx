@@ -50,7 +50,7 @@ const ViewPostPage = () => {
       {post.type === 0 && (post.studentAnswer !== null ? <StudentAnswer studentAnswerId={post.studentAnswer} /> : <NewStudentAnswer initialAnswer=""
         onSave={(newAnswer) => {
           // TODO: send newAnswer to the backend and update post state
-          setPost((prevPost) => prevPost ? { ...prevPost, studentResponse: newAnswer } : null);
+          setPost((prevPost) => prevPost ? { ...prevPost, studentAnswer: newAnswer } : null);
         }}
         onCancel={() => { }} />)}
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}

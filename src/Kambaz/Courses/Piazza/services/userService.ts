@@ -10,10 +10,8 @@ const USER_API_URL = `${import.meta.env.VITE_API_URL}/user`;
  * @throws Error if there is an issue fetching the user by ID.
  */
 const getUser = async (uid: string): Promise<User> => {
-    console.log('inside get user')
   const res = await api.get(`${USER_API_URL}/${uid}`);
 
-  console.log("get user res: ", res)
   if (res.status !== 200) {
     throw new Error("Error while fetching user");
   }
