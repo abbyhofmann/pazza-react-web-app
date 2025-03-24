@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import NewStudentAnswer from "./NewStudentAnswer";
-import { Answer, User } from "../../../types";
+import { type Answer, User } from "../../../types";
 import { getAnswerById } from "../services/answerService";
 import { getUser } from "../services/userService";
+import NewAnswer from "./NewAnswer";
 
 interface AnswerProps {
     answerId: string;
@@ -74,6 +74,7 @@ export default function Answer(props: AnswerProps) {
                         setIsEditing(false);
                     }}
                     onCancel={() => setIsEditing(false)}
+                    type={type}
                 />
             ) :
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">

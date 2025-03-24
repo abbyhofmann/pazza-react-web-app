@@ -1,15 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PostBox from '../PostBox';
-import NewStudentAnswer from '../NewStudentAnswer';
-import InstructorAnswer from '../InstructorAnswer';
 import NewFollowupDiscussions from '../NewFollowupDiscussions';
-import StudentAnswer from '../StudentAnswer';
-import NewInstructorAnswer from '../NewInstructorAnswer';
+import Answer from '../Answer';
 import FollowupDiscussions from '../FollowupDiscussions';
 import "./ViewPostPage.css";
 import { Post } from '../../../../types';
 import { getPostById } from '../../services/postService';
+import NewAnswer from '../NewAnswer';
 
 /**
  * Represents the profile page component. Routes to the right view based on the
@@ -47,14 +45,21 @@ const ViewPostPage = () => {
       <PostBox post={post} />
       {/* TODO - add logic for only creating a student response if the user is a student */}
       {/* only posts of type question should have the student and instructor response components */}
-      {post.type === 0 && (post.studentAnswer !== null ? <StudentAnswer studentAnswerId={post.studentAnswer} /> : <NewStudentAnswer initialAnswer=""
+      {post.type === 0 && (post.studentAnswer !== null ? <Answer answerId={post.studentAnswer} type={"student"} /> : <NewAnswer initialAnswer=""
         onSave={(newAnswer) => {
           // TODO: send newAnswer to the backend and update post state
           setPost((prevPost) => prevPost ? { ...prevPost, studentAnswer: newAnswer } : null);
         }}
-        onCancel={() => { }} />)}
+        onCancel={() => { }}
+        type={"student"} />)}
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
-      {post.type === 0 && (post.instructorAnswer !== null ? <InstructorAnswer instructorAnswerId={post.instructorAnswer} /> : <NewInstructorAnswer />)}
+      {post.type === 0 && (post.instructorAnswer !== null ? <Answer answerId={post.instructorAnswer} type={"instructor"} /> : <NewAnswer initialAnswer=""
+        onSave={(newAnswer) => {
+          // TODO: send newAnswer to the backend and update post state
+          setPost((prevPost) => prevPost ? { ...prevPost, instructorAnswer: newAnswer } : null);
+        }}
+        onCancel={() => { }}
+        type="instructor" />)}
       {post.followupDiscussions.length !== 0 ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
     </div>
   );
