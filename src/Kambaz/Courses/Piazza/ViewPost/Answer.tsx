@@ -14,7 +14,7 @@ export default function Answer(props: AnswerProps) {
 
     const { answerId, type } = props;
 
-    const [answer, setAnswer] = useState<Answer | null>(null); // TODO - update state variable to have Response datatype
+    const [answer, setAnswer] = useState<Answer | null>(null); 
 
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);

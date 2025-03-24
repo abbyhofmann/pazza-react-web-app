@@ -2,7 +2,6 @@ import { Post } from "../../../types";
 import "./ViewPost.css";
 
 interface PostBoxProps {
-    // TODO - update this to Post type once db and types are implemented
     post: Post;
 }
 
