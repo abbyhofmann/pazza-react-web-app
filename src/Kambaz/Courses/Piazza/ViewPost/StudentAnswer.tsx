@@ -54,6 +54,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                     <header className="border-bottom container-fluid">
                         <div className="row">
                             <div className="text-left pl-0 col">
+                        <img className="me-1" width="24px" height="24px" aria-hidden="true" src="images/studentIcon.jpg"></img>
                                 <h2>the students' answer, </h2>
                                 <span className="post_type_snippet">where students collectively construct a single answer</span>
                             </div>

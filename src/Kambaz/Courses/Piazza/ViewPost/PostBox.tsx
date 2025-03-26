@@ -2,7 +2,7 @@ import "./ViewPost.css";
 
 interface PostBoxProps {
     // TODO - update this to Post type once db and types are implemented
-    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
+    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string[]; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
 }
 
 // Component for the individual post item in the sidebar. 
@@ -26,6 +26,7 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="text-left pl-0 col-auto">
                         <b>
                             {/* post type */}
+                            <img className="me-1" width="24px" height="24px" aria-hidden="true" src={post.type === 0 ? "images/question.jpg" : "images/note.jpg"}></img>
                             <span tabIndex={-1} data-id="post_type">{post.type === 0 ? "question" : "note"}</span>
                             {/* post number */}
                             <button type="button" className="p-0 post_number_copy btn btn-link-text">@{extractPostNumber(post._id)}</button>
