@@ -51,53 +51,6 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
 
 /* Piazza Home Page Styling */
 
-.wd-border-piazza-nav-bar {
-  border-radius: 0px;
-  height: 55px;
-  background-color: #007BB5;
-  color: white;
-  border: 1px solid gray;
- }
-
- .wd-padding-left-nav-bar {
-  padding-left: 20px;
- }
-
- .wd-font-family {
-  font-family: 'Roboto', sans-serif;
- }
-
- .wd-logo-height {
-  margin-top: 18px;
-  padding-left: 15px;
- }
-
-.wd-q-a {
-  position:absolute;
-  left: 53%;
-  color: white;
-  text-decoration: underline;
-}
-
-.wd-nav-height {
-  margin-top: 18px;
-}
-
-.wd-hw-folder-nav-bar {
-  border-radius: 0%;
-  height: 30px;
-  background-color: #E6E6EA;
-  color: gray;
-  border: 1px solid lightgrey;
-
-}
-
-
-.wd-hw-height {
-  margin-top: 4px;
-  padding-left: 15px;
- }
-
 .wd-right-page-bg {
 border-radius: 0%;
 border-color: #F1F1F4;
@@ -156,17 +109,17 @@ gap:5px;
   margin-right: 0%;
   height: 130px;
   
-  }
+}
 
-  .wd-text-grey {
-    color: rgb(91, 91, 91);
-    margin-top: 5px;
-    margin-right: 2px;
-  }
+.wd-text-grey {
+  color: rgb(91, 91, 91);
+  margin-top: 5px;
+  margin-right: 2px;
+}
 
-  .wd-font-bold {
-    font-weight: bold;
-  }
+.wd-font-bold {
+  font-weight: bold;
+}
 
 .wd-question-border {
   border-radius: 0%;
