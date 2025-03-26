@@ -1,0 +1,35 @@
+a.nav-link {
+  color: white;
+}
+
+.wd-logo-height {
+  padding-left: 4;
+}
+
+.wd-border-piazza-nav-bar {
+  border-radius: 0px;
+  height: 55px;
+  background-color: #007BB5;
+  color: white;
+  border: 1px solid gray;
+}
+
+.wd-padding-left-nav-bar {
+  padding-left: 20px;
+}
+
+.wd-font-family {
+  font-family: 'Roboto', sans-serif;
+}
+
+.wd-nav-height {
+  margin-top: 18px;
+}
+
+.wd-hw-folder-nav-bar {
+  border-radius: 0%;
+  height: 30px;
+  background-color: #E6E6EA;
+  color: gray;
+  border: 1px solid lightgrey;
+}
