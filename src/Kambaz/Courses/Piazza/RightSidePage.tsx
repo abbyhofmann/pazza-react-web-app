@@ -10,21 +10,20 @@ export default function RightSidePage() {
       </div>
       <div className="wd-class-glance">
         <div className="wd-post-stats wd-bold">
-          <img src="images/warning5.jpg" height={30} />
+          <img src="/images/warning5.jpg" height={30} />
           <span>_ unread posts</span>
         </div>
 
         <div className="wd-post-stats wd-bold" style={{ paddingLeft: '13px' }}>
-          <img src="images/checkmark.jpg" height={25} />
+          <img src="/images/checkmark.jpg" height={25} />
           <span>_ unanswered followups</span>
         </div>
 
         <div className="wd-post-stats wd-bold">
-          <img src="images/warning5.jpg" height={30} />
+          <img src="/images/warning5.jpg" height={30} />
           <span>_ unanswered followups</span>
         </div>
       </div>
-      
     </div>
 
   );

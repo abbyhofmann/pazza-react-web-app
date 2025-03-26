@@ -1,9 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PostBox from '../PostBox';
-import NewFollowupDiscussions from '../NewFollowupDiscussions';
 import Answer from '../Answer';
-import FollowupDiscussions from '../FollowupDiscussions';
+import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
 import { Post } from '../../../../types';
 import { getPostById } from '../../services/postService';
@@ -62,7 +61,7 @@ const ViewPostPage = () => {
         onCancel={() => { }}
         type="instructor"
         editing={false} />)}
-      {post.followupDiscussions.length !== 0 ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+      <FollowupDiscussions convoExists={post.followupDiscussions.length !== 0} fudIds={post.followupDiscussions} />
     </div>
   );
 };

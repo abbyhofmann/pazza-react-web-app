@@ -17,6 +17,7 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="text-left pl-0 col-auto">
                         <b>
                             {/* post type */}
+                            <img className="me-1" width="24px" height="24px" aria-hidden="true" src={post.type === 0 ? "images/question.jpg" : "images/note.jpg"}></img>
                             <span tabIndex={-1} data-id="post_type">{post.type === 0 ? "question" : "note"}</span>
                             {/* post number */}
                             <button type="button" className="p-0 post_number_copy btn btn-link-text">@{(post._id ? post._id : "unknown post id")}</button>
