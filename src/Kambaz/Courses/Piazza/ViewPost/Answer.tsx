@@ -1,62 +1,87 @@
-import { useState } from "react";
-import NewStudentAnswer from "./NewStudentAnswer";
+import { useEffect, useState } from "react";
+import { type Answer, User } from "../../../types";
+import { getAnswerById } from "../services/answerService";
+import { getUser } from "../services/userService";
+import NewAnswer from "./NewAnswer";
 
-interface StudentAnswerProps {
-    studentAnswerId: string;
+interface AnswerProps {
+    answerId: string;
+    type: string;
 }
 
-// Component for displaying a student answer to a post.
-export default function StudentAnswer(props: StudentAnswerProps) {
+// Component for displaying an answer to a post.
+export default function Answer(props: AnswerProps) {
 
-    // TODO - remove: this is just a placeholder to prevent the "declared but value never read" build error
-    console.log(props);
+    const { answerId, type } = props;
 
-    // const { studentAnswerId } = props;
-    const [studentAnswer, setStudentAnswer] = useState<string>("here is a sample student answer"); // TODO - update state variable to have Response datatype
+    const [answer, setAnswer] = useState<Answer | null>(null); 
 
-    // keep track of if the user is editing the student answer 
+    // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     // keep track of if dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     /**
-    //      * Function to fetch the student answer data based on the answer's ID.
-    //      */
-    //     const fetchData = async () => {
-    //       try {
-    //         const res = await getStudentAnswerById(studentAnswerId);
-    //         setStudentAnswer(res || null);
-    //       } catch (error) {
-    //         // eslint-disable-next-line no-console
-    //         console.error('Error fetching student answer:', error);
-    //       }
-    //     };
+    // author(s) of the answer 
+    const [authors, setAuthors] = useState<User[]>([]);
 
-    //     // eslint-disable-next-line no-console
-    //     fetchData().catch(e => console.log(e));
-    //   }, [studentAnswerId]);
+    // formats the date for the answer component 
+    function formatAnswerDate(dateString: string): string {
+        const date = new Date(dateString);
+
+        return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
+    }
+
+    useEffect(() => {
+        /**
+         * Function to fetch the answer data based on the answer's ID.
+         */
+        const fetchData = async () => {
+            try {
+                const res = await getAnswerById(answerId);
+                setAnswer(res || null);
+                const fetchedAuthors: User[] = [];
+                await Promise.all(
+                    res.authors.map(async authorId => {
+                        const fetchedAuthor = await getUser(authorId);
+                        if (fetchedAuthor._id !== undefined) {
+                            fetchedAuthors.push(fetchedAuthor);
+                        }
+                    }));
+                setAuthors(fetchedAuthors);
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error fetching answer:', error);
+            }
+        };
+
+        // eslint-disable-next-line no-console
+        fetchData().catch(e => console.log(e));
+    }, [answerId]);
 
     return (
         <div>
             {isEditing ? (
-                <NewStudentAnswer
-                    initialAnswer={studentAnswer}
-                    onSave={(updatedAnswer) => {
-                        setStudentAnswer(updatedAnswer);
+                <NewAnswer
+                    initialAnswer={answer ? answer.content : ""} // TODO idk about this
+                    onSave={(updatedContent: string) => {
+                        // TODO - endpoint call to update the answer object with the updatedContent on the backend 
+                        if (answer) {
+                            setAnswer({ ...answer, content: updatedContent });
+                        }
                         setIsEditing(false);
                     }}
                     onCancel={() => setIsEditing(false)}
+                    type={type}
+                    editing={isEditing}
                 />
             ) :
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">
                     <header className="border-bottom container-fluid">
                         <div className="row">
                             <div className="text-left pl-0 col">
-                        <img className="me-1" width="24px" height="24px" aria-hidden="true" src="images/studentIcon.jpg"></img>
-                                <h2>the students' answer, </h2>
-                                <span className="post_type_snippet">where students collectively construct a single answer</span>
+                                <h2>the {type}s' answer, </h2>
+                                <span className="post_type_snippet">where {type}s collectively construct a single answer</span>
                             </div>
                         </div>
                     </header>
@@ -91,7 +116,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                                     )}
                                 </div>
                                 <div className="py-3 history-selection">
-                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{studentAnswer}</div> { /* TODO - replace hard-coded content with studentAnswer.content */}
+                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div> { /* TODO - replace hard-coded content with answer.content */}
                                 </div>
                             </div>
                         </div>
@@ -113,7 +138,7 @@ export default function StudentAnswer(props: StudentAnswerProps) {
                             </div>
                             <div className="text-right col">
                                 { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                                <div className="update_text float-end" data-id="contributors">Answered on <time>February 28, 2025 at 8:11 am</time> by <span data-id="contributors">Abby Hofmann</span> { /* TODO - replace hard-coded content with studentAnswer.authors and studentAnswer.dateEdited */}
+                                <div className="update_text float-end" data-id="contributors">Answered on <time>{answer?.dateEdited ? formatAnswerDate(answer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors.map(a => `${a.firstName} ${a.lastName}`).join(", ")}</span> { /* TODO - format when there are multiple authors */}
                                 </div>
                             </div>
                         </div>

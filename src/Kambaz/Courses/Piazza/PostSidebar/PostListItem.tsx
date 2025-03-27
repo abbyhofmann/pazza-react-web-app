@@ -2,7 +2,6 @@ import InstructorIcon from "../InstructorIcon";
 import "./PostSidebar.css";
 
 interface PostListItemProps {
-    _id: string;
     title: string;
     content: string;
     datePosted: string;
@@ -16,10 +15,10 @@ interface PostListItemProps {
 // Component for the individual post item in the sidebar. 
 export default function PostListItem(props: PostListItemProps) {
 
-    const { _id, title, content, datePosted, instructor, displayDate, onClick, isSelected, isUnanswered } = props;
+    const { title, content, datePosted, instructor, displayDate, onClick, isSelected, isUnanswered } = props;
 
     return (
-        <li className={`list-group-item feed_item p-3 ${isSelected ? "selected" : (isUnanswered ? "unanswered" : "")}`} key={_id} onClick={onClick} style={{ cursor: 'pointer' }}>
+        <li className={`list-group-item feed_item p-3 ${isSelected ? "selected" : (isUnanswered ? "unanswered" : "")}`} onClick={onClick} style={{ cursor: 'pointer' }}>
             <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center flex-grow-1 text-truncate">
                     {instructor === true && <InstructorIcon />}

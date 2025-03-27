@@ -27,7 +27,7 @@ export default function Piazza() {
       <HwFolderNav />
 
       <div className="wd-layout">
-        <SideBar />
+        <SideBar  />
         <div className="wd-main-content">
           <Routes>
             <Route path="/" element={<RightSidePage />} />
