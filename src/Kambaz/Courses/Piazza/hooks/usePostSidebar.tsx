@@ -41,7 +41,7 @@ const usePostSidebar = () => {
    * @returns Boolean - true if post does not contain any answers, false if it does.
    */
   function isUnanswered(post: Post): boolean {
-    return post.studentAnswer === null && post.instructorAnswer === null;
+    return post.studentAnswer === null && post.instructorAnswer === null && post.type === 0;
   }
 
   /**
