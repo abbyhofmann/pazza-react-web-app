@@ -30,6 +30,7 @@ const db = client.db("piazza");
 const posts = db.collection("posts");
 const answers = db.collection("answers");
 const users = db.collection("users");
+const followupDiscussions = db.collection("followupDiscussions");
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -95,7 +96,7 @@ app.get('/api/post/:pid', async (req, res) => {
 // get an individual answer by its answer ID
 app.get('/api/answer/:aid', async (req, res) => {
     try {
-        // post id is a request parameter 
+        // answer id is a request parameter 
         const { aid } = req.params;
 
         // ensure that the id is a valid id
@@ -127,6 +128,25 @@ app.get('/api/user/:uid', async (req, res) => {
         res.json(fetchedUser);
     } catch (err) {
         res.status(500).send(`Error when fetching ansuserwer: ${err}`);
+    }
+});
+
+// get an individual followup discussion by its ID
+app.get('/api/followupDiscussion/:fudid', async (req, res) => {
+    try {
+        // followup discussion id is a request parameter 
+        const { fudid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedDiscussion = (await followupDiscussions.findOne({ _id: fudid }));
+        res.json(fetchedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when fetching discussion: ${err}`);
     }
 });
 
