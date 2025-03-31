@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usePostSidebar from "../../hooks/usePostSidebar";
+import { Reply } from "../../../../types";
+import { getReplyById } from "../../services/replyService";
 
 interface FollowupReplyProps {
     replyId: string;
@@ -11,32 +13,29 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     const { formatDate } = usePostSidebar();
 
-    const [reply, setReply] = useState<{ "id": string, "fuqId": string, "author": string, "datePosted": string, "content": string }>({ "id": replyId, "fuqId": "1234", "author": "Miazi", "datePosted": "2025-02-16T01:00:00.000Z", "content": "replyyyyyyy" }); // TODO - update to Reply datatype
+    const [reply, setReply] = useState<Reply | null>(null); 
 
     // TODO - will need function to fetch author and determine if they are a student or instructor 
     // variable for determining which icon to display alongside reply 
     const isStudent = false;
 
-    // TODO - remove: just here to prevent build error
-    console.log(setReply);
+    useEffect(() => {
+        /**
+         * Function to fetch the reply data based on the reply's ID.
+         */
+        const fetchData = async () => {
+          try {
+            const res = await getReplyById(replyId);
+            setReply(res || null);
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error fetching reply:', error);
+          }
+        };
 
-    // useEffect(() => {
-    //     /**
-    //      * Function to fetch the reply data based on the reply's ID.
-    //      */
-    //     const fetchData = async () => {
-    //       try {
-    //         const res = await getFollowupReplyById(replyId);
-    //         setReply(res || null);
-    //       } catch (error) {
-    //         // eslint-disable-next-line no-console
-    //         console.error('Error fetching reply:', error);
-    //       }
-    //     };
-
-    //     // eslint-disable-next-line no-console
-    //     fetchData().catch(e => console.log(e));
-    //   }, [replyId]);
+        // eslint-disable-next-line no-console
+        fetchData().catch(e => console.log(e));
+      }, [replyId]);
 
     return (
         <div
@@ -52,19 +51,20 @@ export default function FollowupReply(props: FollowupReplyProps) {
             </div>
             <div className="col">
                 <b>
-                    <span data-id="contributors">{reply.author} </span>
+                    {/* TODO - fetch the author */}
+                    <span data-id="contributors">{reply?.authorId} </span>
                 </b>
                 <span className="helper-text">
                     <time>
                         {/* TODO - is the MM/DD/YYYY the format we want here? */}
-                        {formatDate(reply.datePosted)}
+                        {formatDate(reply ? reply.datePosted : "")}
                     </time>
                 </span>
                 <div
                     id="m7mvuzhntd4fj_render"
                     className="render-html-content overflow-hidden latex_process"
                 >
-                    {reply.content}
+                    {reply?.content}
                 </div>
             </div>
         </div>

@@ -27,7 +27,6 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         const fetchData = async () => {
             try {
                 const res = await getFollowupDiscussionById(fudId);
-                console.log('fetch fud res: ', res)
                 setFud(res || null);
             } catch (error) {
                 // eslint-disable-next-line no-console

@@ -1,5 +1,7 @@
-import { Post } from "../../../types";
+import { useEffect, useState } from "react";
+import { Post, User } from "../../../types";
 import "./ViewPost.css";
+import { getUser } from "../services/userService";
 
 interface PostBoxProps {
     post: Post;
@@ -9,6 +11,32 @@ interface PostBoxProps {
 export default function PostBox(props: PostBoxProps) {
 
     const { post } = props;
+
+    // author of the post 
+    const [author, setAuthor] = useState<User | null>(null);
+
+    // keep track of if the user is editing the answer 
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        /**
+         * Function to fetch the post-related data.
+         */
+        const fetchData = async () => {
+            try {
+                const fetchedAuthor = await getUser(post.authorId);
+                if (fetchedAuthor._id !== undefined) {
+                    setAuthor(fetchedAuthor);
+                }
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error fetching answer:', error);
+            }
+        };
+        // eslint-disable-next-line no-console
+        fetchData().catch(e => console.log(e));
+    }, [post]);
 
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
@@ -56,7 +84,21 @@ export default function PostBox(props: PostBoxProps) {
                 <div className="row">
                     <div className="text-left align-self-center m-1 col-auto">
                         {/* edit button */}
-                        <button data-id="edit_button" type="button" className="mr-2 btn btn-primary btn-sm">Edit</button> { /* TODO - edit should only available to creator of post and instructors */}
+                        {!isEditing && (
+                            <button
+                                data-id="edit_button"
+                                type="button"
+                                className="mr-2 btn btn-primary btn-sm"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit
+                            </button>
+                        )}
+                    </div>
+                    <div className="text-right col">
+                        { /* author of post */}
+                        <div className="update_text float-end" data-id="contributors">Posted by <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`}</span>
+                        </div>
                     </div>
                 </div>
             </footer>

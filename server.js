@@ -31,6 +31,7 @@ const posts = db.collection("posts");
 const answers = db.collection("answers");
 const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
+const replies = db.collection("replies");
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -147,6 +148,25 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
         res.json(fetchedDiscussion);
     } catch (err) {
         res.status(500).send(`Error when fetching discussion: ${err}`);
+    }
+});
+
+// get an individual followup discussion reply by its ID
+app.get('/api/reply/:rid', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedReply = (await replies.findOne({ _id: rid }));
+        res.json(fetchedReply);
+    } catch (err) {
+        res.status(500).send(`Error when fetching reply: ${err}`);
     }
 });
 
