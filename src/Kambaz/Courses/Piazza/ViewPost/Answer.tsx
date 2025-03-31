@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type Answer, User } from "../../../types";
-import { getAnswerById } from "../services/answerService";
+import { getAnswerById, updateAnswer } from "../services/answerService";
 import { getUser } from "../services/userService";
 import NewAnswer from "./NewAnswer";
 
@@ -81,10 +81,20 @@ export default function Answer(props: AnswerProps) {
             {isEditing ? (
                 <NewAnswer
                     initialAnswer={answer ? answer.content : ""} // TODO idk about this
-                    onSave={(updatedContent: string) => {
-                        // TODO - endpoint call to update the answer object with the updatedContent on the backend 
-                        if (answer) {
-                            setAnswer({ ...answer, content: updatedContent });
+                    onSave={async (updatedContent: string) => {
+                        // check for existence of answer and id 
+                        if (!answer || !answer._id) {
+                            console.error("Cannot update answer: ID is missing");
+                            return;
+                        }
+                    
+                        try {
+                            // update the answer in the db
+                            const updatedAnswer = await updateAnswer(answer._id, updatedContent);
+                            console.log("updatedAnswer: ", updateAnswer);
+                            setAnswer({ ...answer, content: updatedAnswer.content }); 
+                        } catch (error) {
+                            console.error("Error updating answer:", error);
                         }
                         setIsEditing(false);
                     }}

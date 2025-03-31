@@ -18,4 +18,13 @@ const getAnswerById = async (aid: string): Promise<Answer> => {
   return res.data;
 };
 
-export { getAnswerById };
+const updateAnswer = async (aid: string, newContent: string): Promise<Answer> => {
+  const res = await api.put(`${ANSWER_API_URL}/${aid}`, newContent);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating answer");
+  }
+  return res.data;
+}
+
+export { getAnswerById, updateAnswer };

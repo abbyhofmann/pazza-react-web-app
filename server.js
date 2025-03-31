@@ -113,6 +113,31 @@ app.get('/api/answer/:aid', async (req, res) => {
     }
 });
 
+// update an answer's content 
+app.put('/api/answer/:aid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { aid } = req.params;
+        const { updatedContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedAnswer = (await answers.findOneAndUpdate(
+            { _id: aid },
+            { $set: { content: updatedContent } },
+            { new: true }
+        ));
+        
+        res.json(updatedAnswer);
+    } catch (err) {
+        res.status(500).send(`Error when fetching answer: ${err}`);
+    }
+})
+
 // get an individual user by their user ID
 app.get('/api/user/:uid', async (req, res) => {
     try {
