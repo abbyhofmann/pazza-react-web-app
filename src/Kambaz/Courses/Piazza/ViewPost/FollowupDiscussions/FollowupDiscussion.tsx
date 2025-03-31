@@ -3,8 +3,9 @@ import "./FollowupDiscussions.css";
 import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
 import { useEffect, useState } from "react";
 import usePostSidebar from "../../hooks/usePostSidebar";
-import { type FollowupDiscussion } from "../../../../types";
+import { User, type FollowupDiscussion } from "../../../../types";
 import { getFollowupDiscussionById } from "../../services/followupDiscussionService";
+import { getUser } from "../../services/userService";
 
 interface FollowupDiscussionProps {
     fudId: string;
@@ -18,6 +19,8 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     const [resolved, setResolved] = useState<boolean>(false);
 
+    const [author, setAuthor] = useState<User | null>(null);
+
     const { formatDate } = usePostSidebar();
 
     useEffect(() => {
@@ -27,7 +30,9 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         const fetchData = async () => {
             try {
                 const res = await getFollowupDiscussionById(fudId);
-                setFud(res || null);
+                if (res) {
+                    setFud(res);
+                }
             } catch (error) {
                 // eslint-disable-next-line no-console
                 console.error('Error fetching followup discussion:', error);
@@ -38,6 +43,25 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         fetchData().catch(e => console.log(e));
     }, [fudId]);
 
+    useEffect(() => {
+        if (!fud?.authorId) return;
+
+        /**
+         * Function to fetch author data. 
+         */
+        const fetchAuthor = async () => {
+            try {
+                const fetchedAuthor = await getUser(fud.authorId);
+                if (fetchedAuthor) {
+                    setAuthor(fetchedAuthor);
+                }
+            } catch (error) {
+                console.error("Error fetching author: ", error);
+            }
+        };
+
+        fetchAuthor();
+    }, [fud?.authorId]);
 
     return (
         <div className="g-1 row">
@@ -47,8 +71,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
             </div>
             <div className="col">
                 <span data-id="contributors">
-                    {/* TODO -fetch the author */}
-                    <b>{fud?.authorId}</b>
+                    <b>{`${author?.firstName} ${author?.lastName}`}</b>
                 </span>
                 &nbsp;
                 <span className="helper-text">

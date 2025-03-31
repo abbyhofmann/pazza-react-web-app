@@ -14,7 +14,7 @@ export default function Answer(props: AnswerProps) {
 
     const { answerId, type } = props;
 
-    const [answer, setAnswer] = useState<Answer | null>(null); 
+    const [answer, setAnswer] = useState<Answer | null>(null);
 
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -39,16 +39,10 @@ export default function Answer(props: AnswerProps) {
         const fetchData = async () => {
             try {
                 const res = await getAnswerById(answerId);
-                setAnswer(res || null);
-                const fetchedAuthors: User[] = [];
-                await Promise.all(
-                    res.authors.map(async authorId => {
-                        const fetchedAuthor = await getUser(authorId);
-                        if (fetchedAuthor._id !== undefined) {
-                            fetchedAuthors.push(fetchedAuthor);
-                        }
-                    }));
-                setAuthors(fetchedAuthors);
+                if (res) {
+                    setAnswer(res);
+                }
+
             } catch (error) {
                 // eslint-disable-next-line no-console
                 console.error('Error fetching answer:', error);
@@ -58,6 +52,29 @@ export default function Answer(props: AnswerProps) {
         // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
     }, [answerId]);
+
+    useEffect(() => {
+        if (!answer?.authors) return;
+
+        const fetchAuthors = async () => {
+            try {
+                const fetchedAuthors: User[] = [];
+                await Promise.all(
+                    answer.authors.map(async authorId => {
+                        const fetchedAuthor = await getUser(authorId);
+                        if (fetchedAuthor._id !== undefined) {
+                            fetchedAuthors.push(fetchedAuthor);
+                        }
+                    }));
+                setAuthors(fetchedAuthors);
+            } catch (error) {
+                console.error("Error fetching authors: ", error);
+            }
+        };
+
+        fetchAuthors();
+
+    }, [answer?.authors])
 
     return (
         <div>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import usePostSidebar from "../../hooks/usePostSidebar";
-import { Reply } from "../../../../types";
+import { Reply, User } from "../../../../types";
 import { getReplyById } from "../../services/replyService";
+import { getUser } from "../../services/userService";
 
 interface FollowupReplyProps {
     replyId: string;
@@ -13,7 +14,9 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     const { formatDate } = usePostSidebar();
 
-    const [reply, setReply] = useState<Reply | null>(null); 
+    const [reply, setReply] = useState<Reply | null>(null);
+
+    const [author, setAuthor] = useState<User | null>(null);
 
     // TODO - will need function to fetch author and determine if they are a student or instructor 
     // variable for determining which icon to display alongside reply 
@@ -24,18 +27,38 @@ export default function FollowupReply(props: FollowupReplyProps) {
          * Function to fetch the reply data based on the reply's ID.
          */
         const fetchData = async () => {
-          try {
-            const res = await getReplyById(replyId);
-            setReply(res || null);
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Error fetching reply:', error);
-          }
+            try {
+                const res = await getReplyById(replyId);
+                setReply(res || null);
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error fetching reply:', error);
+            }
         };
 
         // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
-      }, [replyId]);
+    }, [replyId]);
+
+    useEffect(() => {
+        if (!reply?.authorId) return;
+
+        /**
+         * Function to fetch author data. 
+         */
+        const fetchAuthor = async () => {
+            try {
+                const fetchedAuthor = await getUser(reply.authorId);
+                if (fetchedAuthor) {
+                    setAuthor(fetchedAuthor);
+                }
+            } catch (error) {
+                console.error("Error fetching author: ", error);
+            }
+        };
+
+        fetchAuthor();
+    }, [reply?.authorId]);
 
     return (
         <div
@@ -51,8 +74,7 @@ export default function FollowupReply(props: FollowupReplyProps) {
             </div>
             <div className="col">
                 <b>
-                    {/* TODO - fetch the author */}
-                    <span data-id="contributors">{reply?.authorId} </span>
+                    <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`} </span>
                 </b>
                 <span className="helper-text">
                     <time>
