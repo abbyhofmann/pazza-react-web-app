@@ -177,13 +177,24 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
 
 // create a new followup discussion 
 app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
-    if (!isQuestionBodyValid(req.body)) {
-        res.status(400).send('Invalid question body');
+    if (!(req.body.postId !== undefined &&
+        req.body.postId !== '' &&
+        req.body.authorId !== undefined &&
+        req.body.authorId !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '' &&
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.replies !== undefined)) {
+        res.status(400).send('Invalid discussion body');
         return;
-      }
-      const question: Question = req.body;
+    }
+    const newDiscussion = req.body;
+    console.log("server new disc: ", newDiscussion);
     try {
-        const createdDiscussion = (await followupDiscussions.create(newDiscussion));
+        const result = await followupDiscussions.insertOne(newDiscussion);
+const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
+console.log('created disc: ', createdDiscussion)
         res.json(createdDiscussion);
     } catch (err) {
         res.status(500).send(`Error when creating discussion: ${err}`);

@@ -17,6 +17,13 @@ const ViewPostPage = () => {
   const { pid } = useParams();
   const [post, setPost] = useState<Post | null>(null);
 
+  const handleSetFudIds = (newFudIds: string[]) => {
+      setPost((prevPost) =>
+        prevPost ? { ...prevPost, followupDiscussions: newFudIds } : null
+      )
+    }
+  
+
   useEffect(() => {
     /**
      * Function to fetch the post data based on the post's ID.
@@ -61,7 +68,7 @@ const ViewPostPage = () => {
         onCancel={() => { }}
         type="instructor"
         editing={false} />)}
-      <FollowupDiscussions convoExists={post.followupDiscussions.length !== 0} fudIds={post.followupDiscussions} />
+      <FollowupDiscussions convoExists={post.followupDiscussions.length !== 0} fudIds={post.followupDiscussions} setFudIds={handleSetFudIds} postId={post._id!!} /> { /* TODO - idk about this null check */}
     </div>
   );
 };
