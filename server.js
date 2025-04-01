@@ -119,8 +119,6 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
         // answer id is a request parameter 
         const { aid, newContent } = req.body;
 
-        console.log('inside update ans api: ', aid, ", ", newContent);
-
         // ensure that the id is a valid id
         if (!mongoDB.ObjectId.isValid(aid)) {
             res.status(400).send('Invalid ID format');
@@ -132,8 +130,6 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
             { $set: { content: newContent } },
             { returnDocument: "after" }
         );
-
-        console.log("updated ans here: ", updatedAnswer);
 
         res.json(updatedAnswer);
     } catch (err) {
@@ -176,6 +172,21 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
         res.json(fetchedDiscussion);
     } catch (err) {
         res.status(500).send(`Error when fetching discussion: ${err}`);
+    }
+});
+
+// create a new followup discussion 
+app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
+    if (!isQuestionBodyValid(req.body)) {
+        res.status(400).send('Invalid question body');
+        return;
+      }
+      const question: Question = req.body;
+    try {
+        const createdDiscussion = (await followupDiscussions.create(newDiscussion));
+        res.json(createdDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when creating discussion: ${err}`);
     }
 });
 

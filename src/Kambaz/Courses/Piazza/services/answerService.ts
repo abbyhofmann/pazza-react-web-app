@@ -19,7 +19,6 @@ const getAnswerById = async (aid: string): Promise<Answer> => {
 };
 
 const updateAnswer = async (aid: string, newContent: string): Promise<Answer> => {
-  console.log('update ans params: ', aid, ", ", newContent);
   const data = { aid, newContent };
   const res = await api.post(`${ANSWER_API_URL}/updateAnswer`, data);
 

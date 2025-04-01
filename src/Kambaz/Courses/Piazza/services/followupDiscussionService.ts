@@ -22,4 +22,15 @@ const getFollowupDiscussionById = async (
   return res.data;
 };
 
-export { getFollowupDiscussionById };
+const createDiscussion = async (
+
+): Promise<FollowupDiscussion> => {
+    const res = await api.post(`${FOLLOWUP_DISCUSSION_API_URL}/createDiscussion`);
+
+    if (res.status !== 200) {
+        throw new Error("Error while creating followup discussion");
+    }
+    return res.data; 
+}
+
+export { getFollowupDiscussionById, createDiscussion };

@@ -32,6 +32,23 @@ export default function Answer(props: AnswerProps) {
         return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
     }
 
+    const handleOnSave = async (updatedContent: string) => {
+        // check for existence of answer and id 
+        if (!answer || !answer._id) {
+            console.error("Cannot update answer: ID is missing");
+            return;
+        }
+    
+        try {
+            // update the answer in the db
+            const updatedAnswer = await updateAnswer(answer._id, updatedContent);
+            setAnswer({ ...answer, content: updatedAnswer.content }); 
+        } catch (error) {
+            console.error("Error updating answer:", error);
+        }
+        setIsEditing(false);
+    }
+
     useEffect(() => {
         /**
          * Function to fetch the answer data based on the answer's ID.
@@ -81,24 +98,7 @@ export default function Answer(props: AnswerProps) {
             {isEditing ? (
                 <NewAnswer
                     initialAnswer={answer ? answer.content : ""} // TODO idk about this
-                    onSave={async (updatedContent: string) => {
-                        // check for existence of answer and id 
-                        if (!answer || !answer._id) {
-                            console.error("Cannot update answer: ID is missing");
-                            return;
-                        }
-                    
-                        try {
-                            // update the answer in the db
-                            console.log('before update answer call: ', answer._id, ", ", updatedContent);
-                            const updatedAnswer = await updateAnswer(answer._id, updatedContent);
-                            console.log("updatedAnswer: ", updatedAnswer);
-                            setAnswer({ ...answer, content: updatedAnswer.content }); 
-                        } catch (error) {
-                            console.error("Error updating answer:", error);
-                        }
-                        setIsEditing(false);
-                    }}
+                    onSave={handleOnSave}
                     onCancel={() => setIsEditing(false)}
                     type={type}
                     editing={isEditing}

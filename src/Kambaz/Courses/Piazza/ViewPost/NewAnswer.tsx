@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import "./ViewPost.css";
-import ReactQuill from "react-quill";
+import EditorComponent from "./EditorComponent";
 
 interface NewAnswerProps {
     initialAnswer: string | null;
@@ -46,12 +46,13 @@ export default function NewAnswer(props: NewAnswerProps) {
                             />
                         ) : (
                             // rich text editor ----> TODO - why does the change add paragraph tags???
-                            <ReactQuill
-                                theme="snow"
-                                className="custom-editor"
-                                value={answerContent}
-                                onChange={setAnswerContent}
-                            />
+                            // <ReactQuill
+                            //     theme="snow"
+                            //     className="custom-editor"
+                            //     value={answerContent}
+                            //     onChange={setAnswerContent}
+                            // />
+                            <EditorComponent content={answerContent} setContent={setAnswerContent} />
                         )}
                     </div>
                 </div>
