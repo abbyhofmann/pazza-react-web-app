@@ -114,11 +114,12 @@ app.get('/api/answer/:aid', async (req, res) => {
 });
 
 // update an answer's content 
-app.put('/api/answer/:aid', async (req, res) => {
+app.post('/api/answer/updateAnswer', async (req, res) => {
     try {
         // answer id is a request parameter 
-        const { aid } = req.params;
-        const { updatedContent } = req.body;
+        const { aid, newContent } = req.body;
+
+        console.log('inside update ans api: ', aid, ", ", newContent);
 
         // ensure that the id is a valid id
         if (!mongoDB.ObjectId.isValid(aid)) {
@@ -126,12 +127,14 @@ app.put('/api/answer/:aid', async (req, res) => {
             return;
         }
 
-        const updatedAnswer = (await answers.findOneAndUpdate(
+        const updatedAnswer = await answers.findOneAndUpdate(
             { _id: aid },
-            { $set: { content: updatedContent } },
-            { new: true }
-        ));
-        
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        console.log("updated ans here: ", updatedAnswer);
+
         res.json(updatedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);

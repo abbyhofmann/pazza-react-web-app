@@ -90,8 +90,9 @@ export default function Answer(props: AnswerProps) {
                     
                         try {
                             // update the answer in the db
+                            console.log('before update answer call: ', answer._id, ", ", updatedContent);
                             const updatedAnswer = await updateAnswer(answer._id, updatedContent);
-                            console.log("updatedAnswer: ", updateAnswer);
+                            console.log("updatedAnswer: ", updatedAnswer);
                             setAnswer({ ...answer, content: updatedAnswer.content }); 
                         } catch (error) {
                             console.error("Error updating answer:", error);

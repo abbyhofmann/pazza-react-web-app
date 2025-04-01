@@ -19,7 +19,9 @@ const getAnswerById = async (aid: string): Promise<Answer> => {
 };
 
 const updateAnswer = async (aid: string, newContent: string): Promise<Answer> => {
-  const res = await api.put(`${ANSWER_API_URL}/${aid}`, newContent);
+  console.log('update ans params: ', aid, ", ", newContent);
+  const data = { aid, newContent };
+  const res = await api.post(`${ANSWER_API_URL}/updateAnswer`, data);
 
   if (res.status !== 200) {
     throw new Error("Error while updating answer");
