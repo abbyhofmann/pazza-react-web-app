@@ -127,7 +127,7 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
         }
 
         const updatedAnswer = await answers.findOneAndUpdate(
-            { _id: aid },
+            { _id: new ObjectId(aid) },
             { $set: { content: newContent } },
             { returnDocument: "after" }
         );
@@ -168,9 +168,7 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
             res.status(400).send('Invalid ID format');
             return;
         }
-        console.log("fudid ", fudid)
         const fetchedDiscussion = (await followupDiscussions.findOne({ _id: new ObjectId(fudid) }));
-        console.log('fetched discc: ', fetchedDiscussion)
         res.json(fetchedDiscussion);
     } catch (err) {
         res.status(500).send(`Error when fetching discussion: ${err}`);
@@ -192,11 +190,9 @@ app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
         return;
     }
     const newDiscussion = req.body;
-    console.log("server new disc: ", newDiscussion);
     try {
         const result = await followupDiscussions.insertOne(newDiscussion);
-const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
-console.log('created disc: ', createdDiscussion)
+        const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
         res.json(createdDiscussion);
     } catch (err) {
         res.status(500).send(`Error when creating discussion: ${err}`);
@@ -219,7 +215,7 @@ app.post('/api/post/addDiscussion', async (req, res) => {
             { _id: new ObjectId(pid) },
             { $addToSet: { followupDiscussions: fudId } },
             { returnDocument: "after" }
-        ); 
+        );
 
         res.json(updatedPost);
     } catch (err) {
