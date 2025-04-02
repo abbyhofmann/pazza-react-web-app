@@ -15,6 +15,8 @@ interface NewAnswerProps {
 export default function NewAnswer(props: NewAnswerProps) {
 
     const { initialAnswer = "", onSave, onCancel, type, editing } = props;
+
+    // variable to keep track of the answer's content
     const [answerContent, setAnswerContent] = useState<string>(initialAnswer ? initialAnswer : ""); // TODO idk if this is right 
 
     // variable for keeping track of displaying the rich text editor; if there is an answer, then clicking "edit" should take you directly to 
@@ -35,28 +37,22 @@ export default function NewAnswer(props: NewAnswerProps) {
                 <div className="g-0 row">
                     <div className="col">
                         {!editorOpen ? (
-                            // input box for adding a new answer
+                            // input box for adding a new answer - when this is clicked, the rich text editor appears
                             <input
                                 placeholder="Click to start off the wiki answer"
                                 id="s_answerPlaceholderId"
                                 className="my-3 form-control"
                                 value={answerContent}
-                                onFocus={() => setEditorOpen(true)} // editor should appear when clicked the input box is clicked
+                                onFocus={() => setEditorOpen(true)} // editor appears when input box is clicked
                                 readOnly
                             />
                         ) : (
-                            // rich text editor ----> TODO - why does the change add paragraph tags???
-                            // <ReactQuill
-                            //     theme="snow"
-                            //     className="custom-editor"
-                            //     value={answerContent}
-                            //     onChange={setAnswerContent}
-                            // />
                             <EditorComponent content={answerContent} setContent={setAnswerContent} />
                         )}
                     </div>
                 </div>
             </div>
+            {/* save and cancel buttons only appear when user is editing */}
             {editing && editorOpen &&
                 <footer className="border-top container-fluid">
                     <div className="row">

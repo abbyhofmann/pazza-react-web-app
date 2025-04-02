@@ -14,7 +14,10 @@ import NewAnswer from '../NewAnswer';
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
+
   const { pid } = useParams();
+
+  // post being rendered
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
@@ -25,7 +28,6 @@ const ViewPostPage = () => {
       if (pid) {
         try {
           const res = await getPostById(pid);
-          console.log('resss: ', res)
           setPost(res);
         } catch (error) {
           // eslint-disable-next-line no-console

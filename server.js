@@ -144,12 +144,6 @@ app.get('/api/user/:uid', async (req, res) => {
         // user id is a request parameter 
         const { uid } = req.params;
 
-        // ensure that the id is a valid id - user IDs are not ObjectIds right now
-        // if (!mongoDB.ObjectId.isValid(uid)) {
-        //     res.status(400).send('Invalid ID format');
-        //     return;
-        // }
-
         const fetchedUser = (await users.findOne({ _id: uid }));
         res.json(fetchedUser);
     } catch (err) {

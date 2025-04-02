@@ -5,6 +5,7 @@ interface EditorComponentProps {
     setContent: (newContent: string) => void;
 }
 
+// Component for the rich text editor used for adding and editing elements of a post.
 export default function EditorComponent(props: EditorComponentProps) {
 
     const { content, setContent } = props;

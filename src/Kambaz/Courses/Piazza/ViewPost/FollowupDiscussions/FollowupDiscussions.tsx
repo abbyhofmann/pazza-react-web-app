@@ -15,11 +15,16 @@ interface FollowupDiscussionsProps {
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
+
   const { convoExists, fudIds, postId, setPost } = props;
 
+  // boolean indicating if a new discussion is being created
   const [startingNewDiscussion, setStartingNewDiscussion] = useState<boolean>(false);
+
+  // boolean for keeping track of the content of a new discussion
   const [discussionContent, setDiscussionContent] = useState<string>("");
 
+  // function to handle creation/saving of a new discussion
   const handleOnSave = async (newDiscussionContent: string) => {
     try {
       // convert HTML content from React Quill to plain text before saving in database 
@@ -66,7 +71,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
           </div>
         </div>
       </header>
-      {/* existing convo goes here  */}
+      {/* existing convo goes here */}
       {convoExists && (
         <div className="followup_content_wrapper col mx-3">
           {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId} />))}
@@ -90,7 +95,6 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
                 onFocus={() => setStartingNewDiscussion(true)}
               />
             ) : (
-              // rich text editor ----> TODO - why does the change add paragraph tags???
               <ReactQuill
                 theme="snow"
                 className="custom-editor"

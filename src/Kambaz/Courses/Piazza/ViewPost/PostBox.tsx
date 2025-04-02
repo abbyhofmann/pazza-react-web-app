@@ -18,7 +18,6 @@ export default function PostBox(props: PostBoxProps) {
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-
     useEffect(() => {
         /**
          * Function to fetch the post-related data.

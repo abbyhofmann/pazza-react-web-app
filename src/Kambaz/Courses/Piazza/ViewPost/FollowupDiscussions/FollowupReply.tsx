@@ -8,19 +8,21 @@ interface FollowupReplyProps {
     replyId: string;
 }
 
+// Component for rendering a reply to a followup discussion.
 export default function FollowupReply(props: FollowupReplyProps) {
 
     const { replyId } = props;
 
     const { formatDate } = usePostSidebar();
 
+    // reply being rendered
     const [reply, setReply] = useState<Reply | null>(null);
 
+    // author of the reply 
     const [author, setAuthor] = useState<User | null>(null);
 
-    // TODO - will need function to fetch author and determine if they are a student or instructor 
     // variable for determining which icon to display alongside reply 
-    const isStudent = false;
+    const [isStudent, setIsStudent] = useState<boolean>(false);
 
     useEffect(() => {
         /**
@@ -51,6 +53,7 @@ export default function FollowupReply(props: FollowupReplyProps) {
                 const fetchedAuthor = await getUser(reply.authorId);
                 if (fetchedAuthor) {
                     setAuthor(fetchedAuthor);
+                    setIsStudent(fetchedAuthor.role === "STUDENT");
                 }
             } catch (error) {
                 console.error("Error fetching author: ", error);

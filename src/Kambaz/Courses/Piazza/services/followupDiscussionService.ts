@@ -22,14 +22,23 @@ const getFollowupDiscussionById = async (
   return res.data;
 };
 
-const createDiscussion = async (newDiscussion: FollowupDiscussion): Promise<FollowupDiscussion> => {
-    console.log('inside create disc: ', newDiscussion);
-    const res = await api.post(`${FOLLOWUP_DISCUSSION_API_URL}/createDiscussion`, newDiscussion);
+/**
+ * Adds a new followup discussion to the database.
+ * @param newDiscussion The new discussion object to add.
+ * @returns The new discussion object added to the database.
+ */
+const createDiscussion = async (
+  newDiscussion: FollowupDiscussion
+): Promise<FollowupDiscussion> => {
+  const res = await api.post(
+    `${FOLLOWUP_DISCUSSION_API_URL}/createDiscussion`,
+    newDiscussion
+  );
 
-    if (res.status !== 200) {
-        throw new Error("Error while creating followup discussion");
-    }
-    return res.data; 
-}
+  if (res.status !== 200) {
+    throw new Error("Error while creating followup discussion");
+  }
+  return res.data;
+};
 
 export { getFollowupDiscussionById, createDiscussion };

@@ -18,7 +18,17 @@ const getAnswerById = async (aid: string): Promise<Answer> => {
   return res.data;
 };
 
-const updateAnswer = async (aid: string, newContent: string): Promise<Answer> => {
+/**
+ * Updates an answer upon a user editing its content.
+ *
+ * @param aid The id of the answer being updated.
+ * @param newContent The updated content of the answer.
+ * @returns The updated answer object.
+ */
+const updateAnswer = async (
+  aid: string,
+  newContent: string
+): Promise<Answer> => {
   const data = { aid, newContent };
   const res = await api.post(`${ANSWER_API_URL}/updateAnswer`, data);
 
@@ -26,6 +36,6 @@ const updateAnswer = async (aid: string, newContent: string): Promise<Answer> =>
     throw new Error("Error while updating answer");
   }
   return res.data;
-}
+};
 
 export { getAnswerById, updateAnswer };

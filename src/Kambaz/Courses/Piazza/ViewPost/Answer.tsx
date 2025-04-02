@@ -77,6 +77,9 @@ export default function Answer(props: AnswerProps) {
     useEffect(() => {
         if (!answer?.authors) return;
 
+        /**
+         * Function to fetch the authors of an answer, based on the answer's list of author ids.
+         */
         const fetchAuthors = async () => {
             try {
                 const fetchedAuthors: User[] = [];
@@ -148,7 +151,7 @@ export default function Answer(props: AnswerProps) {
                                     )}
                                 </div>
                                 <div className="py-3 history-selection">
-                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div> 
+                                    <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +173,7 @@ export default function Answer(props: AnswerProps) {
                             </div>
                             <div className="text-right col">
                                 { /* we don't need last updated at, but we do need the timestamp and author of who answered it */}
-                                <div className="update_text float-end" data-id="contributors">Answered on <time>{answer?.dateEdited ? formatAnswerDate(answer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors.map(a => `${a.firstName} ${a.lastName}`).join(", ")}</span> 
+                                <div className="update_text float-end" data-id="contributors">Answered on <time>{answer?.dateEdited ? formatAnswerDate(answer?.dateEdited) : ""}</time> by <span data-id="contributors">{authors.map(a => `${a.firstName} ${a.lastName}`).join(", ")}</span>
                                 </div>
                             </div>
                         </div>

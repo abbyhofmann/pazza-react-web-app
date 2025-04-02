@@ -11,16 +11,21 @@ interface FollowupDiscussionProps {
     fudId: string;
 }
 
+// Component for rendering an individual followup discussion.
 export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     const { fudId } = props;
 
+    // followup discussion being rendered
     const [fud, setFud] = useState<FollowupDiscussion | null>(null);
 
+    // resolved status of the discussion
     const [resolved, setResolved] = useState<boolean>(false);
 
+    // author of the followup discussion
     const [author, setAuthor] = useState<User | null>(null);
 
+    // function for formatting the date
     const { formatDate } = usePostSidebar();
 
     useEffect(() => {
@@ -77,7 +82,6 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                 <span className="helper-text">
                     <time
                     >
-                        {/* TODO - fix ! */}
                         {formatDate(fud ? fud.datePosted : "")}
                     </time>
                 </span>
