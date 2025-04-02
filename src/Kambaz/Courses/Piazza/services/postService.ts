@@ -27,4 +27,13 @@ const getPosts = async (): Promise<Post[]> => {
   return res.data;
 };
 
-export { getPostById, getPosts };
+const addDiscussionToPost = async (pid: string, fudId: string): Promise<Post> => {
+  const data = { pid, fudId };
+  const res = await api.post(`${POST_API_URL}/addDiscussion`, data);
+  if (res.status !== 200) {
+    throw new Error("Error while adding discussion to post");
+  }
+  return res.data;
+}
+
+export { getPostById, getPosts, addDiscussionToPost };

@@ -4,17 +4,18 @@ import ReactQuill from "react-quill";
 import { createDiscussion } from "../../services/followupDiscussionService";
 import { FollowupDiscussion as FollowupDiscussionType, Post} from "../../../../types";
 import FollowupDiscussion from "./FollowupDiscussion";
+import { addDiscussionToPost } from "../../services/postService";
 
 interface FollowupDiscussionsProps {
   convoExists: boolean;
   fudIds: string[];
-  setFudIds: (ids: string[]) => void;
+  setPost: (post: Post) => void;
   postId: string;
 }
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
-  const { convoExists, fudIds, postId, setFudIds } = props;
+  const { convoExists, fudIds, postId, setPost } = props;
 
   const [startingNewDiscussion, setStartingNewDiscussion] = useState<boolean>(false);
   const [discussionContent, setDiscussionContent] = useState<string>("");
@@ -25,11 +26,16 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
       console.log('new disc: ', newDiscussion);  
       // create the followup discussion in the db
         const newDiscussionFromDb = await createDiscussion(newDiscussion);
+        
         // TODO - update the fudIds to have the new discussion 
         console.log("newDiscussionFromDb: ", newDiscussionFromDb);
         if (newDiscussionFromDb !== undefined && newDiscussionFromDb._id !== undefined) {
           console.log("inside if before setFudIds")
-          setFudIds([...fudIds, newDiscussionFromDb._id]);
+          const updatedPost = await addDiscussionToPost(postId, newDiscussionFromDb._id);
+          console.log('updatedPost: ', updatedPost);
+          setPost(updatedPost);
+          setDiscussionContent("");
+          // setFudIds([...fudIds, newDiscussionFromDb._id]);
         }
     } catch (error) {
         console.error("Error creating followup discussion:", error);

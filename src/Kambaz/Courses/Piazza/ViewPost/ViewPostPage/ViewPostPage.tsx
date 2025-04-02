@@ -18,6 +18,7 @@ const ViewPostPage = () => {
   const [post, setPost] = useState<Post | null>(null);
 
   const handleSetFudIds = (newFudIds: string[]) => {
+    console.log('handle setfudis')
       setPost((prevPost) =>
         prevPost ? { ...prevPost, followupDiscussions: newFudIds } : null
       )
@@ -32,6 +33,7 @@ const ViewPostPage = () => {
       if (pid) {
         try {
           const res = await getPostById(pid);
+          console.log('resss: ', res)
           setPost(res);
         } catch (error) {
           // eslint-disable-next-line no-console
@@ -68,7 +70,7 @@ const ViewPostPage = () => {
         onCancel={() => { }}
         type="instructor"
         editing={false} />)}
-      <FollowupDiscussions convoExists={post.followupDiscussions.length !== 0} fudIds={post.followupDiscussions} setFudIds={handleSetFudIds} postId={post._id!!} /> { /* TODO - idk about this null check */}
+      <FollowupDiscussions convoExists={post.followupDiscussions.length !== 0} fudIds={post.followupDiscussions} setPost={setPost} postId={post._id!!} /> { /* TODO - idk about this null check */}
     </div>
   );
 };

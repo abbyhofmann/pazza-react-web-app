@@ -133,7 +133,7 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
 
         res.json(updatedAnswer);
     } catch (err) {
-        res.status(500).send(`Error when fetching answer: ${err}`);
+        res.status(500).send(`Error when updating answer: ${err}`);
     }
 })
 
@@ -200,6 +200,30 @@ console.log('created disc: ', createdDiscussion)
         res.status(500).send(`Error when creating discussion: ${err}`);
     }
 });
+
+// add a followup discussion to post 
+app.post('/api/post/addDiscussion', async (req, res) => {
+    try {
+
+        const { pid, fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: pid },
+            { $addToSet: { followupDiscussions: fudId } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding discussion to post: ${err}`);
+    }
+})
 
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
