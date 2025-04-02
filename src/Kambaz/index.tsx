@@ -8,6 +8,7 @@ import Courses from "./Courses";
 import { useState } from "react";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import { useSelector } from "react-redux";
+import Session from "./Account/Session";
 
 export default function Kambaz() {
   const { courses } = useSelector((state: any) => state.courseReducer);
@@ -22,28 +23,30 @@ export default function Kambaz() {
   });
 
   return (
-    <div id="wd-kambaz">
-      <KambazNavigation />
-      <div className="wd-main-content-offset p-3">
-        <Routes>
-          <Route path="/" element={<Navigate to="Account" />} />
-          <Route path="/Account/*" element={<Account />} />
-          <Route path="/Dashboard" element={
-            <ProtectedRoute>
-              <Dashboard
-                courses={courses}
-                course={course}
-                setCourse={setCourse}
-              />
-            </ProtectedRoute>
-          } />
-          <Route path="/Courses/:cid/*" element={
-            <ProtectedRoute><Courses /></ProtectedRoute>
-          } />
-          <Route path="/Calendar" element={<h1>Calendar</h1>} />
-          <Route path="/Inbox" element={<h1>Inbox</h1>} />
-        </Routes>
+    <Session>
+      <div id="wd-kambaz">
+        <KambazNavigation />
+        <div className="wd-main-content-offset p-3">
+          <Routes>
+            <Route path="/" element={<Navigate to="Account" />} />
+            <Route path="/Account/*" element={<Account />} />
+            <Route path="/Dashboard" element={
+              <ProtectedRoute>
+                <Dashboard
+                  courses={courses}
+                  course={course}
+                  setCourse={setCourse}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="/Courses/:cid/*" element={
+              <ProtectedRoute><Courses /></ProtectedRoute>
+            } />
+            <Route path="/Calendar" element={<h1>Calendar</h1>} />
+            <Route path="/Inbox" element={<h1>Inbox</h1>} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Session>
   );
 }
