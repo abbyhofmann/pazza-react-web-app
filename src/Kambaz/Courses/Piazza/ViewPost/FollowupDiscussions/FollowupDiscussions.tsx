@@ -2,7 +2,7 @@ import "./FollowupDiscussions.css";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import { createDiscussion } from "../../services/followupDiscussionService";
-import { FollowupDiscussion as FollowupDiscussionType, Post} from "../../../../types";
+import { FollowupDiscussion as FollowupDiscussionType, Post } from "../../../../types";
 import FollowupDiscussion from "./FollowupDiscussion";
 import { addDiscussionToPost } from "../../services/postService";
 
@@ -22,26 +22,34 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
 
   const handleOnSave = async (newDiscussionContent: string) => {
     try {
-      const newDiscussion: FollowupDiscussionType = {postId: postId, authorId: "me", datePosted: new Date().toDateString(), content: newDiscussionContent, replies: [] };
-      console.log('new disc: ', newDiscussion);  
+      // convert HTML content from React Quill to plain text before saving in database 
+      const doc = new DOMParser().parseFromString(newDiscussionContent, "text/html");
+      const plainTextContent = doc.body.textContent || "";
+
+      const newDiscussion: FollowupDiscussionType = {
+        postId: postId,
+        authorId: "123",
+        datePosted: new Date().toDateString(),
+        content: plainTextContent.trim(),
+        replies: []
+      };
       // create the followup discussion in the db
-        const newDiscussionFromDb = await createDiscussion(newDiscussion);
-        
-        // TODO - update the fudIds to have the new discussion 
-        console.log("newDiscussionFromDb: ", newDiscussionFromDb);
-        if (newDiscussionFromDb !== undefined && newDiscussionFromDb._id !== undefined) {
-          console.log("inside if before setFudIds")
-          const updatedPost = await addDiscussionToPost(postId, newDiscussionFromDb._id);
-          console.log('updatedPost: ', updatedPost);
-          setPost(updatedPost);
-          setDiscussionContent("");
-          // setFudIds([...fudIds, newDiscussionFromDb._id]);
-        }
+      const newDiscussionFromDb = await createDiscussion(newDiscussion);
+
+      if (newDiscussionFromDb?._id) {
+        // add the new discussion to the post list of fudIds
+        const updatedPost = await addDiscussionToPost(postId, newDiscussionFromDb._id);
+        // set the post that's rendering to be the updated post
+        setPost(updatedPost);
+        // clear the discussion content for the next new discussion 
+        setDiscussionContent("");
+      }
     } catch (error) {
-        console.error("Error creating followup discussion:", error);
+      console.error("Error creating followup discussion:", error);
     }
+    // close the editor component
     setStartingNewDiscussion(false);
-}
+  }
 
   return (
     <article
@@ -73,42 +81,36 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
               Start a new followup discussion
             </label>
             {!startingNewDiscussion ? (
-                            // input box for adding a new answer
-                            <input
-              id="followup-box"
-              type="text"
-              className="form-control ng-pristine ng-valid"
-              placeholder="Compose a new followup discussion"
-              onFocus={() => setStartingNewDiscussion(true)}
-            />
-                        ) : (
-                            // rich text editor ----> TODO - why does the change add paragraph tags???
-                            <ReactQuill
-                                theme="snow"
-                                className="custom-editor"
-                                value={discussionContent}
-                                onChange={setDiscussionContent}
-                            />
-                        )}
-            {/* <input
-              id="followup-box"
-              type="text"
-              className="form-control ng-pristine ng-valid"
-              placeholder="Compose a new followup discussion"
-            /> */}
+              // input box for adding a new answer
+              <input
+                id="followup-box"
+                type="text"
+                className="form-control ng-pristine ng-valid"
+                placeholder="Compose a new followup discussion"
+                onFocus={() => setStartingNewDiscussion(true)}
+              />
+            ) : (
+              // rich text editor ----> TODO - why does the change add paragraph tags???
+              <ReactQuill
+                theme="snow"
+                className="custom-editor"
+                value={discussionContent}
+                onChange={setDiscussionContent}
+              />
+            )}
           </div>
         </div>
       </div>
       {startingNewDiscussion &&
-                <footer className="border-top container-fluid">
-                    <div className="row">
-                        <div className="text-left align-self-center m-1 col-auto">
-                            <button className="btn btn-primary btn-sm me-2" onClick={() => handleOnSave(discussionContent)}>Submit</button>
-                            <button className="btn btn-secondary btn-sm" onClick={() => setStartingNewDiscussion(false)}>Cancel</button>
-                        </div>
-                    </div>
-                </footer>
-            }
+        <footer className="border-top container-fluid">
+          <div className="row">
+            <div className="text-left align-self-center m-1 col-auto">
+              <button className="btn btn-primary btn-sm me-2" onClick={() => handleOnSave(discussionContent)}>Submit</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => setStartingNewDiscussion(false)}>Cancel</button>
+            </div>
+          </div>
+        </footer>
+      }
     </article>
   );
 }

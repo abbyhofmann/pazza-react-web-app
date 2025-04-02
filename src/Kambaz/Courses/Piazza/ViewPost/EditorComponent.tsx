@@ -6,7 +6,7 @@ interface EditorComponentProps {
 }
 
 export default function EditorComponent(props: EditorComponentProps) {
-    
+
     const { content, setContent } = props;
 
     return (
