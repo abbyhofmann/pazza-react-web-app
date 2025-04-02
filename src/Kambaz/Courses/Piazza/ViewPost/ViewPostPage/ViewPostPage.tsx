@@ -17,14 +17,6 @@ const ViewPostPage = () => {
   const { pid } = useParams();
   const [post, setPost] = useState<Post | null>(null);
 
-  const handleSetFudIds = (newFudIds: string[]) => {
-    console.log('handle setfudis')
-      setPost((prevPost) =>
-        prevPost ? { ...prevPost, followupDiscussions: newFudIds } : null
-      )
-    }
-  
-
   useEffect(() => {
     /**
      * Function to fetch the post data based on the post's ID.
