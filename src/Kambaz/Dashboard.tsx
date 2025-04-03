@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom";
 import { Row, Col, Card, Button, Form, FormControl, Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState } from "react";
-import { enroll, unenroll } from "./Dashboard/reducer";
+import * as enrollmentClient from "./Courses/Enrollments/client.ts";
+// import { enroll, unenroll } from "./Dashboard/reducer";
 
 
 export default function Dashboard(
@@ -14,7 +15,6 @@ export default function Dashboard(
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
   const isFaculty = currentUser.role === "FACULTY";
-  const dispatch = useDispatch();
   const [viewEnrollments, setViewEnrollments] = useState<boolean>(false);
 
   return (
@@ -114,8 +114,8 @@ export default function Dashboard(
                       enrollment.user === currentUser._id &&
                       enrollment.course === c._id
                   ) ?
-                    <Button className="mx-4" variant="danger" onClick={() => dispatch(unenroll({ courseId: c._id, userId: currentUser._id }))}>Unenroll</Button> :
-                    <Button className="mx-4" variant="success" onClick={() => dispatch(enroll({ courseId: c._id, userId: currentUser._id }))}>Enroll</Button>
+                    <Button className="mx-4" variant="danger" onClick={() => enrollmentClient.unenroll(c._id)}>Unenroll</Button> :
+                    <Button className="mx-4" variant="success" onClick={() => enrollmentClient.enroll(c._id)}>Enroll</Button>
                   }
                 </span></td>
             </tr>
