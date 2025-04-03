@@ -6,16 +6,39 @@ import ModuleControlButtons from "../Modules/ModuleControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as assignmentClient from "./client";
 
-export default function Assignments({ assignments, addAssignment, deleteAssignment }: {
-  assignments: any[];
-  addAssignment: () => void;
-  deleteAssignment: (a: any) => void;
-}) {
+export default function Assignments() {
   const { cid } = useParams();
   const { pathname } = useLocation();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
+  const [assignments, setAssignments] = useState<any[]>([]);
+
+  const fetchAssignments = async () => {
+    try {
+      const amts = await assignmentClient.findAssignmentsForCourse(cid);
+      setAssignments(amts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createAssignment = async (amt: any) => {
+    const newAssignment = await assignmentClient.createAssignment(amt);
+    setAssignments([...assignments, newAssignment]);
+  }
+
+  const removeAssignment = async (amtId: string) => {
+    await assignmentClient.deleteAssignment(amtId);
+    setAssignments(assignments.filter((a) => a._id !== amtId));
+  }
+
+  useEffect(() => {
+    fetchAssignments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div id="wd-assignments">
@@ -25,7 +48,7 @@ export default function Assignments({ assignments, addAssignment, deleteAssignme
           <input placeholder="Search..."
             id="wd-search-assignment" />
           {isFaculty &&
-            <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment" onClick={addAssignment}>
+            <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment" onClick={createAssignment}>
               <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
               Assignment
             </Button>
@@ -57,7 +80,7 @@ export default function Assignments({ assignments, addAssignment, deleteAssignme
                   <ListGroup.Item className="wd-lesson p-3 ps-1" key={index}>
                     {isFaculty &&
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      <ModuleControlButtons moduleId={a._id} deleteModule={(aId) => deleteAssignment(aId)} editModule={function (_moduleId: string): void {
+                      <ModuleControlButtons moduleId={a._id} deleteModule={removeAssignment} editModule={function (_moduleId: string): void {
                         throw new Error("Function not implemented.");
                       }} />
                     }

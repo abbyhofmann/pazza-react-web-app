@@ -7,22 +7,13 @@ import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import { Route, Routes, useLocation, useParams } from "react-router";
 import PeopleTable from "./People/Table";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addAssignment, deleteAssignment, updateAssignment } from "./Assignments/reducer";
+import { useSelector } from "react-redux";
 
 export default function Courses() {
-  const dispatch = useDispatch();
   const { cid } = useParams();
   const { courses } = useSelector((state: any) => state.courseReducer);
   const course = courses.find((course: any) => course._id === cid);
   const { pathname } = useLocation();
-  const { assignments } = useSelector((state: any) => state.assignmentReducer);
-  const [assignment, setAssignment] = useState({
-    _id: "0",
-    title: "New Assignment",
-    course: cid,
-  });
 
   return (
     <div id="wd-courses">
@@ -37,8 +28,8 @@ export default function Courses() {
           <Routes>
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
-            <Route path="Assignments" element={<Assignments assignments={assignments} addAssignment={() => dispatch(addAssignment(assignment))} deleteAssignment={(aId) => dispatch(deleteAssignment(aId))} />} />
-            <Route path="Assignments/:aid" element={<AssignmentEditor updateAssignment={() => dispatch(updateAssignment(assignment))} editAssignment={setAssignment} />} />
+            <Route path="Assignments" element={<Assignments />} />
+            <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>

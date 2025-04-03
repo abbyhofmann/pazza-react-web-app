@@ -3,20 +3,19 @@ import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 import { assignments } from "../../Database";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
+import * as assignmentClient from "./client";
 
-export default function AssignmentEditor(
-  {
-    updateAssignment, editAssignment,
-  }: {
-    updateAssignment: (a: any) => void;
-    editAssignment: (a: any) => void;
-  }) {
+export default function AssignmentEditor() {
   const { aid, cid } = useParams();
   const assignment = assignments.find(v => v._id === aid);
   const backLink = `/Kambaz/Courses/${cid}#/Kambaz/Courses/${cid}/Assignments`;
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
   const assignmentEdited = assignment ?? {};
+
+  const editAssignment = async (amt: any) => {
+    await assignmentClient.updateAssignment(amt);
+  }
 
   if (assignment) {
     return (
@@ -107,7 +106,7 @@ export default function AssignmentEditor(
               </Form.Group>
               <hr />
               <Button variant="danger" size="lg" className="me-1 float-end" id="wd-save-assignment-btn" href={backLink} type="submit"
-                onClick={() => updateAssignment(assignmentEdited)}>
+                onClick={() => editAssignment(assignmentEdited)}>
                 Save
               </Button>
               <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-cancel-assignment-btn" href={backLink}>
