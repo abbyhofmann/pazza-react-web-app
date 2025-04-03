@@ -136,7 +136,31 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when updating answer: ${err}`);
     }
-})
+}); 
+
+// create a new answer
+app.post('/api/answer/createAnswer', async (req, res) => {
+    if (!(req.body.postId !== undefined &&
+        req.body.postId !== '' &&
+        req.body.type !== undefined &&
+        req.body.authors !== undefined &&
+        req.body.authors.length() !== 0 &&
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.dateEdited !== undefined &&
+        req.body.dateEdited !== '')) {
+        res.status(400).send('Invalid answer body');
+        return;
+    }
+    const newAnswer = req.body;
+    try {
+        const result = await answers.insertOne(newAnswer);
+        const createdAnswer = await answers.findOne({ _id: result.insertedId });
+        res.json(createdAnswer);
+    } catch (err) {
+        res.status(500).send(`Error when creating answer: ${err}`);
+    }
+});
 
 // get an individual user by their user ID
 app.get('/api/user/:uid', async (req, res) => {

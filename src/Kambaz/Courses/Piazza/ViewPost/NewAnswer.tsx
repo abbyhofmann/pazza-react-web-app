@@ -23,6 +23,7 @@ export default function NewAnswer(props: NewAnswerProps) {
     // the editor, but if there is no answer, then you have to click an input box and then the editor will pop up 
     const [editorOpen, setEditorOpen] = useState<boolean>(editing && !!initialAnswer);
 
+    console.log("editing: ", editing, ", editorOpen: ", editorOpen);
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">

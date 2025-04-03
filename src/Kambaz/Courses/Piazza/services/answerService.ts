@@ -38,4 +38,19 @@ const updateAnswer = async (
   return res.data;
 };
 
-export { getAnswerById, updateAnswer };
+/**
+ * Adds a new answer to the database.
+ *
+ * @param newAnswer The new answer object being created.
+ * @returns The new answer object.
+ */
+const createAnswer = async (newAnswer: Answer): Promise<Answer> => {
+  const res = await api.post(`${ANSWER_API_URL}/createAnswer`, newAnswer);
+
+  if (res.status !== 200) {
+    throw new Error("Error while creating answer");
+  }
+  return res.data;
+};
+
+export { getAnswerById, updateAnswer, createAnswer };
