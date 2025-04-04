@@ -123,8 +123,9 @@ export default function Answer(props: AnswerProps) {
                     onCancel={() => { setIsEditing(false); setCreatingNewAnswer(false)} }
                     type={type}
                     editing={true} // editing or creating new answer should always result in rich-text-editor being displayed
+                    
                 />
-            ) : answer ? (
+            ) : (
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">
                     <header className="border-bottom container-fluid">
                         <div className="row">
@@ -199,15 +200,7 @@ export default function Answer(props: AnswerProps) {
                         </div>
                     </footer>
                 </article>
-            ) : (
-                <NewAnswer
-                    initialAnswer=""
-                    onSave={handleOnSave}
-                    onCancel={() => setCreatingNewAnswer(false)}
-                    type={type}
-                    editing={creatingNewAnswer}
-                />
-            )
+            ) 
             }
         </div>
     )

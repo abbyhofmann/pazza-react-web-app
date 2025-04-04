@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ViewPost.css";
 import EditorComponent from "./EditorComponent";
 
@@ -8,7 +8,7 @@ interface NewAnswerProps {
     onSave: (updatedAnswer: string) => void;
     onCancel: () => void;
     type: string;
-    editing: boolean;
+    editing?: boolean;
 }
 
 // Component for adding a new answer to a post.
@@ -21,7 +21,11 @@ export default function NewAnswer(props: NewAnswerProps) {
 
     // variable for keeping track of displaying the rich text editor; if there is an answer, then clicking "edit" should take you directly to 
     // the editor, but if there is no answer, then you have to click an input box and then the editor will pop up 
-    const [editorOpen, setEditorOpen] = useState<boolean>(editing && !!initialAnswer);
+    const [editorOpen, setEditorOpen] = useState<boolean>(!!editing);
+
+    // useEffect(() => {
+    //     if (editing) setEditorOpen(true);
+    //   }, [editing]);
 
     console.log("editing: ", editing, ", editorOpen: ", editorOpen);
     return (
@@ -54,7 +58,7 @@ export default function NewAnswer(props: NewAnswerProps) {
                 </div>
             </div>
             {/* save and cancel buttons only appear when user is editing */}
-            {editing && editorOpen &&
+            {editorOpen &&
                 <footer className="border-top container-fluid">
                     <div className="row">
                         <div className="text-left align-self-center m-1 col-auto">
