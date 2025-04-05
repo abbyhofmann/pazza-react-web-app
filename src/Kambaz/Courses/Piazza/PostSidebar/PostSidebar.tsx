@@ -6,6 +6,7 @@ import { Post } from "../../../types";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
+  
   const {
     formatDate,
     extractTime,
@@ -20,8 +21,6 @@ export default function PostSidebar() {
     navButton,
     posts
   } = usePostSidebar();
-
-
 
   return (
     <div
