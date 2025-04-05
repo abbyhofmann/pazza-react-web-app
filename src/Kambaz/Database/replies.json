@@ -1,6 +1,6 @@
 [
   {
-    "_id": "67e18754c006ff6589c4a523",
+    "_id": {"$oid": "67e18754c006ff6589c4a523"},
     "followupDiscussionId": "67e186a8c8e0b2c2e5a611a9",
     "authorId": "123",
     "datePosted": "2025-02-13T15:50:00.000Z",
