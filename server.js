@@ -140,7 +140,6 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
 
 // create a new answer
 app.post('/api/answer/createAnswer', async (req, res) => {
-    console.log('create answer req body: ', req.body)
     if (!(req.body.postId !== undefined &&
         req.body.postId !== '' &&
         req.body.type !== undefined &&
@@ -153,6 +152,7 @@ app.post('/api/answer/createAnswer', async (req, res) => {
         res.status(400).send('Invalid answer body');
         return;
     }
+
     const newAnswer = req.body;
     try {
         const result = await answers.insertOne(newAnswer);

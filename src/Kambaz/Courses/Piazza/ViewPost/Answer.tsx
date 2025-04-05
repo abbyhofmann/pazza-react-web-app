@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { type Answer, User } from "../../../types";
 import { getAnswerById, updateAnswer } from "../services/answerService";
 import { getUser } from "../services/userService";
-import NewAnswer from "./NewAnswer";
+import WipAnswer from "./WipAnswer";
 
 interface AnswerProps {
     answerId: string;
@@ -19,9 +19,6 @@ export default function Answer(props: AnswerProps) {
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    // keep track of if a new answer is being added 
-    const [creatingNewAnswer, setCreatingNewAnswer] = useState<boolean>(false);
-
     // keep track of if dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
@@ -35,38 +32,26 @@ export default function Answer(props: AnswerProps) {
         return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
     }
 
+    // handle saving an answer when it is being edited 
     const handleOnSave = async (updatedContent: string, type: string) => {
-        
+
         try {
             // convert HTML content from React Quill to plain text before saving in database 
             const doc = new DOMParser().parseFromString(updatedContent, "text/html");
             const plainTextContent = doc.body.textContent || "";
 
-            
             if (answer && answer._id) {
                 // update existing answer
                 const updatedAnswer = await updateAnswer(answer._id, plainTextContent);
                 setAnswer({ ...answer, content: updatedAnswer.content });
-            } 
-            else {
-                console.log('inside else - no answer')
-            //     // create a new answer
-            //     const newAnswer: Answer = {
-            //         postId: "",
-            //         type: type === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
-            //         authors: [], // TODO - add the logged in user
-            //         content: plainTextContent,
-            //         dateEdited: new Date().toDateString(),
-            //     }
-            //     const newAnswerFromDb = await createAnswer(newAnswer);
-            //     setAnswer(newAnswerFromDb);
             }
-
+            else {
+                throw new Error("Cannot update an answer that doesn't exist");
+            }
         } catch (error) {
             console.error("Error updating answer:", error);
         }
         setIsEditing(false);
-        setCreatingNewAnswer(false);
     }
 
     useEffect(() => {
@@ -119,12 +104,12 @@ export default function Answer(props: AnswerProps) {
 
     return (
         <div>
-            {isEditing || creatingNewAnswer ? (
-                <NewAnswer
-                    initialAnswer={answer ? answer.content : ""} // TODO idk about this
+            {isEditing ? (
+                <WipAnswer
+                    initialAnswer={answer ? answer.content : ""} // TODO improve this check 
                     onSave={handleOnSave}
-                    onCancel={() => { setIsEditing(false); setCreatingNewAnswer(false)} }
-                    type={type}                    
+                    onCancel={() => { setIsEditing(false) }}
+                    type={type}
                 />
             ) : (
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">
@@ -139,7 +124,7 @@ export default function Answer(props: AnswerProps) {
                     <div className="content container-fluid">
                         <div className="g-0 row">
                             <div className="col">
-                               
+
                                 <div className="float-end dropdown">
                                     {/* actions dropdown for edit and delete */}
                                     <button
@@ -169,15 +154,10 @@ export default function Answer(props: AnswerProps) {
                                 </div>
                                 <div className="py-3 history-selection">
                                     <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div>
-                                
                                 </div>
-                                
                             </div>
-                                    
                         </div>
-                                    
                     </div>
-                    
                     <footer className="border-top container-fluid">
                         <div className="row">
                             <div className="text-left align-self-center m-1 col-auto">
@@ -201,8 +181,7 @@ export default function Answer(props: AnswerProps) {
                         </div>
                     </footer>
                 </article>
-            ) 
-            }
+            )}
         </div>
     )
 }

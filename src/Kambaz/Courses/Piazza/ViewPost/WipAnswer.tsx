@@ -3,27 +3,25 @@ import { useState } from "react";
 import "./ViewPost.css";
 import EditorComponent from "./EditorComponent";
 
-interface NewAnswerProps {
-    initialAnswer: string | null;
+interface WipAnswerProps {
+    initialAnswer: string;
     onSave: (updatedAnswer: string, type: string) => void;
     onCancel: () => void;
     type: string;
-    // editing: boolean;
 }
 
-// Component for adding a new answer to a post.
-export default function NewAnswer(props: NewAnswerProps) {
+// Component for rendering view for editing (updating or adding a new) answer.
+export default function WipAnswer(props: WipAnswerProps) {
 
-    const { initialAnswer = "", onSave, onCancel, type,  } = props;
+    const { initialAnswer, onSave, onCancel, type, } = props;
 
     // variable to keep track of the answer's content
-    const [answerContent, setAnswerContent] = useState<string>(initialAnswer ? initialAnswer : ""); // TODO idk if this is right 
+    const [answerContent, setAnswerContent] = useState<string>(initialAnswer);
 
     // variable for keeping track of displaying the rich text editor; if there is an answer, then clicking "edit" should take you directly to 
     // the editor, but if there is no answer, then you have to click an input box and then the editor will pop up 
     const [editorOpen, setEditorOpen] = useState<boolean>(true);
 
-    // console.log("editing: ", editing, ", editorOpen: ", editorOpen);
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
@@ -38,13 +36,13 @@ export default function NewAnswer(props: NewAnswerProps) {
                 <div className="g-0 row">
                     <div className="col">
                         {!editorOpen ? (
-                            // input box for adding a new answer - when this is clicked, the rich text editor appears
+                            // input box - when this is clicked, the rich text editor appears
                             <input
                                 placeholder="Click to start off the wiki answer"
                                 id="s_answerPlaceholderId"
                                 className="my-3 form-control"
                                 value={answerContent}
-                                onFocus={() => setEditorOpen(true)} 
+                                onFocus={() => setEditorOpen(true)}
                                 readOnly
                             />
                         ) : (

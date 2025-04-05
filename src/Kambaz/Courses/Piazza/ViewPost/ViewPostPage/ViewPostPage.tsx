@@ -5,7 +5,7 @@ import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
 import { Answer as AnswerType, Post } from "../../../../types";
 import { addAnswerToPost, getPostById } from "../../services/postService";
-import NewAnswer from "../NewAnswer";
+import WipAnswer from "../WipAnswer";
 import ".././ViewPost.css";
 import NewAnswerInputBox from "../NewAnswerInputBox";
 import { createAnswer } from "../../services/answerService";
@@ -23,11 +23,12 @@ const ViewPostPage = () => {
   // post being rendered
   const [post, setPost] = useState<Post | null>(null);
 
-  // keep track of if answers are being created
-  const [creatingStudentAnswer, setCreatingStudentAnswer] = useState(false);
-  const [creatingInstructorAnswer, setCreatingInstructorAnswer] =
+  // keep track of if answers are a work-in-progress (i.e. being edited or created)
+  const [isWipStudentAnswer, setIsWipStudentAnswer] = useState(false);
+  const [isWipInstructorAnswer, setIsWipInstructorAnswer] =
     useState(false);
 
+  // handle when the submit button is clicked when creating a new answer
   const handleOnSubmit = async (newAnswerContent: string, answerType: string) => {
     if (post && post._id) {
       try {
@@ -46,19 +47,17 @@ const ViewPostPage = () => {
         const newAnswerFromDb = await createAnswer(newAnswer);
         if (newAnswerFromDb?._id) {
 
-
           // todo - add answer to post on the backend 
           if (answerType === "student") {
             const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "student");
             setPost(updatedPost);
-            setCreatingStudentAnswer(false); // hide after submit
+            setIsWipStudentAnswer(false); // hide after submit
           } else {
             const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "instructor");
             setPost(updatedPost);
-            setCreatingInstructorAnswer(false);
+            setIsWipInstructorAnswer(false);
           }
         }
-
       }
 
       catch (error) {
@@ -91,49 +90,66 @@ const ViewPostPage = () => {
 
   return (
     <div className="view-post-content">
+
+      {/* POST COMPONENT */}
       <PostBox post={post} />
+
       {/* TODO - add logic for only creating a student response if the user is a student */}
       {/* only posts of type question should have the student and instructor response components */}
+
+      {/* STUDENT ANSWER COMPONENT */}
       {post.type === 0 &&
+        // if the post has a student answer, render the answer 
         (post.studentAnswer !== null ? (
           <Answer answerId={post.studentAnswer} type={"student"} />
-        ) : creatingStudentAnswer ? (
-          <NewAnswer
+        ) : isWipStudentAnswer ? (
+
+          // if a student answer is being created, render the wip display
+          <WipAnswer
             initialAnswer=""
             onSave={handleOnSubmit}
             onCancel={() => {
-              setCreatingStudentAnswer(false); // hide on cancel
+              setIsWipStudentAnswer(false); // hide on cancel
             }}
             type={"student"}
           />
         ) : (
-          <NewAnswerInputBox setIsEditing={setCreatingStudentAnswer} answerAuthorType="student" />
+
+          // if there is no answer and one is not being created, display the text input box 
+          <NewAnswerInputBox setIsEditing={setIsWipStudentAnswer} answerAuthorType="student" />
         ))}
 
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
+      {/* INSTRUCTOR ANSWER COMPONENT */}
       {post.type === 0 &&
+
+        // if the post has an instructor answer, render it 
         (post.instructorAnswer !== null ? (
           <Answer answerId={post.instructorAnswer} type={"instructor"} />
-        ) : creatingInstructorAnswer ? (
-          <NewAnswer
+        ) : isWipInstructorAnswer ? (
+
+          // if an instructor answer is being created, render the wip display 
+          <WipAnswer
             initialAnswer=""
             onSave={handleOnSubmit}
             onCancel={() => {
-              setCreatingInstructorAnswer(false);
+              setIsWipInstructorAnswer(false);
             }}
             type="instructor"
           />
         ) : (
-          <NewAnswerInputBox setIsEditing={setCreatingInstructorAnswer} answerAuthorType="instructor" />
+
+          // if there is no answer and one is not being created, display the text input box 
+          <NewAnswerInputBox setIsEditing={setIsWipInstructorAnswer} answerAuthorType="instructor" />
         ))}
 
+      {/* FOLLOWUP DISCUSSIONS COMPONENT */}
       <FollowupDiscussions
         convoExists={post.followupDiscussions.length !== 0}
         fudIds={post.followupDiscussions}
         setPost={setPost}
         postId={post._id!!}
       />{" "}
-      {/* TODO - idk about this null check */}
     </div>
   );
 };
