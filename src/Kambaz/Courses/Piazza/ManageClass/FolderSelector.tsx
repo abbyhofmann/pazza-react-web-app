@@ -1,8 +1,8 @@
 import { FaPencil } from "react-icons/fa6";
-import { folders } from "../../../Database";
 import { Form } from "react-bootstrap";
 import { useState } from "react";
 import { FaBars, FaSave, FaTrash } from "react-icons/fa";
+import useFolders from "../hooks/useFolders";
 
 interface Props {
   name: string;
@@ -11,6 +11,7 @@ interface Props {
 export default function FolderSelector() {
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
   const [editing, setEditing] = useState(false);
+  const { folders } = useFolders();
 
   const Folder = ({ name }: Props) => {
     const [selected, setSelected] = useState(true);

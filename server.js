@@ -157,7 +157,7 @@ app.get('/api/folders', async (req, res) => {
         // course id is in the request body 
         const { cid } = req.body;
         const fetchedFolders = await folders.find({ course_id: cid }).toArray();
-        res.json(fetchedFolders);
+        res.status(200).json(fetchedFolders);
     } catch (err) {
         res.status(500).send(`Error when fetching folders: ${err}`);
     }
@@ -169,7 +169,7 @@ app.get('/api/folders/names', async (req, res) => {
         const { cid } = req.body;
         const fetchedFolders = await folders.find({ course_id: cid }).toArray();
         const names = fetchedFolders.map(folder => folder.name);
-        res.json(names);
+        res.status(200).json(names);
     } catch (err) {
         res.status(500).send(`Error when fetching folder names: ${err}`);
     }
@@ -181,7 +181,7 @@ app.get('/api/folders/posts', async (req, res) => {
         const { folder, cid } = req.body;
         const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
         const posts = fetchedFolders.map(folder => folder.posts);
-        res.json(posts);
+        res.status(200).json(posts);
     } catch (err) {
         res.status(500).send(`Error when fetching folder posts: ${err}`);
     }
