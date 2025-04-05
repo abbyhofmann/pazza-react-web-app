@@ -122,7 +122,7 @@ export default function Answer(props: AnswerProps) {
                     onSave={handleOnSave}
                     onCancel={() => { setIsEditing(false); setCreatingNewAnswer(false)} }
                     type={type}
-                    editing={true} // editing or creating new answer should always result in rich-text-editor being displayed
+                    // editing={true} // editing or creating new answer should always result in rich-text-editor being displayed
                     
                 />
             ) : (
@@ -130,7 +130,7 @@ export default function Answer(props: AnswerProps) {
                     <header className="border-bottom container-fluid">
                         <div className="row">
                             <div className="text-left pl-0 col">
-                                <h2>the {type}s' answer, </h2>
+                                <h2>the {type}'s answer, </h2>
                                 <span className="post_type_snippet">where {type}s collectively construct a single answer</span>
                             </div>
                         </div>

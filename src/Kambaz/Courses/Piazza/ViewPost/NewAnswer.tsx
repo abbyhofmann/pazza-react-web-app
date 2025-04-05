@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./ViewPost.css";
 import EditorComponent from "./EditorComponent";
 
@@ -8,32 +8,28 @@ interface NewAnswerProps {
     onSave: (updatedAnswer: string) => void;
     onCancel: () => void;
     type: string;
-    editing?: boolean;
+    // editing: boolean;
 }
 
 // Component for adding a new answer to a post.
 export default function NewAnswer(props: NewAnswerProps) {
 
-    const { initialAnswer = "", onSave, onCancel, type, editing } = props;
+    const { initialAnswer = "", onSave, onCancel, type,  } = props;
 
     // variable to keep track of the answer's content
     const [answerContent, setAnswerContent] = useState<string>(initialAnswer ? initialAnswer : ""); // TODO idk if this is right 
 
     // variable for keeping track of displaying the rich text editor; if there is an answer, then clicking "edit" should take you directly to 
     // the editor, but if there is no answer, then you have to click an input box and then the editor will pop up 
-    const [editorOpen, setEditorOpen] = useState<boolean>(!!editing);
+    const [editorOpen, setEditorOpen] = useState<boolean>(true);
 
-    // useEffect(() => {
-    //     if (editing) setEditorOpen(true);
-    //   }, [editing]);
-
-    console.log("editing: ", editing, ", editorOpen: ", editorOpen);
+    // console.log("editing: ", editing, ", editorOpen: ", editorOpen);
     return (
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
                 <div className="row">
                     <div className="text-left pl-0 col">
-                        <h2>the {type}s' answer, </h2>
+                        <h2>the {type}'s answer, </h2>
                         <span className="post_type_snippet">where {type}s collectively construct a single answer</span>
                     </div>
                 </div>
