@@ -31,6 +31,7 @@ const posts = db.collection("posts");
 const answers = db.collection("answers");
 const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
+const folders = db.collection("folders");
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -150,30 +151,42 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
     }
 });
 
-// app.listen(3000, 'localhost', () => {
-//     console.log('Server running on Port 3000');
-// });
-app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
-    console.log(`Server running on Port ${process.env.PORT || 3000}`);
-} finally {
-    client.close();
-}
-});
-
+// get all the folders in a course
 app.get('/api/folders', async (req, res) => {
     try {
-        await client.connect();
-        const db = client.db("piazza");
-        const folders = db.collection("folders");
-        const allFolders = (await folders.find({}).toArray());
-
-        console.log('Connected to MongoDB');
-        res.status(200).send(allFolders);
-    } finally {
-        client.close();
+        // course id is in the request body 
+        const { cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        res.json(fetchedFolders);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folders: ${err}`);
     }
-})
+});
 
-app.listen(3000, 'localhost', () => {
-    console.log('Server running on Port 3000');
+// get the names of all the folders in a course
+app.get('/api/folders/names', async (req, res) => {
+    try {
+        const { cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const names = fetchedFolders.map(folder => folder.name);
+        res.json(names);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folder names: ${err}`);
+    }
+});
+
+// get all the posts in a course's folder
+app.get('/api/folders/posts', async (req, res) => {
+    try {
+        const { folder, cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
+        const posts = fetchedFolders.map(folder => folder.posts);
+        res.json(posts);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folder posts: ${err}`);
+    }
+});
+
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+    console.log(`Server running on Port ${process.env.PORT || 3000}`);
 });
