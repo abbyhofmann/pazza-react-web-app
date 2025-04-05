@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type Answer, User } from "../../../types";
-import { createAnswer, getAnswerById, updateAnswer } from "../services/answerService";
+import { getAnswerById, updateAnswer } from "../services/answerService";
 import { getUser } from "../services/userService";
 import NewAnswer from "./NewAnswer";
 
@@ -124,9 +124,7 @@ export default function Answer(props: AnswerProps) {
                     initialAnswer={answer ? answer.content : ""} // TODO idk about this
                     onSave={handleOnSave}
                     onCancel={() => { setIsEditing(false); setCreatingNewAnswer(false)} }
-                    type={type}
-                    // editing={true} // editing or creating new answer should always result in rich-text-editor being displayed
-                    
+                    type={type}                    
                 />
             ) : (
                 <article data-id="sa_answer" className="answer" aria-label="Student Answer">

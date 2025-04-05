@@ -94,25 +94,6 @@ const ViewPostPage = () => {
       <PostBox post={post} />
       {/* TODO - add logic for only creating a student response if the user is a student */}
       {/* only posts of type question should have the student and instructor response components */}
-      {/* {post.type === 0 &&
-        (post.studentAnswer !== null ? (
-          <Answer answerId={post.studentAnswer} type={"student"} />
-        ) : 
-          <NewAnswer
-            initialAnswer=""
-            onSave={(newAnswer) => {
-              // TODO: send newAnswer to the backend and update post state
-              setPost((prevPost) =>
-                prevPost ? { ...prevPost, studentAnswer: newAnswer } : null
-              );
-            }}
-            onCancel={() => {
-              console.log('cancel clickeddd')
-            }}
-            type={"student"}
-            editing={false}
-          />
-        ) } */}
       {post.type === 0 &&
         (post.studentAnswer !== null ? (
           <Answer answerId={post.studentAnswer} type={"student"} />
@@ -130,24 +111,6 @@ const ViewPostPage = () => {
         ))}
 
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
-      {/* {post.type === 0 &&
-        (post.instructorAnswer !== null ? (
-          <Answer answerId={post.instructorAnswer} type={"instructor"} />
-        ) : 
-          <NewAnswer
-            initialAnswer=""
-            onSave={(newAnswer) => {
-              // TODO: send newAnswer to the backend and update post state
-              setPost((prevPost) =>
-                prevPost ? { ...prevPost, instructorAnswer: newAnswer } : null
-              );
-            }}
-            onCancel={() => {
-            }}
-            type="instructor"
-            editing={false}
-          />
-        ) } */}
       {post.type === 0 &&
         (post.instructorAnswer !== null ? (
           <Answer answerId={post.instructorAnswer} type={"instructor"} />
