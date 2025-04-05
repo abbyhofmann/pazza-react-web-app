@@ -35,7 +35,7 @@ export default function Answer(props: AnswerProps) {
         return `${date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: true })}`;
     }
 
-    const handleOnSave = async (updatedContent: string) => {
+    const handleOnSave = async (updatedContent: string, type: string) => {
         
         try {
             // convert HTML content from React Quill to plain text before saving in database 
@@ -47,17 +47,19 @@ export default function Answer(props: AnswerProps) {
                 // update existing answer
                 const updatedAnswer = await updateAnswer(answer._id, plainTextContent);
                 setAnswer({ ...answer, content: updatedAnswer.content });
-            } else {
-                // create a new answer
-                const newAnswer: Answer = {
-                    postId: "",
-                    type: type === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
-                    authors: [], // TODO - add the logged in user
-                    content: plainTextContent,
-                    dateEdited: new Date().toDateString(),
-                }
-                const newAnswerFromDb = await createAnswer(newAnswer);
-                setAnswer(newAnswerFromDb);
+            } 
+            else {
+                console.log('inside else - no answer')
+            //     // create a new answer
+            //     const newAnswer: Answer = {
+            //         postId: "",
+            //         type: type === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
+            //         authors: [], // TODO - add the logged in user
+            //         content: plainTextContent,
+            //         dateEdited: new Date().toDateString(),
+            //     }
+            //     const newAnswerFromDb = await createAnswer(newAnswer);
+            //     setAnswer(newAnswerFromDb);
             }
 
         } catch (error) {
@@ -73,6 +75,7 @@ export default function Answer(props: AnswerProps) {
          */
         const fetchData = async () => {
             try {
+                console.log('fetching data answerId: ', answerId)
                 const res = await getAnswerById(answerId);
                 if (res) {
                     setAnswer(res);

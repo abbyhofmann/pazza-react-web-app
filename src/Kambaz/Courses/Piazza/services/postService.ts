@@ -52,4 +52,18 @@ const addDiscussionToPost = async (
   return res.data;
 };
 
-export { getPostById, getPosts, addDiscussionToPost };
+const addAnswerToPost = async (
+  pid: string,
+  aid: string, 
+  type: string
+): Promise<Post> => {
+  const data = { pid, aid, type };
+  const res = await api.post(`${POST_API_URL}/addAnswer`, data);
+
+  if (res.status !== 200) {
+    throw new Error(`Error while adding ${type} answer to post`);
+  }
+  return res.data;
+}
+
+export { getPostById, getPosts, addDiscussionToPost, addAnswerToPost };

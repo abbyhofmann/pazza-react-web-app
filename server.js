@@ -136,15 +136,16 @@ app.post('/api/answer/updateAnswer', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when updating answer: ${err}`);
     }
-}); 
+});
 
 // create a new answer
 app.post('/api/answer/createAnswer', async (req, res) => {
+    console.log('create answer req body: ', req.body)
     if (!(req.body.postId !== undefined &&
         req.body.postId !== '' &&
         req.body.type !== undefined &&
         req.body.authors !== undefined &&
-        req.body.authors.length() !== 0 &&
+        // req.body.authors.length !== 0 && // TODO - uncomment once we have author added
         req.body.content !== undefined &&
         req.body.content !== '' &&
         req.body.dateEdited !== undefined &&
@@ -238,6 +239,37 @@ app.post('/api/post/addDiscussion', async (req, res) => {
         res.json(updatedPost);
     } catch (err) {
         res.status(500).send(`Error when adding discussion to post: ${err}`);
+    }
+})
+
+// add an answer to post 
+app.post('/api/post/addAnswer', async (req, res) => {
+    try {
+        const { pid, aid, type } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        if (type !== "student" && type !== "instructor") {
+            return res.status(400).send("Invalid answer type");
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            {
+                $set: {
+                    [type === "student" ? "studentAnswer" : "instructorAnswer"]: aid,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding student answer to post: ${err}`);
     }
 })
 

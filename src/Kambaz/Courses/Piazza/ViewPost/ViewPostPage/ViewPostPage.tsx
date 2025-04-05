@@ -1,13 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostBox from "../PostBox";
-import Answer from "../Answer";
 import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
-import { Post } from "../../../../types";
-import { getPostById } from "../../services/postService";
+import { Answer as AnswerType, Post } from "../../../../types";
+import { addAnswerToPost, getPostById } from "../../services/postService";
 import NewAnswer from "../NewAnswer";
 import ".././ViewPost.css";
+import NewAnswerInputBox from "../NewAnswerInputBox";
+import { createAnswer } from "../../services/answerService";
+import Answer from "../Answer";
 
 
 /**
@@ -25,6 +27,45 @@ const ViewPostPage = () => {
   const [creatingStudentAnswer, setCreatingStudentAnswer] = useState(false);
   const [creatingInstructorAnswer, setCreatingInstructorAnswer] =
     useState(false);
+
+  const handleOnSubmit = async (newAnswerContent: string, answerType: string) => {
+    if (post && post._id) {
+      try {
+        // convert HTML content from React Quill to plain text before saving in database 
+        const doc = new DOMParser().parseFromString(newAnswerContent, "text/html");
+        const plainTextContent = doc.body.textContent || "";
+
+        // create a new answer
+        const newAnswer: AnswerType = {
+          postId: post._id,
+          type: answerType === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
+          authors: [], // TODO - add the logged in user
+          content: plainTextContent,
+          dateEdited: new Date().toDateString(),
+        }
+        const newAnswerFromDb = await createAnswer(newAnswer);
+        if (newAnswerFromDb?._id) {
+
+
+          // todo - add answer to post on the backend 
+          if (answerType === "student") {
+            const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "student");
+            setPost(updatedPost);
+            setCreatingStudentAnswer(false); // hide after submit
+          } else {
+            const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "instructor");
+            setPost(updatedPost);
+            setCreatingInstructorAnswer(false);
+          }
+        }
+
+      }
+
+      catch (error) {
+        console.error("Error updating answer:", error);
+      }
+    }
+  }
 
   useEffect(() => {
     /**
@@ -78,44 +119,14 @@ const ViewPostPage = () => {
         ) : creatingStudentAnswer ? (
           <NewAnswer
             initialAnswer=""
-            onSave={(newAnswer) => {
-              setPost((prevPost) =>
-                prevPost ? { ...prevPost, studentAnswer: newAnswer } : null
-              );
-              setCreatingStudentAnswer(false); // hide after submit
-            }}
+            onSave={handleOnSubmit}
             onCancel={() => {
               setCreatingStudentAnswer(false); // hide on cancel
             }}
             type={"student"}
           />
         ) : (
-          <article data-id="s_answer" className="answer" aria-label="Student Answer">
-            <header className="border-bottom container-fluid">
-              <div className="row">
-                <div className="text-left pl-0 col">
-                  <h2>the student's answer, </h2>
-                  <span className="post_type_snippet">where students collectively construct a single answer</span>
-                </div>
-              </div>
-            </header>
-            <div className="content container-fluid">
-              <div className="g-0 row">
-                <div className="col">
-
-                  <input
-                    placeholder="Click to start off the wiki answer"
-                    id="s_answerPlaceholderId"
-                    className="my-3 form-control"
-                    value=""
-                    onFocus={() => setCreatingStudentAnswer(true)} // editor appears when input box is clicked
-                    readOnly
-                  />
-                </div>
-              </div>
-            </div>
-
-          </article>
+          <NewAnswerInputBox setIsEditing={setCreatingStudentAnswer} answerAuthorType="student" />
         ))}
 
       {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
@@ -143,44 +154,14 @@ const ViewPostPage = () => {
         ) : creatingInstructorAnswer ? (
           <NewAnswer
             initialAnswer=""
-            onSave={(newAnswer) => {
-              setPost((prevPost) =>
-                prevPost ? { ...prevPost, instructorAnswer: newAnswer } : null
-              );
-              setCreatingInstructorAnswer(false);
-            }}
+            onSave={handleOnSubmit}
             onCancel={() => {
               setCreatingInstructorAnswer(false);
             }}
             type="instructor"
           />
         ) : (
-          <article data-id="i_answer" className="answer" aria-label="Instructor Answer">
-            <header className="border-bottom container-fluid">
-              <div className="row">
-                <div className="text-left pl-0 col">
-                  <h2>the instructor's answer, </h2>
-                  <span className="post_type_snippet">where instructors collectively construct a single answer</span>
-                </div>
-              </div>
-            </header>
-            <div className="content container-fluid">
-              <div className="g-0 row">
-                <div className="col">
-
-                  <input
-                    placeholder="Click to start off the wiki answer"
-                    id="i_answerPlaceholderId"
-                    className="my-3 form-control"
-                    value=""
-                    onFocus={() => setCreatingInstructorAnswer(true)} // editor appears when input box is clicked
-                    readOnly
-                  />
-                </div>
-              </div>
-            </div>
-
-          </article>
+          <NewAnswerInputBox setIsEditing={setCreatingInstructorAnswer} answerAuthorType="instructor" />
         ))}
 
       <FollowupDiscussions

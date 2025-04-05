@@ -5,7 +5,7 @@ import EditorComponent from "./EditorComponent";
 
 interface NewAnswerProps {
     initialAnswer: string | null;
-    onSave: (updatedAnswer: string) => void;
+    onSave: (updatedAnswer: string, type: string) => void;
     onCancel: () => void;
     type: string;
     // editing: boolean;
@@ -44,7 +44,7 @@ export default function NewAnswer(props: NewAnswerProps) {
                                 id="s_answerPlaceholderId"
                                 className="my-3 form-control"
                                 value={answerContent}
-                                onFocus={() => setEditorOpen(true)} // editor appears when input box is clicked
+                                onFocus={() => setEditorOpen(true)} 
                                 readOnly
                             />
                         ) : (
@@ -58,7 +58,7 @@ export default function NewAnswer(props: NewAnswerProps) {
                 <footer className="border-top container-fluid">
                     <div className="row">
                         <div className="text-left align-self-center m-1 col-auto">
-                            <button className="btn btn-primary btn-sm me-2" onClick={() => onSave(answerContent)}>Submit</button>
+                            <button className="btn btn-primary btn-sm me-2" onClick={() => onSave(answerContent, type)}>Submit</button>
                             <button className="btn btn-secondary btn-sm" onClick={onCancel}>Cancel</button>
                         </div>
                     </div>
