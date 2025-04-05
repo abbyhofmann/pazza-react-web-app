@@ -218,6 +218,30 @@ app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
     }
 });
 
+// add a reply to followup discussion 
+app.post('/api/followupDiscussion/addReply', async (req, res) => {
+    try {
+
+        const { fudId, rid } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $addToSet: { replies: rid } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when adding reply to discussion: ${err}`);
+    }
+})
+
 // add a followup discussion to post 
 app.post('/api/post/addDiscussion', async (req, res) => {
     try {
@@ -240,7 +264,7 @@ app.post('/api/post/addDiscussion', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when adding discussion to post: ${err}`);
     }
-})
+});
 
 // add an answer to post 
 app.post('/api/post/addAnswer', async (req, res) => {
@@ -289,6 +313,31 @@ app.get('/api/reply/:rid', async (req, res) => {
         res.json(fetchedReply);
     } catch (err) {
         res.status(500).send(`Error when fetching reply: ${err}`);
+    }
+});
+
+// create a new reply
+app.post('/api/reply/createReply', async (req, res) => {
+
+    if (!(req.body.followupDiscussionId !== undefined &&
+        req.body.followupDiscussionId !== '' &&
+        req.body.authorId !== undefined &&
+        // req.body.authorId !== '' && // TODO - uncomment when we add author
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '')) {
+        res.status(400).send('Invalid reply body');
+        return;
+    }
+
+    const newReply = req.body;
+    try {
+        const result = await replies.insertOne(newReply);
+        const createdReply = await replies.findOne({ _id: result.insertedId });
+        res.json(createdReply);
+    } catch (err) {
+        res.status(500).send(`Error when creating reply: ${err}`);
     }
 });
 

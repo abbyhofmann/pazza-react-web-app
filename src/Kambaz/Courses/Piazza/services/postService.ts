@@ -52,9 +52,17 @@ const addDiscussionToPost = async (
   return res.data;
 };
 
+/**
+ * Adds an answer id to a post's student or instructor answer attribute.
+ *
+ * @param pid The id of the post to which the answer is being added.
+ * @param aid The id of the answer being added.
+ * @param type The type of answer (either student or instructor).
+ * @returns The updated post object with the answer id set.
+ */
 const addAnswerToPost = async (
   pid: string,
-  aid: string, 
+  aid: string,
   type: string
 ): Promise<Post> => {
   const data = { pid, aid, type };
@@ -64,6 +72,6 @@ const addAnswerToPost = async (
     throw new Error(`Error while adding ${type} answer to post`);
   }
   return res.data;
-}
+};
 
 export { getPostById, getPosts, addDiscussionToPost, addAnswerToPost };

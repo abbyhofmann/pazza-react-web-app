@@ -1,10 +1,10 @@
 import "./FollowupDiscussions.css";
 import { useState } from "react";
-import ReactQuill from "react-quill";
 import { createDiscussion } from "../../services/followupDiscussionService";
 import { FollowupDiscussion as FollowupDiscussionType, Post } from "../../../../types";
 import FollowupDiscussion from "./FollowupDiscussion";
 import { addDiscussionToPost } from "../../services/postService";
+import EditorComponent from "../EditorComponent";
 
 interface FollowupDiscussionsProps {
   convoExists: boolean;
@@ -95,12 +95,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
                 onFocus={() => setStartingNewDiscussion(true)}
               />
             ) : (
-              <ReactQuill
-                theme="snow"
-                className="custom-editor"
-                value={discussionContent}
-                onChange={setDiscussionContent}
-              />
+              <EditorComponent content={discussionContent} setContent={setDiscussionContent} />
             )}
           </div>
         </div>
@@ -110,7 +105,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
           <div className="row">
             <div className="text-left align-self-center m-1 col-auto">
               <button className="btn btn-primary btn-sm me-2" onClick={() => handleOnSave(discussionContent)}>Submit</button>
-              <button className="btn btn-secondary btn-sm" onClick={() => setStartingNewDiscussion(false)}>Cancel</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => { setStartingNewDiscussion(false); setDiscussionContent(""); }}>Cancel</button>
             </div>
           </div>
         </footer>

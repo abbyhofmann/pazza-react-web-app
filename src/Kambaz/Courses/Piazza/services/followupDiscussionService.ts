@@ -41,4 +41,24 @@ const createDiscussion = async (
   return res.data;
 };
 
-export { getFollowupDiscussionById, createDiscussion };
+/**
+ * Adds a reply id to a followup discussion's list of replies.
+ *
+ * @param fudId The id of the discussion to which the reply is being added.
+ * @param rid The id of the reply being added.
+ * @returns The updated followup discussion object with the reply id added.
+ */
+const addReplyToDiscussion = async (
+  fudId: string,
+  rid: string
+): Promise<FollowupDiscussion> => {
+  const data = { fudId, rid };
+  const res = await api.post(`${FOLLOWUP_DISCUSSION_API_URL}/addReply`, data);
+
+  if (res.status !== 200) {
+    throw new Error(`Error while adding reply to discussion`);
+  }
+  return res.data;
+};
+
+export { getFollowupDiscussionById, createDiscussion, addReplyToDiscussion };

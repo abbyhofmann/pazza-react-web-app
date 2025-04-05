@@ -18,4 +18,18 @@ const getReplyById = async (rid: string): Promise<Reply> => {
   return res.data;
 };
 
-export { getReplyById };
+/**
+ * Adds a new reply to the database.
+ * @param newReply The new reply object to add.
+ * @returns The new reply object added to the database.
+ */
+const createReply = async (newReply: Reply): Promise<Reply> => {
+  const res = await api.post(`${REPLY_API_URL}/createReply`, newReply);
+
+  if (res.status !== 200) {
+    throw new Error("Error while creating reply");
+  }
+  return res.data;
+};
+
+export { getReplyById, createReply };
