@@ -4,6 +4,7 @@ import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
 import path from 'path';
+import { ObjectId } from 'mongodb';
 
 dotenv.config();
 const app = express();
@@ -85,7 +86,7 @@ app.get('/api/post/:pid', async (req, res) => {
         }
 
         // fetch the post from the database - returns null if there is not a post with that id 
-        const fetchedPost = (await posts.findOne({ _id: pid }));
+        const fetchedPost = (await posts.findOne({ _id: new ObjectId(pid) }));
         console.log('fetched post: ', fetchedPost);
         res.json(fetchedPost);
     } catch (err) {
@@ -105,7 +106,7 @@ app.get('/api/answer/:aid', async (req, res) => {
             return;
         }
 
-        const fetchedAnswer = (await answers.findOne({ _id: aid }));
+        const fetchedAnswer = (await answers.findOne({ _id: new ObjectId(aid) }));
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
@@ -143,7 +144,7 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
             return;
         }
 
-        const fetchedDiscussion = (await followupDiscussions.findOne({ _id: fudid }));
+        const fetchedDiscussion = (await followupDiscussions.findOne({ _id: new ObjectId(fudid) }));
         res.json(fetchedDiscussion);
     } catch (err) {
         res.status(500).send(`Error when fetching discussion: ${err}`);
