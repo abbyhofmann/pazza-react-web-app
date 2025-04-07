@@ -24,7 +24,7 @@ const useAnswer = (answerId: string) => {
     }
 
     // handle saving an answer when it is being edited 
-    const handleOnSave = async (updatedContent: string, type: string) => {
+    const handleOnSave = async (updatedContent: string) => {
 
         try {
             // convert HTML content from React Quill to plain text before saving in database 
