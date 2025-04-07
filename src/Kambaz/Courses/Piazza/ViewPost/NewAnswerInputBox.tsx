@@ -14,6 +14,9 @@ export default function NewAnswerInputBox(props: NewAnswerInputProps) {
         <article data-id={`${answerAuthorType}_answer`} className="answer" aria-label={`${answerAuthorType} Answer`}>
             <header className="border-bottom container-fluid">
                 <div className="row">
+                    <div className="mx-0 col-auto">
+                        <img className="" width="18px" height="18px" aria-hidden="true" src={answerAuthorType === "student" ? "images/studentIcon.jpg" : "images/instructorIcon.jpg"} />
+                    </div>
                     <div className="text-left pl-0 col">
                         <h2>the {answerAuthorType}'s answer, </h2>
                         <span className="post_type_snippet">where {answerAuthorType}s collectively construct a single answer</span>

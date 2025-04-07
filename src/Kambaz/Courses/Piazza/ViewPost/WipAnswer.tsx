@@ -26,6 +26,9 @@ export default function WipAnswer(props: WipAnswerProps) {
         <article data-id="s_answer" className="answer" aria-label="Student Answer">
             <header className="border-bottom container-fluid">
                 <div className="row">
+                    <div className="mx-0 col-auto">
+                        <img className="" width="18px" height="18px" aria-hidden="true" src={type === "student" ? "images/studentIcon.jpg" : "images/instructorIcon.jpg"} />
+                    </div>
                     <div className="text-left pl-0 col">
                         <h2>the {type}'s answer, </h2>
                         <span className="post_type_snippet">where {type}s collectively construct a single answer</span>
