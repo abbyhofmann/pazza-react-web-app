@@ -4,7 +4,7 @@ import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { folders } from "../../Database";
 import "./../../styles.css";
 
@@ -14,9 +14,12 @@ export default function NewPostPage() {
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
    const [postSumary, setPostSummary] = useState("");
+   
 
    const navigate = useNavigate();
    const { cid } = useParams();
+   const location = useLocation();
+   const handleNewPost = location.state?.handleNewPost;
 
 
    const DeleteButton = () => {
@@ -103,8 +106,14 @@ export default function NewPostPage() {
          });
 
          if (response.ok) {
+            const savedPost = await response.json();
             console.log("New Post Added");
+
+            if (handleNewPost) {
+               handleNewPost(savedPost);
+            }
             navigate(`/Kambaz/Courses/${cid}/Piazza`);
+
          }
          else {
             console.error("Failed to Post");
@@ -348,4 +357,8 @@ export default function NewPostPage() {
 
 
    );
+}
+
+function setPosts(arg0: (prevPosts: any) => any[]) {
+   throw new Error("Function not implemented.");
 }
