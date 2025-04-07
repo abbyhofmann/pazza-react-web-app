@@ -1,13 +1,33 @@
+import { markDiscussionResolved, markDiscussionUnresolved } from "../../../services/followupDiscussionService";
 import "./ResolvedButtons.css";
 
 export interface ResolvedButtonsProps {
+    fudId: string;
     resolved: boolean;
     setResolved: (resolvedStatus: boolean) => void;
 }
 
 export default function ResolvedButtons(props: ResolvedButtonsProps) {
 
-    const { resolved, setResolved } = props;
+    const { fudId, resolved, setResolved } = props;
+
+    const handleClickResolve = async () => {
+        try {
+            const updatedDiscussion = await markDiscussionResolved(fudId);
+            setResolved(true);
+        } catch (error) {
+            console.error("Error updating discussion resolved:", error);
+        }
+    }
+
+    const handleClickUnresolve = async () => {
+        try {
+            const updatedDiscussion = await markDiscussionUnresolved(fudId);
+            setResolved(false);
+        } catch (error) {
+            console.error("Error marking discussion unresolved:", error);
+        }
+    }
 
     return (
         <div className="">
@@ -20,7 +40,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                         type="radio"
                         className="custom-control-input"
                         checked={resolved}
-                        onChange={() => (setResolved(true))}
+                        onChange={handleClickResolve}
                     />
                     <label
                         title=""
@@ -36,7 +56,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                         type="radio"
                         className="custom-control-input"
                         checked={!resolved}
-                        onChange={() => (setResolved(false))}
+                        onChange={handleClickUnresolve}
                     />
                     <label
                         title=""

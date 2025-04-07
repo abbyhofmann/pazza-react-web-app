@@ -29,7 +29,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
     return (
         <div className="g-1 row">
-            <ResolvedButtons resolved={resolved} setResolved={setResolved} />
+            <ResolvedButtons fudId={fudId} resolved={resolved} setResolved={setResolved} />
             <div className="mx-0 col-auto">
                 <img className="avatar" width="30px" height="30px" aria-hidden="true" src="images/anonProfilePic.jpg" />
             </div>

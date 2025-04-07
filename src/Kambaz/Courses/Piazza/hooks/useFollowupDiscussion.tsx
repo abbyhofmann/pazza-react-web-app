@@ -60,6 +60,7 @@ const useFollowupDiscussion = (fudId: string) => {
                 const res = await getFollowupDiscussionById(fudId);
                 if (res) {
                     setFud(res);
+                    setResolved(res.resolved);
                 }
             } catch (error) {
                 // eslint-disable-next-line no-console

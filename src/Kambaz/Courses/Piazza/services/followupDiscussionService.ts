@@ -61,4 +61,52 @@ const addReplyToDiscussion = async (
   return res.data;
 };
 
-export { getFollowupDiscussionById, createDiscussion, addReplyToDiscussion };
+/**
+ * Marks a followup discussion as resolved.
+ *
+ * @param fudId The id of the discussion being resolved.
+ * @returns The updated followup discussion object now marked as resolved.
+ */
+const markDiscussionResolved = async (
+  fudId: string
+): Promise<FollowupDiscussion> => {
+  const data = { fudId };
+  const res = await api.post(
+    `${FOLLOWUP_DISCUSSION_API_URL}/markResolved`,
+    data
+  );
+
+  if (res.status !== 200) {
+    throw new Error(`Error while marking discussion as resolved`);
+  }
+  return res.data;
+};
+
+/**
+ * Marks a followup discussion as unresolved.
+ *
+ * @param fudId The id of the discussion being unresolved.
+ * @returns The updated followup discussion object now marked as unresolved.
+ */
+const markDiscussionUnresolved = async (
+  fudId: string
+): Promise<FollowupDiscussion> => {
+  const data = { fudId };
+  const res = await api.post(
+    `${FOLLOWUP_DISCUSSION_API_URL}/markUnresolved`,
+    data
+  );
+
+  if (res.status !== 200) {
+    throw new Error(`Error while marking discussion as unresolved`);
+  }
+  return res.data;
+};
+
+export {
+  getFollowupDiscussionById,
+  createDiscussion,
+  addReplyToDiscussion,
+  markDiscussionResolved,
+  markDiscussionUnresolved,
+};

@@ -25,7 +25,8 @@ const useFollowupDiscussions = (
                 authorId: "123",
                 datePosted: new Date().toDateString(),
                 content: plainTextContent.trim(),
-                replies: []
+                replies: [],
+                resolved: false,
             };
             // create the followup discussion in the db
             const newDiscussionFromDb = await createDiscussion(newDiscussion);

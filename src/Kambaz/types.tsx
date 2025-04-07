@@ -53,6 +53,7 @@ export interface FollowupDiscussion {
     datePosted: string;
     content: string;
     replies: string[];
+    resolved: boolean;
 }
 
 export interface Answer {

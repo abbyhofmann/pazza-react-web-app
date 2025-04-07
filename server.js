@@ -240,7 +240,55 @@ app.post('/api/followupDiscussion/addReply', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when adding reply to discussion: ${err}`);
     }
-})
+});
+
+// marks a followup discussion as resolved
+app.post('/api/followupDiscussion/markResolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: true } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as resolved: ${err}`);
+    }
+});
+
+// marks a followup discussion as unresolved
+app.post('/api/followupDiscussion/markUnresolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: false } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as unresolved: ${err}`);
+    }
+});
 
 // add a followup discussion to post 
 app.post('/api/post/addDiscussion', async (req, res) => {

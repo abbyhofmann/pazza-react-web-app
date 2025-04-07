@@ -263,7 +263,7 @@
     "instructor": true,
     "title": "Starter Code Bug",
     "content": "All - we have discovered a bug in the A3 starter code and have pushed a change. Please be sure to pull from main.",
-    "followupDiscussions": [],
+    "followupDiscussions": ["67f42180031d22ecd2f3ae31"],
     "studentAnswer": null,
     "instructorAnswer": null,
     "viewers": [],
