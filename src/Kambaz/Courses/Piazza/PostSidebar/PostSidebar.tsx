@@ -5,11 +5,10 @@ import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 
-// The post feed accordian-style sidebar.
+// The post feed accordion-style sidebar.
 export default function PostSidebar() {
+  const { posts, isLoading, error } = usePostSidebarContext();
 
-  const { posts } = usePostSidebarContext();
-  
   const {
     formatDate,
     extractTime,
@@ -23,6 +22,15 @@ export default function PostSidebar() {
     isUnanswered,
     navButton,
   } = usePostSidebar();
+
+  // Handle loading and error states
+  if (isLoading) {
+    return <div>Loading posts...</div>; // Show a loading indicator or message
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Show error message
+  }
 
   return (
     <div
@@ -118,7 +126,7 @@ export default function PostSidebar() {
               </ul>
             </div>
 
-            {/* Last Week Dropdown Header - TODO: may want to have the data sorted so the days appear in order of most to least recent */}
+            {/* Last Week Dropdown Header */}
             <div
               className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
               data-bs-toggle="collapse"
@@ -158,7 +166,7 @@ export default function PostSidebar() {
             {/* Date Range Display for Older Posts */}
             {Array.from(groupedPostsMap.entries()).map(
               ([dateRange, postsInRange]) => (
-                <div>
+                <div key={dateRange}>
                   <div
                     className="mb-0 bucket-header gray-bar d-flex align-items-center px-3 py-2"
                     data-bs-toggle="collapse"
@@ -179,25 +187,23 @@ export default function PostSidebar() {
                   </div>
 
                   <div
-                    id={`collapse${dateRange.replace(/[^a-zA-Z0-9]/g, "")}`}
+                    id={`collapse${dateRange.replace(/[^a-zA0-9]/g, "")}`}
                     className="collapse show"
                   >
                     <ul className="list-group list-group-flush">
-                      {postsInRange.map(
-                        (post: Post) => (
-                          <PostListItem
-                            key={post._id}
-                            title={post.title}
-                            content={post.content}
-                            datePosted={post.datePosted}
-                            instructor={post.instructor}
-                            displayDate={formatDate}
-                            onClick={() => handlePostClick(post._id!)}
-                            isSelected={selectedPostId === post._id}
-                            isUnanswered={isUnanswered(post)}
-                          />
-                        )
-                      )}
+                      {postsInRange.map((post: Post) => (
+                        <PostListItem
+                          key={post._id}
+                          title={post.title}
+                          content={post.content}
+                          datePosted={post.datePosted}
+                          instructor={post.instructor}
+                          displayDate={formatDate}
+                          onClick={() => handlePostClick(post._id!)}
+                          isSelected={selectedPostId === post._id}
+                          isUnanswered={isUnanswered(post)}
+                        />
+                      ))}
                     </ul>
                   </div>
                 </div>

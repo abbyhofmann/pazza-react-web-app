@@ -6,22 +6,30 @@ import { getPosts } from "./services/postService";
 type PostSidebarContextType = {
   posts: Post[];
   fetchPosts: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
 };
 
-// Context for sharing the posts data across the application. This is needed because as answers get added to a post, the 
-// post sidebar needs to update to reflect the posts (specifically when a post is no longer "unanswered"). 
+// Context for sharing the posts data across the application
 const PostSidebarContext = createContext<PostSidebarContextType | null>(null);
 
 export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
-  // function for fetching the posts 
+  // Function for fetching the posts 
   const fetchPosts = async () => {
     try {
+      setIsLoading(true);
       const res = await getPosts();
       setPosts(res);
+      setError(null); // Reset error on successful fetch
     } catch (error) {
       console.error("Error fetching posts:", error);
+      setError("Failed to load posts.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,7 +38,7 @@ export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <PostSidebarContext.Provider value={{ posts, fetchPosts }}>
+    <PostSidebarContext.Provider value={{ posts, fetchPosts, isLoading, error }}>
       {children}
     </PostSidebarContext.Provider>
   );

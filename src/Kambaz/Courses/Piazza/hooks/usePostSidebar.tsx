@@ -144,6 +144,12 @@ const usePostSidebar = () => {
     // map to keep track of which week each post belongs in
     const groupedPosts: Map<string, Post[]> = new Map();
 
+     // Ensure posts is always an array
+  if (!Array.isArray(posts)) {
+    console.error('Posts is not an array:', posts);
+    return groupedPosts;
+  }
+
     posts.forEach((post) => {
       // add post to the week if it is not in the dates to exclude - for our use case, we do not want to display posts from this week,
       // as they will already be displayed in other dropdowns
