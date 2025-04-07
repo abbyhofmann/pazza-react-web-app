@@ -8,7 +8,6 @@ import { useLocation, useParams } from "react-router";
 import { folders } from "../../Database";
 import "./../../styles.css";
 
-
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
@@ -89,8 +88,8 @@ export default function NewPostPage() {
          title: postSumary,
          content: editorValue,
          followUpQuestions: '',
-         studentResponse: '',
-         instructorResponse: '',
+         studentAnswer: '',
+         instructorAnswer: '',
          viewers: '',
          courseId: cid,
       };

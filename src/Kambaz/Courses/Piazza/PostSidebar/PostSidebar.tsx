@@ -2,8 +2,8 @@ import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { Post } from "../../../types";
+import { useState } from "react";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -17,6 +17,9 @@ export default function PostSidebar() {
     groupedPostsMap,
     today,
     yesterday,
+    isUnanswered,
+    navButton,
+    posts
   } = usePostSidebar();
 
   const [posts, setPosts] = useState<any[]>([]);
@@ -50,7 +53,7 @@ export default function PostSidebar() {
       );
       if (response.ok) {
         const createdPost = await response.json();
-        setPosts((prevPosts) => [createdPost, ...prevPosts]);
+        setPosts((prevPosts: any) => [createdPost, ...prevPosts]);
       } else {
         console.error("Failed to creare Post");
       }
@@ -58,15 +61,6 @@ export default function PostSidebar() {
     console.error("Error posting new Post", error);
   }
 };
-
-  const navigate = useNavigate();
-    const { cid } = useParams();
-
-  const navButton = () => {
-    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`)
-    ;
-  }
-
   return (
     <div
       className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end"
@@ -75,7 +69,7 @@ export default function PostSidebar() {
       <div>
         <div id="feed_search_bar">
           <button id="new_post_button" type="button" onClick={navButton}>
-          <BsFileEarmarkPostFill className="me-1 mb-1 fs-6"/>
+            <BsFileEarmarkPostFill className="me-1 mb-1 fs-6" />
             New Post
           </button>
           <div id="search_bar" role="search">
@@ -112,14 +106,15 @@ export default function PostSidebar() {
                   .filter((post: any) => formatDate(post.datePosted) === today)
                   .map((post: any) => (
                     <PostListItem
-                      _id={post._id}
+
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)} // TODO - is this how to handle the undefined???
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -146,14 +141,14 @@ export default function PostSidebar() {
                   .filter((post: any) => formatDate(post.datePosted) === yesterday)
                   .map((post: any) => (
                     <PostListItem
-                      _id={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)}
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -182,14 +177,14 @@ export default function PostSidebar() {
                   )
                   .map((post: any) => (
                     <PostListItem
-                      _id={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={getDayOfWeek}
-                      onClick={() => handlePostClick(post._id)}
+                      onClick={() => handlePostClick(post._id!)}
                       isSelected={selectedPostId === post._id}
+                      isUnanswered={isUnanswered(post)}
                     />
                   ))}
               </ul>
@@ -224,30 +219,16 @@ export default function PostSidebar() {
                   >
                     <ul className="list-group list-group-flush">
                       {postsInRange.map(
-                        (post: {
-                          _id: string;
-                          folderId: string;
-                          authorId: string;
-                          datePosted: string;
-                          type: number;
-                          instructor: boolean;
-                          title: string;
-                          content: string;
-                          followUpQuestions: string;
-                          studentResponse: string;
-                          instructorResponse: string;
-                          viewers: string;
-                          courseId: string;
-                        }) => (
+                        (post: Post) => (
                           <PostListItem
-                            _id={post._id}
                             title={post.title}
                             content={post.content}
                             datePosted={post.datePosted}
                             instructor={post.instructor}
                             displayDate={formatDate}
-                            onClick={() => handlePostClick(post._id)}
+                            onClick={() => handlePostClick(post._id!)}
                             isSelected={selectedPostId === post._id}
+                            isUnanswered={isUnanswered(post)}
                           />
                         )
                       )}

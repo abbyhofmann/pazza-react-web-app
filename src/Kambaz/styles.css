@@ -164,17 +164,17 @@ gap:5px;
   margin-right: 0%;
   height: 130px;
   
-  }
+}
 
-  .wd-text-grey {
-    color: rgb(77, 76, 76);
-    margin-top: 5px;
-    margin-right: 2px;
-  }
+.wd-text-grey {
+  color: rgb(91, 91, 91);
+  margin-top: 5px;
+  margin-right: 2px;
+}
 
-  .wd-font-bold { 
-    font-weight: bold;
-  }
+.wd-font-bold {
+  font-weight: bold;
+}
 
 .wd-question-border {
   border-radius: 0%;
