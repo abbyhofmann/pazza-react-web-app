@@ -1,4 +1,4 @@
-import { markDiscussionResolved, markDiscussionUnresolved } from "../../../services/followupDiscussionService";
+import useResolvedButtons from "../../../hooks/useResolvedButtons";
 import "./ResolvedButtons.css";
 
 export interface ResolvedButtonsProps {
@@ -11,23 +11,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
 
     const { fudId, resolved, setResolved } = props;
 
-    const handleClickResolve = async () => {
-        try {
-            const updatedDiscussion = await markDiscussionResolved(fudId);
-            setResolved(true);
-        } catch (error) {
-            console.error("Error updating discussion resolved:", error);
-        }
-    }
-
-    const handleClickUnresolve = async () => {
-        try {
-            const updatedDiscussion = await markDiscussionUnresolved(fudId);
-            setResolved(false);
-        } catch (error) {
-            console.error("Error marking discussion unresolved:", error);
-        }
-    }
+    const { handleClickResolve, handleClickUnresolve } = useResolvedButtons(fudId, setResolved);
 
     return (
         <div className="">
