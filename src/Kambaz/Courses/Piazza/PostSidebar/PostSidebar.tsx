@@ -3,7 +3,6 @@ import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
-import { useState } from "react";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -22,45 +21,8 @@ export default function PostSidebar() {
     posts
   } = usePostSidebar();
 
-  const [posts, setPosts] = useState<any[]>([]);
 
-  const fetchPosts = async () => {
-     try {
-        const response = await fetch("http://localhost:3000/api/posts"); 
-        if (response.ok) {
-           const data = await response.json();
-           setPosts(data.reverse());  
-        } else {
-           console.error("Failed to fetch posts");
-        }
-     } catch (error) {
-        console.error("Error fetching posts:", error);
-     }
-  }; 
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const handleNewPost = async (newPost: any) => {
-   
-    try {
-      const response = await fetch("http://localhost:3000/api/post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify(newPost),
-      }
-      );
-      if (response.ok) {
-        const createdPost = await response.json();
-        setPosts((prevPosts: any) => [createdPost, ...prevPosts]);
-      } else {
-        console.error("Failed to creare Post");
-      }
-  } catch (error) {
-    console.error("Error posting new Post", error);
-  }
-};
   return (
     <div
       className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end"
@@ -103,8 +65,8 @@ export default function PostSidebar() {
             <div id="collapseToday" className="collapse show">
               <ul className="list-group list-group-flush">
                 {posts
-                  .filter((post: any) => formatDate(post.datePosted) === today)
-                  .map((post: any) => (
+                  .filter((post) => formatDate(post.datePosted) === today)
+                  .map((post) => (
                     <PostListItem
 
                       title={post.title}
@@ -138,8 +100,8 @@ export default function PostSidebar() {
             <div id="collapseYesterday" className="collapse show">
               <ul className="list-group list-group-flush">
                 {posts
-                  .filter((post: any) => formatDate(post.datePosted) === yesterday)
-                  .map((post: any) => (
+                  .filter((post) => formatDate(post.datePosted) === yesterday)
+                  .map((post) => (
                     <PostListItem
                       title={post.title}
                       content={post.content}
@@ -172,10 +134,10 @@ export default function PostSidebar() {
             <div id="collapseLastWeek" className="collapse show">
               <ul className="list-group list-group-flush">
                 {posts
-                  .filter((post: any) =>
+                  .filter((post) =>
                     datesLastWeek.includes(formatDate(post.datePosted))
                   )
-                  .map((post: any) => (
+                  .map((post) => (
                     <PostListItem
                       title={post.title}
                       content={post.content}
