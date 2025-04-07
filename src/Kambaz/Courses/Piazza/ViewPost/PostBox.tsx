@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
+import { Post, User } from "../../../types";
 import "./ViewPost.css";
+import { getUser } from "../services/userService";
 
 interface PostBoxProps {
-    // TODO - update this to Post type once db and types are implemented
-    post: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; };
+    post: Post;
 }
 
 // Component for the individual post item in the sidebar. 
@@ -10,14 +12,30 @@ export default function PostBox(props: PostBoxProps) {
 
     const { post } = props;
 
-    /**
-     * Extracts the post number from the postId, where the postId is in the format of P{post#} (ex: P101).
-     * @param postId The post id as a string.
-     * @returns The post number extracted from the postId.
-     */
-    function extractPostNumber(postId: string): string {
-        return postId.substring(1);
-    }
+    // author of the post 
+    const [author, setAuthor] = useState<User | null>(null);
+
+    // keep track of if the user is editing the answer 
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
+    useEffect(() => {
+        /**
+         * Function to fetch the post-related data.
+         */
+        const fetchData = async () => {
+            try {
+                const fetchedAuthor = await getUser(post.authorId);
+                if (fetchedAuthor._id !== undefined) {
+                    setAuthor(fetchedAuthor);
+                }
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error fetching answer:', error);
+            }
+        };
+        // eslint-disable-next-line no-console
+        fetchData().catch(e => console.log(e));
+    }, [post]);
 
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
@@ -26,9 +44,10 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="text-left pl-0 col-auto">
                         <b>
                             {/* post type */}
+                            <img className="me-1" width="24px" height="24px" aria-hidden="true" src={post.type === 0 ? "images/question.jpg" : "images/note.jpg"}></img>
                             <span tabIndex={-1} data-id="post_type">{post.type === 0 ? "question" : "note"}</span>
                             {/* post number */}
-                            <button type="button" className="p-0 post_number_copy btn btn-link-text">@{extractPostNumber(post._id)}</button>
+                            <button type="button" className="p-0 post_number_copy btn btn-link-text">@{(post._id ? post._id : "unknown post id")}</button>
                         </b>
                     </div>
                     <div className="text-right col">
@@ -64,7 +83,21 @@ export default function PostBox(props: PostBoxProps) {
                 <div className="row">
                     <div className="text-left align-self-center m-1 col-auto">
                         {/* edit button */}
-                        <button data-id="edit_button" type="button" className="mr-2 btn btn-primary btn-sm">Edit</button> { /* TODO - edit should only available to creator of post and instructors */}
+                        {!isEditing && (
+                            <button
+                                data-id="edit_button"
+                                type="button"
+                                className="mr-2 btn btn-primary btn-sm"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit
+                            </button>
+                        )}
+                    </div>
+                    <div className="text-right col">
+                        { /* author of post */}
+                        <div className="update_text float-end" data-id="contributors">Posted by <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`}</span>
+                        </div>
                     </div>
                 </div>
             </footer>

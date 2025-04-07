@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { posts } from "../../../Database";
+import { Post } from "../../../types"; 
+
+import { usePostSidebarContext } from "./usePostSidebarContent";
 
 /**
  * Custom hook for managing post sidebar and date-related functionality.
@@ -10,7 +12,32 @@ const usePostSidebar = () => {
   const navigate = useNavigate();
   const { cid } = useParams();
 
+  const { posts, fetchPosts } = usePostSidebarContext();
+
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  const navButton = () => {
+    navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
+  }
+
+  // const [posts, setPosts] = useState<Post[]>([]);
+
+  // fetch posts  
+  
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    fetchPosts().catch(e => console.log(e));
+  }, []);
+
+  /**
+   * Function that determines if a post is unanswered (i.e. contains no student or instructor responses).
+   * @param post The post object itself.
+   * @returns Boolean - true if post does not contain any answers, false if it does.
+   */
+  function isUnanswered(post: Post): boolean {
+    return post.studentAnswer === null && post.instructorAnswer === null && post.type === 0;
+  }
 
   /**
  * Function for formatting the given date in dd/mm/yy format. This is used for formatting the date for
@@ -106,7 +133,6 @@ const usePostSidebar = () => {
     return days;
   }
 
-  // TODO - once we have mongodb data types, posts will be of type Post[] instead of the json
   /**
   * Function for grouping posts by the week they were created in. This creates a mapping between string date range (such as 2/10-2/16) and
   * a list of the post objects that fall within that week. The current week is excluded from this mapping, as posts from this week will
@@ -115,9 +141,9 @@ const usePostSidebar = () => {
   * @param posts The posts being grouped.
   * @returns A mapping of string date range to list of posts that fall in that date range.
   */
-  function groupPostsByWeek(datesToExclude: String[], posts: { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]): Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> {
+  function groupPostsByWeek(datesToExclude: String[], posts: Post[]): Map<string, Post[]> {
     // map to keep track of which week each post belongs in
-    const groupedPosts: Map<string, { _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: boolean; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; }[]> = new Map();
+    const groupedPosts: Map<string, Post[]> = new Map();
 
     posts.forEach((post) => {
       // add post to the week if it is not in the dates to exclude - for our use case, we do not want to display posts from this week,
@@ -171,7 +197,10 @@ const usePostSidebar = () => {
     datesLastWeek,
     groupedPostsMap,
     today,
-    yesterday
+    yesterday,
+    isUnanswered,
+    navButton,
+    posts,
   };
 };
 

@@ -1,0 +1,26 @@
+[
+    {
+      "_id": {"$oid": "67e15c83ae4534e193b7eacb"},
+      "postId": "67dc37f92d09afff6e1e079d",
+      "type": 0,
+      "authors": ["234"],
+      "content": "No, not for A2",
+      "dateEdited": "2025-02-17T04:40:00.000Z"
+    },
+    {
+      "_id": {"$oid": "67e15d06ed9f5ba584bf0d93"},
+      "postId": "67dc37f92d09afff6e1e079d",
+      "type": 1,
+      "authors": ["123"],
+      "content": "See student answer",
+      "dateEdited": "2025-02-18T04:00:00.000Z"
+    },
+    {
+      "_id": {"$oid": "67e1689e3b313d8f2faa5d99"},
+      "postId": "67dc37fe978d92187857ac31",
+      "type": 1,
+      "authors": ["678"],
+      "content": "I'd strongly recommend Visual Studio Code",
+      "dateEdited": "2025-02-01T02:30:00.000Z"
+    }
+  ]

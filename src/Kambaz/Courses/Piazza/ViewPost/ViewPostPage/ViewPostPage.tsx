@@ -1,13 +1,10 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import PostBox from '../PostBox';
-import NewStudentAnswer from '../NewStudentAnswer';
-import InstructorAnswer from '../InstructorAnswer';
-import NewFollowupDiscussions from '../NewFollowupDiscussions';
-import StudentAnswer from '../StudentAnswer';
-import NewInstructorAnswer from '../NewInstructorAnswer';
-import FollowupDiscussions from '../FollowupDiscussions';
-import "./ViewPostPage.css";
+import PostBox from "../PostBox";
+import useViewPostPage from "../../hooks/useViewPostPage";
+import Answer from "../Answer";
+import WipAnswer from "../WipAnswer";
+import NewAnswerInputBox from "../NewAnswerInpuBox";
+import FollowupDiscussions from "../FollowupDiscussions";
+
 
 /**
  * Represents the profile page component. Routes to the right view based on the
@@ -15,25 +12,81 @@ import "./ViewPostPage.css";
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
-    const { pid } = useParams();
-    const [post, setPost] = useState<{ _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; } | null>(null);
 
-    useEffect(() => {
-        // TODO - fetch the post details via server based on the postId
-        setPost({ _id: pid!, folderId: 'fid', authorId: 'aid', datePosted: '2025-02-15T09:30:00.000Z', type: 0, instructor: 1, title: 'Do we need images for Dashboard??', content: 'Changing the data source for dashboard now has no photos rendering for each course, do we need to fix this by using assets/images/?', followUpQuestions: '', studentResponse: '', instructorResponse: 'haiii', viewers: '', courseId: '4550' });
-    }, [pid]);
+  const { post,
+    setPost,
+    handleOnSubmit,
+    isWipInstructorAnswer,
+    setIsWipInstructorAnswer,
+    isWipStudentAnswer,
+    setIsWipStudentAnswer
+  } = useViewPostPage();
 
-    if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
+  if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
-    return (
+  return (
     <div className="view-post-content">
-        <PostBox post={post} />
-        {/* TODO - add logic for only creating a student response if the user is a student */}
-        {post.studentResponse !== "" ? <StudentAnswer /> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}
-        {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
-        {post.instructorResponse !== "" ? <InstructorAnswer /> : <NewInstructorAnswer />}
-        {post.followUpQuestions !== "" ? <FollowupDiscussions /> : <NewFollowupDiscussions />}
+
+      {/* POST COMPONENT */}
+      <PostBox post={post} />
+
+      {/* TODO - add logic for only creating a student response if the user is a student */}
+      {/* only posts of type question should have the student and instructor response components */}
+
+      {/* STUDENT ANSWER COMPONENT */}
+      {post.type === 0 &&
+        // if the post has a student answer, render the answer 
+        (post.studentAnswer !== null ? (
+          <Answer answerId={post.studentAnswer} type={"student"} />
+        ) : isWipStudentAnswer ? (
+
+          // if a student answer is being created, render the wip display
+          <WipAnswer
+            initialAnswer=""
+            onSave={handleOnSubmit}
+            onCancel={() => {
+              setIsWipStudentAnswer(false); // hide on cancel
+            }}
+            type={"student"}
+          />
+        ) : (
+
+          // if there is no answer and one is not being created, display the text input box 
+          <NewAnswerInputBox setIsEditing={setIsWipStudentAnswer} answerAuthorType="student" />
+        ))}
+
+      {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
+      {/* INSTRUCTOR ANSWER COMPONENT */}
+      {post.type === 0 &&
+
+        // if the post has an instructor answer, render it 
+        (post.instructorAnswer !== null ? (
+          <Answer answerId={post.instructorAnswer} type={"instructor"} />
+        ) : isWipInstructorAnswer ? (
+
+          // if an instructor answer is being created, render the wip display 
+          <WipAnswer
+            initialAnswer=""
+            onSave={handleOnSubmit}
+            onCancel={() => {
+              setIsWipInstructorAnswer(false);
+            }}
+            type="instructor"
+          />
+        ) : (
+
+          // if there is no answer and one is not being created, display the text input box 
+          <NewAnswerInputBox setIsEditing={setIsWipInstructorAnswer} answerAuthorType="instructor" />
+        ))}
+
+      {/* FOLLOWUP DISCUSSIONS COMPONENT */}
+      <FollowupDiscussions
+        convoExists={post.followupDiscussions.length !== 0}
+        fudIds={post.followupDiscussions}
+        setPost={setPost}
+        postId={post._id!!}
+      />{" "}
     </div>
-    );
+  );
 };
 export default ViewPostPage;

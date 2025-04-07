@@ -1,0 +1,20 @@
+[
+    {
+      "_id": { "$oid": "67e186a8c8e0b2c2e5a611a9"},
+      "postId": "67dc37f92d09afff6e1e079d",
+      "authorId": "890",
+      "datePosted": "2025-02-13T15:45:00.000Z",
+      "content": "What assignment will the backend setup happen in? Just looking to plan ahead :)",
+      "replies": ["67e18754c006ff6589c4a523"], 
+      "resolved": false
+    },
+    {
+      "_id": { "$oid": "67f42180031d22ecd2f3ae31"},
+      "postId": "67dc38571484841a09f89fc5",
+      "authorId": "123",
+      "datePosted": "2025-04-01T15:45:00.000Z",
+      "content": "Please be sure to pull from github for the updated code.",
+      "replies": [], 
+      "resolved": true
+    }
+  ]
