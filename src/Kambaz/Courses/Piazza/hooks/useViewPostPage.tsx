@@ -3,9 +3,12 @@ import { useParams } from "react-router";
 import { Answer, Post } from "../../../types";
 import { createAnswer } from "../services/answerService";
 import { addAnswerToPost, getPostById } from "../services/postService";
+import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 
 const useViewPostPage = () => {
     const { pid } = useParams();
+
+    const { fetchPosts } = usePostSidebarContext();
 
     // post being rendered
     const [post, setPost] = useState<Post | null>(null);
@@ -34,15 +37,18 @@ const useViewPostPage = () => {
                 const newAnswerFromDb = await createAnswer(newAnswer);
                 if (newAnswerFromDb?._id) {
 
-                    // todo - add answer to post on the backend 
                     if (answerType === "student") {
                         const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "student");
                         setPost(updatedPost);
-                        setIsWipStudentAnswer(false); // hide after submit
+                        setIsWipStudentAnswer(false);
+                        // fetch posts when new answer is added so it no longer appears as unanswered  
+                        await fetchPosts();
                     } else {
                         const updatedPost = await addAnswerToPost(post._id, newAnswerFromDb._id, "instructor");
                         setPost(updatedPost);
                         setIsWipInstructorAnswer(false);
+                        // fetch posts when new answer is added so it no longer appears as unanswered  
+                        await fetchPosts();
                     }
                 }
             }
@@ -72,7 +78,7 @@ const useViewPostPage = () => {
         // eslint-disable-next-line no-console
         fetchData().catch((e) => console.log(e));
     }, [pid]);
-    
+
     return {
         post,
         setPost,

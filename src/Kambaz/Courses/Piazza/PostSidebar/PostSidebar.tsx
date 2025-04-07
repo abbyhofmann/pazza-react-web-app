@@ -3,9 +3,12 @@ import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
+import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
+
+  const { posts } = usePostSidebarContext();
   
   const {
     formatDate,
@@ -19,7 +22,6 @@ export default function PostSidebar() {
     yesterday,
     isUnanswered,
     navButton,
-    posts
   } = usePostSidebar();
 
   return (
@@ -67,7 +69,7 @@ export default function PostSidebar() {
                   .filter((post) => formatDate(post.datePosted) === today)
                   .map((post) => (
                     <PostListItem
-
+                      key={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
@@ -102,6 +104,7 @@ export default function PostSidebar() {
                   .filter((post) => formatDate(post.datePosted) === yesterday)
                   .map((post) => (
                     <PostListItem
+                      key={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
@@ -138,6 +141,7 @@ export default function PostSidebar() {
                   )
                   .map((post) => (
                     <PostListItem
+                      key={post._id}
                       title={post.title}
                       content={post.content}
                       datePosted={post.datePosted}
@@ -182,6 +186,7 @@ export default function PostSidebar() {
                       {postsInRange.map(
                         (post: Post) => (
                           <PostListItem
+                            key={post._id}
                             title={post.title}
                             content={post.content}
                             datePosted={post.datePosted}
