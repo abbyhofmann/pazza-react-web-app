@@ -4,6 +4,7 @@ import { Row, Col, Card, Button, Form, FormControl } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import * as enrollmentClient from "./Courses/Enrollments/client.ts";
+import * as userClient from "./Account/client.ts";
 
 type Props = {
   course: any;
@@ -17,6 +18,11 @@ export default function Dashboard(
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
   const [viewEnrollments, setViewEnrollments] = useState<boolean>(false);
+  const [myCourses, setMyCourses] = useState<any[]>(courses);
+
+  const updateEnrollments = async () => {
+    setMyCourses(await userClient.findMyCourses());
+  }
 
   const DashboardCourse = ({ course }: Props) => {
     return (
@@ -61,7 +67,7 @@ export default function Dashboard(
   }
 
   const EnrollmentCourse = ({ course }: Props) => {
-    const enrolled = courses.some((c) => c._id === course._id);
+    const [enrolled, setEnrolled] = useState<boolean>(myCourses.some((c) => c._id === course._id));
     return (
       <Col className="wd-dashboard-course" style={{ width: "300px" }}>
         <Card>
@@ -75,10 +81,16 @@ export default function Dashboard(
             </Card.Text>
             <div>
               {enrolled &&
-                <Button className="mb-4 float-end" variant="danger" onClick={() => enrollmentClient.unenroll(course._id)}>Unenroll</Button>
+                <Button className="mb-4 float-end" variant="danger" onClick={async () => {
+                  enrollmentClient.unenroll(course._id);
+                  setEnrolled(false);
+                }}>Unenroll</Button>
               }
               {!enrolled &&
-                <Button className="mb-4 float-end" variant="success" onClick={() => enrollmentClient.enroll(course._id)}>Enroll</Button>
+                <Button className="mb-4 float-end" variant="success" onClick={async () => {
+                  enrollmentClient.enroll(course._id);
+                  setEnrolled(true);
+                }}>Enroll</Button>
               }
             </div>
           </Card.Body>
@@ -90,7 +102,9 @@ export default function Dashboard(
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-      <Button variant="primary" onClick={() => setViewEnrollments(!viewEnrollments)}>Enrollments</Button>
+      <Button variant="primary" onClick={() => {
+        setViewEnrollments(!viewEnrollments); updateEnrollments();
+      }}>Enrollments</Button>
       {!viewEnrollments &&
         <div>
           {isFaculty &&
@@ -113,10 +127,10 @@ export default function Dashboard(
                 onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })} />
             </div>
           }
-          <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+          <h2 id="wd-dashboard-published">Published Courses ({myCourses.length})</h2> <hr />
           <div id="wd-dashboard-courses">
             <Row xs={1} md={5} className="g-4">
-              {courses.map((course, index) =>
+              {myCourses.map((course, index) =>
                 <DashboardCourse course={course} key={index} />)}
             </Row>
           </div>

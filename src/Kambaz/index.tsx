@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import Session from "./Account/Session";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
+import * as enrollmentClient from "./Courses/Enrollments/client";
 
 export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -36,6 +37,7 @@ export default function Kambaz() {
 
   const addNewCourse = async () => {
     const newCourse = await userClient.createCourse(course);
+    await enrollmentClient.enroll(newCourse._id);
     setCourses([...courses, newCourse]);
   };
 
