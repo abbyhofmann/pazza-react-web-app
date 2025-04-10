@@ -14,6 +14,8 @@ import * as courseClient from "./Courses/client";
 
 export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>([]);
+  const [allCourses, setAllCourses] = useState<any[]>([]);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [course, setCourse] = useState<any>({
     _id: "0",
     name: "New Course",
@@ -31,6 +33,7 @@ export default function Kambaz() {
       else { return c; }
     }));
   };
+
   const addNewCourse = async () => {
     const newCourse = await userClient.createCourse(course);
     setCourses([...courses, newCourse]);
@@ -41,7 +44,6 @@ export default function Kambaz() {
     setCourses(courses.filter((course) => course._id !== courseId));
   };
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     try {
       const coursesC = await userClient.findMyCourses();
@@ -51,8 +53,18 @@ export default function Kambaz() {
     }
   };
 
+  const fetchAllCourses = async () => {
+    try {
+      const coursesAll = await userClient.findAllCourses();
+      setAllCourses(coursesAll);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     fetchCourses();
+    fetchAllCourses();
   }, [currentUser]);
 
   return (
@@ -66,9 +78,10 @@ export default function Kambaz() {
             <Route path="/Dashboard" element={
               <ProtectedRoute>
                 <Dashboard
+                  allCourses={allCourses}
                   courses={courses}
-                  course={course}
-                  setCourse={setCourse}
+                  newCourse={course}
+                  setNewCourse={setCourse}
                   addCourse={addNewCourse}
                   deleteCourse={deleteCourse}
                   updateCourse={updateCourse}
