@@ -66,7 +66,6 @@ app.post('/api/post', (req, res) => {
 app.get('/api/post/posts', async (req, res) => {
     try {
         const allPosts = await posts.find({}).toArray();
-        console.log('all posts: ', allPosts);
         res.status(200).send(allPosts);
     } catch (err) {
         res.status(500).send(`Error fetching posts: ${err}`);
@@ -87,7 +86,6 @@ app.get('/api/post/:pid', async (req, res) => {
 
         // fetch the post from the database - returns null if there is not a post with that id 
         const fetchedPost = (await posts.findOne({ _id: pid }));
-        console.log('fetched post: ', fetchedPost);
         res.json(fetchedPost);
     } catch (err) {
         res.status(500).send(`Error when fetching post: ${err}`);
@@ -186,6 +184,49 @@ app.get('/api/folders/posts', async (req, res) => {
         res.status(500).send(`Error when fetching folder posts: ${err}`);
     }
 });
+
+// add folder in a specific course
+app.post('/api/folders', async (req, res) => {
+    try {
+        const { folder } = req.body;
+        const resp = await folders.insertOne(folder);
+        res.status(200).send(resp);
+    } catch (err) {
+        res.status(500).send(`Error when creating folder: ${err}`);
+    }
+});
+
+// delete folders 
+app.delete('/api/folders', async (req, res) => {
+    try {
+        const toDelete = req.body;
+        const responses = [];
+        for (const f of toDelete) {
+            const resp = await folders.deleteOne(
+                { name: f.name, course: f.course },
+                (err, obj) => {
+                    if (err) throw err;
+                });
+            responses.push(resp);
+        }
+        res.status(200).send(`Successful in deleting ${responses.length} folders`);
+    } catch (err) {
+        res.status(500).send(`Error when deleting folder: ${err}`);
+    }
+});
+
+app.put('/api/folders', async (req, res) => {
+    try {
+        const { courseId, oldName, newName } = req.body;
+        const resp = await folders.updateOne(
+            { name: oldName, course: courseId },
+            { $set: { name: newName } }
+        );
+        res.status(200).send(resp);
+    } catch (err) {
+        res.status(500).send(`Error when editing folder name: ${err}`);
+    }
+})
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log(`Server running on Port ${process.env.PORT || 3000}`);
