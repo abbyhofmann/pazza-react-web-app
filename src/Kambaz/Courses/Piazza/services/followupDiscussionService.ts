@@ -53,7 +53,7 @@ const addReplyToDiscussion = async (
   rid: string
 ): Promise<FollowupDiscussion> => {
   const data = { fudId, rid };
-  const res = await api.post(`${FOLLOWUP_DISCUSSION_API_URL}/addReply`, data);
+  const res = await api.put(`${FOLLOWUP_DISCUSSION_API_URL}/addReply`, data);
 
   if (res.status !== 200) {
     throw new Error(`Error while adding reply to discussion`);
@@ -71,7 +71,7 @@ const markDiscussionResolved = async (
   fudId: string
 ): Promise<FollowupDiscussion> => {
   const data = { fudId };
-  const res = await api.post(
+  const res = await api.put(
     `${FOLLOWUP_DISCUSSION_API_URL}/markResolved`,
     data
   );
@@ -92,7 +92,7 @@ const markDiscussionUnresolved = async (
   fudId: string
 ): Promise<FollowupDiscussion> => {
   const data = { fudId };
-  const res = await api.post(
+  const res = await api.put(
     `${FOLLOWUP_DISCUSSION_API_URL}/markUnresolved`,
     data
   );

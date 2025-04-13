@@ -115,7 +115,7 @@ app.get('/api/answer/:aid', async (req, res) => {
 });
 
 // update an answer's content 
-app.post('/api/answer/updateAnswer', async (req, res) => {
+app.put('/api/answer/updateAnswer', async (req, res) => {
     try {
         // answer id is a request parameter 
         const { aid, newContent } = req.body;
@@ -219,7 +219,7 @@ app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
 });
 
 // add a reply to followup discussion 
-app.post('/api/followupDiscussion/addReply', async (req, res) => {
+app.put('/api/followupDiscussion/addReply', async (req, res) => {
     try {
 
         const { fudId, rid } = req.body;
@@ -243,7 +243,7 @@ app.post('/api/followupDiscussion/addReply', async (req, res) => {
 });
 
 // marks a followup discussion as resolved
-app.post('/api/followupDiscussion/markResolved', async (req, res) => {
+app.put('/api/followupDiscussion/markResolved', async (req, res) => {
     try {
 
         const { fudId } = req.body;
@@ -267,7 +267,7 @@ app.post('/api/followupDiscussion/markResolved', async (req, res) => {
 });
 
 // marks a followup discussion as unresolved
-app.post('/api/followupDiscussion/markUnresolved', async (req, res) => {
+app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
     try {
 
         const { fudId } = req.body;
@@ -291,7 +291,7 @@ app.post('/api/followupDiscussion/markUnresolved', async (req, res) => {
 });
 
 // add a followup discussion to post 
-app.post('/api/post/addDiscussion', async (req, res) => {
+app.put('/api/post/addDiscussion', async (req, res) => {
     try {
 
         const { pid, fudId } = req.body;
@@ -315,7 +315,7 @@ app.post('/api/post/addDiscussion', async (req, res) => {
 });
 
 // add an answer to post 
-app.post('/api/post/addAnswer', async (req, res) => {
+app.put('/api/post/addAnswer', async (req, res) => {
     try {
         const { pid, aid, type } = req.body;
 

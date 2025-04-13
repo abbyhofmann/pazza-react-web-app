@@ -44,7 +44,7 @@ const addDiscussionToPost = async (
   fudId: string
 ): Promise<Post> => {
   const data = { pid, fudId };
-  const res = await api.post(`${POST_API_URL}/addDiscussion`, data);
+  const res = await api.put(`${POST_API_URL}/addDiscussion`, data);
 
   if (res.status !== 200) {
     throw new Error("Error while adding discussion to post");
@@ -66,7 +66,7 @@ const addAnswerToPost = async (
   type: string
 ): Promise<Post> => {
   const data = { pid, aid, type };
-  const res = await api.post(`${POST_API_URL}/addAnswer`, data);
+  const res = await api.put(`${POST_API_URL}/addAnswer`, data);
 
   if (res.status !== 200) {
     throw new Error(`Error while adding ${type} answer to post`);
