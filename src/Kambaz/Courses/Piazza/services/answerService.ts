@@ -10,9 +10,7 @@ const ANSWER_API_URL = `${import.meta.env.VITE_API_URL}/answer`;
  * @throws Error if there is an issue fetching the answer by ID.
  */
 const getAnswerById = async (aid: string): Promise<Answer> => {
-  console.log("getanswerbyid called with aid: ", aid)
   const res = await api.get(`${ANSWER_API_URL}/${aid}`);
-  console.log('res: ', res)
   if (res.status !== 200) {
     throw new Error("Error while fetching answer");
   }

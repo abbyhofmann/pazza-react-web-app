@@ -51,7 +51,6 @@ const useAnswer = (answerId: string) => {
          */
         const fetchData = async () => {
             try {
-                console.log('fetching data answerId: ', answerId)
                 const res = await getAnswerById(answerId);
                 if (res) {
                     setAnswer(res);

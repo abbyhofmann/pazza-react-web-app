@@ -67,7 +67,6 @@ app.post('/api/post', (req, res) => {
 app.get('/api/post/posts', async (req, res) => {
     try {
         const allPosts = await posts.find({}).toArray();
-        console.log('all posts: ', allPosts);
         res.status(200).send(allPosts);
     } catch (err) {
         res.status(500).send(`Error fetching posts: ${err}`);
@@ -88,7 +87,6 @@ app.get('/api/post/:pid', async (req, res) => {
 
         // fetch the post from the database - returns null if there is not a post with that id 
         const fetchedPost = (await posts.findOne({ _id: new ObjectId(pid) }));
-        console.log('fetched post: ', fetchedPost, ", pid: ", pid);
         res.json(fetchedPost);
     } catch (err) {
         res.status(500).send(`Error when fetching post: ${err}`);
