@@ -1,14 +1,28 @@
 import "./FollowupDiscussions.css";
+import { Post } from "../../../../types";
 import FollowupDiscussion from "./FollowupDiscussion";
+import EditorComponent from "../EditorComponent";
+import useFollowupDiscussions from "../../hooks/useFollowupDiscussions";
 
 interface FollowupDiscussionsProps {
   convoExists: boolean;
   fudIds: string[];
+  setPost: (post: Post) => void;
+  postId: string;
 }
 
 // Component for displaying followup discussions of a post.
 export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
-  const { convoExists, fudIds } = props;
+
+  const { convoExists, fudIds, setPost, postId } = props;
+
+  const {
+    startingNewDiscussion,
+    setStartingNewDiscussion,
+    discussionContent,
+    setDiscussionContent,
+    handleOnSave
+  } = useFollowupDiscussions(setPost, postId);
 
   return (
     <article
@@ -25,9 +39,8 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
           </div>
         </div>
       </header>
-      {/* existing convo goes here  */}
+      {/* existing convo goes here */}
       {convoExists && (
-        // will likely need a for-loop to loop through all of a post's followup discussions
         <div className="followup_content_wrapper col mx-3">
           {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId} />))}
         </div>
@@ -40,15 +53,31 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
             <label htmlFor="followup-box">
               Start a new followup discussion
             </label>
-            <input
-              id="followup-box"
-              type="text"
-              className="form-control ng-pristine ng-valid"
-              placeholder="Compose a new followup discussion"
-            />
+            {!startingNewDiscussion ? (
+              // input box for adding a new answer
+              <input
+                id="followup-box"
+                type="text"
+                className="form-control ng-pristine ng-valid"
+                placeholder="Compose a new followup discussion"
+                onFocus={() => setStartingNewDiscussion(true)}
+              />
+            ) : (
+              <EditorComponent content={discussionContent} setContent={setDiscussionContent} />
+            )}
           </div>
         </div>
       </div>
+      {startingNewDiscussion &&
+        <footer className="border-top container-fluid">
+          <div className="row">
+            <div className="text-left align-self-center m-1 col-auto">
+              <button className="btn btn-primary btn-sm me-2" onClick={() => handleOnSave(discussionContent)}>Submit</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => { setStartingNewDiscussion(false); setDiscussionContent(""); }}>Cancel</button>
+            </div>
+          </div>
+        </footer>
+      }
     </article>
   );
 }
