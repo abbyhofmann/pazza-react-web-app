@@ -18,26 +18,42 @@ const useFolders = () => {
   }, []);
 
   const fetchPostsInFolder = async (folder: string) => {
-    return await getPostsInFolder(cid ?? "", folder);
+    try {
+      return await getPostsInFolder(cid ?? "", folder);
+    } catch (err) {
+      console.error(`Error in use-hook while fetching posts: ${err}`);
+    }
   }
 
   const addFolder = async (folderName: string) => {
-    const resp = await createFolder(cid ?? "", folderName);
-    await fetchFolders();
-    return resp;
+    try {
+      const resp = await createFolder(cid ?? "", folderName);
+      await fetchFolders();
+      return resp;
+    } catch (err) {
+      console.error(`Error in use-hook while adding folder: ${err}`);
+    }
   }
 
   const deleteFoldersHook = async (folders: string[]) => {
-    const normalised = folders.map((f) => ({ cid: cid ?? "", name: f }));
-    const resp = await deleteFolders(normalised);
-    await fetchFolders();
-    return resp;
+    try {
+      const normalised = folders.map((f) => ({ cid: cid ?? "", name: f }));
+      const resp = await deleteFolders(normalised);
+      await fetchFolders();
+      return resp;
+    } catch (err) {
+      console.error(`Error in use-hook while deleting folder: ${err}`);
+    }
   }
 
   const editFolderName = async (folderNameOld: string, folderNameNew: string) => {
-    const resp = await editFolder(cid ?? "", folderNameOld, folderNameNew);
-    await fetchFolders();
-    return resp;
+    try {
+      const resp = await editFolder(cid ?? "", folderNameOld, folderNameNew);
+      await fetchFolders();
+      return resp;
+    } catch (err) {
+      console.error(`Error in use-hook while editing folder: ${err}`);
+    }
   }
 
   return {
