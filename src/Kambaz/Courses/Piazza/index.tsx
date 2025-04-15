@@ -9,6 +9,7 @@ import NoteQuestionSidebar from "./PostSidebar/PostSidebar";
 import "./index.css";
 import NewPostPage from "./NewPost";
 import RightSidePage from "./RightSidePage";
+import { PostSidebarProvider } from "./PostSidebarContext";
 
 const SideBar = () => {
   const location = useLocation();
@@ -23,20 +24,22 @@ const SideBar = () => {
 export default function Piazza() {
   return (
     <div>
-      <PiazzaNavBarTop />
-      <HwFolderNav />
+      <PostSidebarProvider>
+        <PiazzaNavBarTop />
+        <HwFolderNav />
 
-      <div className="wd-layout">
-        <SideBar  />
-        <div className="wd-main-content">
-          <Routes>
-            <Route path="/" element={<RightSidePage />} />
-            <Route path="/NewPostPage" element={<NewPostPage />} />
-            <Route path="/manage-class/*" element={<ManageClassScreen />} />
-            <Route path="/post/:pid" element={<ViewPostPage />} />
-          </Routes>
+        <div className="wd-layout">
+          <SideBar />
+          <div className="wd-main-content">
+            <Routes>
+              <Route path="/" element={<RightSidePage />} />
+              <Route path="/NewPostPage" element={<NewPostPage />} />
+              <Route path="/manage-class/*" element={<ManageClassScreen />} />
+              <Route path="/post/:pid" element={<ViewPostPage />} />
+            </Routes>
+          </div>
         </div>
-      </div>
+      </PostSidebarProvider>
     </div>
   );
 }

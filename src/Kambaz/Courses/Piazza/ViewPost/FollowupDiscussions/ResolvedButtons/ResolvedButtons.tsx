@@ -1,13 +1,17 @@
+import useResolvedButtons from "../../../hooks/useResolvedButtons";
 import "./ResolvedButtons.css";
 
 export interface ResolvedButtonsProps {
+    fudId: string;
     resolved: boolean;
     setResolved: (resolvedStatus: boolean) => void;
 }
 
 export default function ResolvedButtons(props: ResolvedButtonsProps) {
 
-    const { resolved, setResolved } = props;
+    const { fudId, resolved, setResolved } = props;
+
+    const { handleClickResolve, handleClickUnresolve } = useResolvedButtons(fudId, setResolved);
 
     return (
         <div className="">
@@ -20,7 +24,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                         type="radio"
                         className="custom-control-input"
                         checked={resolved}
-                        onChange={() => (setResolved(true))}
+                        onChange={handleClickResolve}
                     />
                     <label
                         title=""
@@ -36,7 +40,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                         type="radio"
                         className="custom-control-input"
                         checked={!resolved}
-                        onChange={() => (setResolved(false))}
+                        onChange={handleClickUnresolve}
                     />
                     <label
                         title=""

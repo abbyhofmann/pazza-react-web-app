@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Post } from "../../../types";
-import { getPosts } from "../services/postService";
+import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 
 /**
  * Custom hook for managing post sidebar and date-related functionality.
@@ -11,28 +11,22 @@ const usePostSidebar = () => {
   const navigate = useNavigate();
   const { cid } = useParams();
 
+  const { posts, fetchPosts } = usePostSidebarContext();
+
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   const navButton = () => {
     navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
   }
 
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
+
+  // fetch posts  
+  
 
   useEffect(() => {
-    const fetchData = async () => {
-
-      try {
-        const res = await getPosts();
-        setPosts(res);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching posts:', error);
-      }
-    };
-
     // eslint-disable-next-line no-console
-    fetchData().catch(e => console.log(e));
+    fetchPosts().catch(e => console.log(e));
   }, []);
 
   /**

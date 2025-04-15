@@ -4,6 +4,7 @@ import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
 import path from 'path';
+import { ObjectId } from 'mongodb';
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,7 @@ const posts = db.collection("posts");
 const answers = db.collection("answers");
 const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
+const replies = db.collection("replies");
 const folders = db.collection("folders");
 
 
@@ -85,7 +87,7 @@ app.get('/api/post/:pid', async (req, res) => {
         }
 
         // fetch the post from the database - returns null if there is not a post with that id 
-        const fetchedPost = (await posts.findOne({ _id: pid }));
+        const fetchedPost = (await posts.findOne({ _id: new ObjectId(pid) }));
         res.json(fetchedPost);
     } catch (err) {
         res.status(500).send(`Error when fetching post: ${err}`);
@@ -104,10 +106,59 @@ app.get('/api/answer/:aid', async (req, res) => {
             return;
         }
 
-        const fetchedAnswer = (await answers.findOne({ _id: aid }));
+        const fetchedAnswer = (await answers.findOne({ _id: new ObjectId(aid) }));
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
+    }
+});
+
+// update an answer's content 
+app.put('/api/answer/updateAnswer', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { aid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedAnswer = await answers.findOneAndUpdate(
+            { _id: new ObjectId(aid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedAnswer);
+    } catch (err) {
+        res.status(500).send(`Error when updating answer: ${err}`);
+    }
+});
+
+// create a new answer
+app.post('/api/answer/createAnswer', async (req, res) => {
+    if (!(req.body.postId !== undefined &&
+        req.body.postId !== '' &&
+        req.body.type !== undefined &&
+        req.body.authors !== undefined &&
+        // req.body.authors.length !== 0 && // TODO - uncomment once we have author added
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.dateEdited !== undefined &&
+        req.body.dateEdited !== '')) {
+        res.status(400).send('Invalid answer body');
+        return;
+    }
+
+    const newAnswer = req.body;
+    try {
+        const result = await answers.insertOne(newAnswer);
+        const createdAnswer = await answers.findOne({ _id: result.insertedId });
+        res.json(createdAnswer);
+    } catch (err) {
+        res.status(500).send(`Error when creating answer: ${err}`);
     }
 });
 
@@ -116,12 +167,6 @@ app.get('/api/user/:uid', async (req, res) => {
     try {
         // user id is a request parameter 
         const { uid } = req.params;
-
-        // ensure that the id is a valid id - user IDs are not ObjectIds right now
-        // if (!mongoDB.ObjectId.isValid(uid)) {
-        //     res.status(400).send('Invalid ID format');
-        //     return;
-        // }
 
         const fetchedUser = (await users.findOne({ _id: uid }));
         res.json(fetchedUser);
@@ -141,11 +186,400 @@ app.get('/api/followupDiscussion/:fudid', async (req, res) => {
             res.status(400).send('Invalid ID format');
             return;
         }
-
-        const fetchedDiscussion = (await followupDiscussions.findOne({ _id: fudid }));
+        const fetchedDiscussion = (await followupDiscussions.findOne({ _id: new ObjectId(fudid) }));
         res.json(fetchedDiscussion);
     } catch (err) {
         res.status(500).send(`Error when fetching discussion: ${err}`);
+    }
+});
+
+// create a new followup discussion 
+app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
+    if (!(req.body.postId !== undefined &&
+        req.body.postId !== '' &&
+        req.body.authorId !== undefined &&
+        req.body.authorId !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '' &&
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.replies !== undefined)) {
+        res.status(400).send('Invalid discussion body');
+        return;
+    }
+    const newDiscussion = req.body;
+    try {
+        const result = await followupDiscussions.insertOne(newDiscussion);
+        const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
+        res.json(createdDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when creating discussion: ${err}`);
+    }
+});
+
+// add a reply to followup discussion 
+app.put('/api/followupDiscussion/addReply', async (req, res) => {
+    try {
+
+        const { fudId, rid } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $addToSet: { replies: rid } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when adding reply to discussion: ${err}`);
+    }
+});
+
+// marks a followup discussion as resolved
+app.put('/api/followupDiscussion/markResolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: true } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as resolved: ${err}`);
+    }
+});
+
+// marks a followup discussion as unresolved
+app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: false } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as unresolved: ${err}`);
+    }
+});
+
+// add a followup discussion to post 
+app.put('/api/post/addDiscussion', async (req, res) => {
+    try {
+
+        const { pid, fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            { $addToSet: { followupDiscussions: fudId } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding discussion to post: ${err}`);
+    }
+});
+
+// add an answer to post 
+app.put('/api/post/addAnswer', async (req, res) => {
+    try {
+        const { pid, aid, type } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        if (type !== "student" && type !== "instructor") {
+            return res.status(400).send("Invalid answer type");
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            {
+                $set: {
+                    [type === "student" ? "studentAnswer" : "instructorAnswer"]: aid,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding student answer to post: ${err}`);
+    }
+})
+
+// get an individual followup discussion reply by its ID
+app.get('/api/reply/:rid', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedReply = (await replies.findOne({ _id: new ObjectId(rid) }));
+        res.json(fetchedReply);
+    } catch (err) {
+        res.status(500).send(`Error when fetching reply: ${err}`);
+    }
+});
+
+// create a new reply
+app.post('/api/reply/createReply', async (req, res) => {
+
+    if (!(req.body.followupDiscussionId !== undefined &&
+        req.body.followupDiscussionId !== '' &&
+        req.body.authorId !== undefined &&
+        // req.body.authorId !== '' && // TODO - uncomment when we add author
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '')) {
+        res.status(400).send('Invalid reply body');
+        return;
+    }
+
+    const newReply = req.body;
+    try {
+        const result = await replies.insertOne(newReply);
+        const createdReply = await replies.findOne({ _id: result.insertedId });
+        res.json(createdReply);
+    } catch (err) {
+        res.status(500).send(`Error when creating reply: ${err}`);
+    }
+});
+
+// create a new followup discussion 
+app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
+    if (!(req.body.postId !== undefined &&
+        req.body.postId !== '' &&
+        req.body.authorId !== undefined &&
+        req.body.authorId !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '' &&
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.replies !== undefined)) {
+        res.status(400).send('Invalid discussion body');
+        return;
+    }
+    const newDiscussion = req.body;
+    try {
+        const result = await followupDiscussions.insertOne(newDiscussion);
+        const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
+        res.json(createdDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when creating discussion: ${err}`);
+    }
+});
+
+// add a reply to followup discussion 
+app.put('/api/followupDiscussion/addReply', async (req, res) => {
+    try {
+
+        const { fudId, rid } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $addToSet: { replies: rid } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when adding reply to discussion: ${err}`);
+    }
+});
+
+// marks a followup discussion as resolved
+app.put('/api/followupDiscussion/markResolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: true } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as resolved: ${err}`);
+    }
+});
+
+// marks a followup discussion as unresolved
+app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
+    try {
+
+        const { fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { resolved: false } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedDiscussion);
+    } catch (err) {
+        res.status(500).send(`Error when marking discussion as unresolved: ${err}`);
+    }
+});
+
+// add a followup discussion to post 
+app.put('/api/post/addDiscussion', async (req, res) => {
+    try {
+
+        const { pid, fudId } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            { $addToSet: { followupDiscussions: fudId } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding discussion to post: ${err}`);
+    }
+});
+
+// add an answer to post 
+app.put('/api/post/addAnswer', async (req, res) => {
+    try {
+        const { pid, aid, type } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        if (type !== "student" && type !== "instructor") {
+            return res.status(400).send("Invalid answer type");
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            {
+                $set: {
+                    [type === "student" ? "studentAnswer" : "instructorAnswer"]: aid,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when adding student answer to post: ${err}`);
+    }
+})
+
+// get an individual followup discussion reply by its ID
+app.get('/api/reply/:rid', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fetchedReply = (await replies.findOne({ _id: new ObjectId(rid) }));
+        res.json(fetchedReply);
+    } catch (err) {
+        res.status(500).send(`Error when fetching reply: ${err}`);
+    }
+});
+
+// create a new reply
+app.post('/api/reply/createReply', async (req, res) => {
+
+    if (!(req.body.followupDiscussionId !== undefined &&
+        req.body.followupDiscussionId !== '' &&
+        req.body.authorId !== undefined &&
+        // req.body.authorId !== '' && // TODO - uncomment when we add author
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '')) {
+        res.status(400).send('Invalid reply body');
+        return;
+    }
+
+    const newReply = req.body;
+    try {
+        const result = await replies.insertOne(newReply);
+        const createdReply = await replies.findOne({ _id: result.insertedId });
+        res.json(createdReply);
+    } catch (err) {
+        res.status(500).send(`Error when creating reply: ${err}`);
     }
 });
 
