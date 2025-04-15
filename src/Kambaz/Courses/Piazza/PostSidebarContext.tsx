@@ -14,11 +14,16 @@ const PostSidebarContext = createContext<PostSidebarContextType | null>(null);
 
 export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<Post[]>([]);
-
-  // function for fetching the posts 
+  
   const fetchPosts = async () => {
     try {
       const res = await getPosts();
+      console.log("Fetched posts:", res);
+  
+      if (!Array.isArray(res)) {
+        throw new Error("Fetched data is not an array");
+      }
+  
       setPosts(res);
     } catch (error) {
       console.error("Error fetching posts:", error);
