@@ -215,6 +215,7 @@ app.delete('/api/folders', async (req, res) => {
     }
 });
 
+// to edit a folder name
 app.put('/api/folders', async (req, res) => {
     try {
         const { courseId, oldName, newName } = req.body;

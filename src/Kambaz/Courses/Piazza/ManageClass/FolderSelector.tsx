@@ -15,29 +15,34 @@ export default function FolderSelector() {
   const Folder = ({ name }: Props) => {
     const [editing, setEditing] = useState(false);
     const [editedName, setEditedName] = useState<string>("");
-    // TODO: figure out how to float-end and float-start
+    const editFolderOnClick = () => {
+      if (editing) {
+        // if we are currently editing, then we save the new folder name
+        editFolderName(name, editedName);
+      }
+      // flip the editing state
+      setEditing(!(editing));
+    }
+
+    const checkboxOnClick = (cb: React.ChangeEvent<HTMLInputElement>) => {
+      if (!cb.target.checked) {
+        // if checked, remove it and uncheck it
+        setSelectedFolders(prev =>
+          prev.includes(name)
+            ? prev.filter(f => f !== name)
+            : [...prev, name]
+        );
+      } else {
+        // if unchecked, add it and check it
+        setSelectedFolders([...selectedFolders, name]);
+      }
+    }
+
     return (
       <div className="d-flex">
         <Form.Check type="checkbox"
           checked={selectedFolders.includes(name)}
-          onChange={(cb) => {
-            if (!cb.target.checked) {
-              // if checked, remove it and uncheck it
-              setSelectedFolders(prev =>
-                prev.includes(name)
-                  ? prev.filter(f => f !== name)
-                  : [...prev, name]
-              );
-              // cb.target.checked = false;
-              console.log('removing from selected:', name);
-            } else {
-              // if unchecked, add it and check it
-              setSelectedFolders([...selectedFolders, name]);
-              // cb.target.checked = true;
-              console.log('adding to selected:', name);
-            }
-
-          }} />
+          onChange={checkboxOnClick} />
         <div className="px-2">
           <FaBars />
         </div>
@@ -46,21 +51,17 @@ export default function FolderSelector() {
             <div className="folder-selector-name px-2">
               {name}
             </div>
-            <button className="manage_folders_button px-4 mx-4 float-end" onClick={() => {
-              setEditing(!(editing));
-            }}>
+            <button className="manage_folders_button px-4 mx-4 float-end" onClick={editFolderOnClick}>
               <FaPencil />
               Edit
             </button>
           </div>
         }
-        {editing &&
+        {
+          editing &&
           <div className="d-flex">
             <input placeholder={name} onChange={e => setEditedName(e.target.value)} />
-            <button className="manage_folders_button px-4 mx-4" onClick={() => {
-              setEditing(!(editing));
-              editFolderName(name, editedName);
-            }}>
+            <button className="manage_folders_button px-4 mx-4" onClick={editFolderOnClick}>
               <FaSave />
               Save
             </button>
