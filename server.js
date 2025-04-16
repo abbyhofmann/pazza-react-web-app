@@ -14,6 +14,7 @@ app.use(express.json());
 const dbConn = process.env.DB_CONN_STRING;
 const client = new mongoDB.MongoClient(dbConn);
 
+
 // connect to the DB once at startup
 async function connectDB() {
     try {
