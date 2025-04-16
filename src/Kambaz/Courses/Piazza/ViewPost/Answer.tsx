@@ -1,6 +1,7 @@
 import { type Answer } from "../../../types";
 import WipAnswer from "./WipAnswer";
 import useAnswer from "../hooks/useAnswer";
+import ActionsDropdown from "./ActionsDropdown";
 
 interface AnswerProps {
     answerId: string;
@@ -50,34 +51,8 @@ export default function Answer(props: AnswerProps) {
                     <div className="content container-fluid">
                         <div className="g-0 row">
                             <div className="col">
-
-                                <div className="float-end dropdown">
-                                    {/* actions dropdown for edit and delete */}
-                                    <button
-                                        aria-haspopup="true"
-                                        aria-expanded={showDropdown}
-                                        data-id="postActionMenuId"
-                                        type="button"
-                                        className="dropdown-toggle btn btn-action"
-                                        onClick={() => setShowDropdown(!showDropdown)}
-                                    >Actions</button>
-                                    {showDropdown && (
-                                        <ul className="dropdown-menu show position-absolute">
-                                            <li>
-                                                <button className="dropdown-item" onClick={() => setIsEditing(true)}>
-                                                    Edit
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button className="dropdown-item text-danger"
-                                                onClick={handleDelete}
-                                                >
-                                                    Delete
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    )}
-                                </div>
+                                {/* dropdown for editing and deleting */}
+                                <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
                                 <div className="py-3 history-selection">
                                     <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div>
                                 </div>
