@@ -7,6 +7,12 @@ import { useEffect, useState } from "react";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
+
+  function removeParagraphTags(content: string) {
+    return content.replace(/<\/?p>/g, '');
+  }
+
+
   const {
     formatDate,
     extractTime,
@@ -115,7 +121,7 @@ export default function PostSidebar() {
                     <PostListItem
                       _id={post._id}
                       title={post.title}
-                      content={post.content}
+                      content={removeParagraphTags(post.content)}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
