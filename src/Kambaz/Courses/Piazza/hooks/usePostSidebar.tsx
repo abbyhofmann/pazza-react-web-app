@@ -34,12 +34,13 @@ const usePostSidebar = () => {
   */
   function extractTime(dateString: string): string {
     const date = new Date(dateString);
-    let hours = date.getUTCHours();
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    let hours = date.getHours(); // get local hours
+    const minutes = String(date.getMinutes()).padStart(2, '0');  // get local minutes
+  
     const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    hours = hours % 12 || 12; // convert 24-hour to 12-hour format
-
+  
+    hours = hours % 12 || 12; // Convert to 12-hour format (AM/PM)
+  
     return `${hours}:${minutes} ${ampm}`;
   }
 

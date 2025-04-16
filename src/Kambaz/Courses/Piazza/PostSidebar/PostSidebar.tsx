@@ -27,6 +27,7 @@ export default function PostSidebar() {
         if (response.ok) {
            const data = await response.json();
            setPosts(data.reverse());  
+           
         } else {
            console.error("Failed to fetch posts");
         }
