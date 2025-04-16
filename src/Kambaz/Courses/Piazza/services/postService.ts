@@ -74,4 +74,24 @@ const addAnswerToPost = async (
   return res.data;
 };
 
-export { getPostById, getPosts, addDiscussionToPost, addAnswerToPost };
+const removeAnswerFromPost = async (
+  pid: string,
+  aid: string,
+  type: string
+): Promise<Post> => {
+  const data = { pid, aid, type };
+  const res = await api.put(`${POST_API_URL}/removeAnswer`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing answer from post");
+  }
+  return res.data;
+};
+
+export {
+  getPostById,
+  getPosts,
+  addDiscussionToPost,
+  addAnswerToPost,
+  removeAnswerFromPost,
+};

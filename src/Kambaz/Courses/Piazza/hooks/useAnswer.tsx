@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Answer, User } from "../../../types";
-import { getAnswerById, updateAnswer } from "../services/answerService";
+import { deleteAnswer, getAnswerById, updateAnswer } from "../services/answerService";
 import { getUser } from "../services/userService";
+import { removeAnswerFromPost } from "../services/postService";
 
-const useAnswer = (answerId: string) => {
+const useAnswer = (answerId: string, type: string, setPost: (post: any) => void) => {
 
     const [answer, setAnswer] = useState<Answer | null>(null);
 
@@ -43,7 +44,36 @@ const useAnswer = (answerId: string) => {
             console.error("Error updating answer:", error);
         }
         setIsEditing(false);
-    }
+    };
+
+    const handleDelete = async () => {
+        try {
+            if (answer) {
+                // delete from db
+                const deletedRes = await deleteAnswer(answerId);
+                if (deletedRes) {
+
+
+                    console.log("deleted res: ", deletedRes);
+                    // remove from post 
+                    const postWithAnswerDeleted = await removeAnswerFromPost(answer?.postId, answerId, type);
+
+                    // set the post so the new answer component is displayed 
+                    if (postWithAnswerDeleted) {
+                        setPost(postWithAnswerDeleted);
+                    }
+                    else {
+                        throw new Error("Answer deletion unsuccessful");
+                    }
+                }
+
+            } else {
+                throw new Error("Cannot delete an answer that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting answer:", error);
+        }
+    };
 
     useEffect(() => {
         /**
@@ -102,7 +132,8 @@ const useAnswer = (answerId: string) => {
         setShowDropdown,
         formatAnswerDate,
         authors,
-        setAuthors
+        setAuthors,
+        handleDelete
     }
 }
 

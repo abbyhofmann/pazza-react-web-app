@@ -39,7 +39,7 @@ const ViewPostPage = () => {
       {post.type === 0 &&
         // if the post has a student answer, render the answer 
         (post.studentAnswer !== null ? (
-          <Answer answerId={post.studentAnswer} type={"student"} />
+          <Answer answerId={post.studentAnswer} type={"student"} setPost={setPost} />
         ) : isWipStudentAnswer ? (
 
           // if a student answer is being created, render the wip display
@@ -63,7 +63,7 @@ const ViewPostPage = () => {
 
         // if the post has an instructor answer, render it 
         (post.instructorAnswer !== null ? (
-          <Answer answerId={post.instructorAnswer} type={"instructor"} />
+          <Answer answerId={post.instructorAnswer} type={"instructor"} setPost={setPost} />
         ) : isWipInstructorAnswer ? (
 
           // if an instructor answer is being created, render the wip display 

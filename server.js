@@ -112,6 +112,25 @@ app.get('/api/answer/:aid', async (req, res) => {
     }
 });
 
+// delete an answer 
+app.delete('/api/answer/:aid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { aid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const answerDeletion = (await answers.deleteOne({ _id: new ObjectId(aid) }));
+        res.json(answerDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting answer: ${err}`);
+    }
+})
+
 // update an answer's content 
 app.put('/api/answer/updateAnswer', async (req, res) => {
     try {
@@ -339,7 +358,36 @@ app.put('/api/post/addAnswer', async (req, res) => {
 
         res.json(updatedPost);
     } catch (err) {
-        res.status(500).send(`Error when adding student answer to post: ${err}`);
+        res.status(500).send(`Error when adding answer to post: ${err}`);
+    }
+});
+
+// remove an answer from a post - called when deleting an answer
+app.put('/api/post/removeAnswer', async (req, res) => {
+    try {
+        const { pid, aid, type } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            {
+                _id: new ObjectId(pid),
+                [`${type}Answer`]: aid, // match only if this answer id matches
+            },
+            {
+                $set: {
+                    [`${type}Answer`]: null,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when removing answer from post: ${err}`);
     }
 })
 

@@ -5,12 +5,13 @@ import useAnswer from "../hooks/useAnswer";
 interface AnswerProps {
     answerId: string;
     type: string;
+    setPost: (post: any) => void;
 }
 
 // Component for displaying an answer to a post.
 export default function Answer(props: AnswerProps) {
 
-    const { answerId, type } = props;
+    const { answerId, type, setPost } = props;
 
     const {
         isEditing,
@@ -21,7 +22,8 @@ export default function Answer(props: AnswerProps) {
         setShowDropdown,
         formatAnswerDate,
         authors,
-    } = useAnswer(answerId);
+        handleDelete
+    } = useAnswer(answerId, type, setPost);
 
     return (
         <div>
@@ -68,7 +70,7 @@ export default function Answer(props: AnswerProps) {
                                             </li>
                                             <li>
                                                 <button className="dropdown-item text-danger"
-                                                // onClick={handleDelete}
+                                                onClick={handleDelete}
                                                 >
                                                     Delete
                                                 </button>
