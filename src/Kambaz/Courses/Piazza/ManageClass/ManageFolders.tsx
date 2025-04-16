@@ -1,6 +1,11 @@
+import { useState } from "react";
 import FolderSelector from "./FolderSelector";
+import useFolders from "../hooks/useFolders";
 
 export default function ManageFolders() {
+  const [folderName, setFolderName] = useState<string>("");
+  const { addFolder } = useFolders();
+
   return (
     <div id="manage_box" className="d-flex flex-column gap-3">
       <hr style={{ border: "3px solid black" }} />
@@ -17,8 +22,8 @@ export default function ManageFolders() {
         <h3 className="fw-bold">Create new folders:</h3>
         <p>Add folders that are relevant for your class.</p>
         <div className="d-flex flex-row justify-content-between">
-          <input className="w-auto" placeholder="Add a folder(s)" />
-          <button className="blue_button">Add folder</button>
+          <input className="w-auto" placeholder="Add a folder(s)" onChange={(e) => setFolderName(e.target.value)} />
+          <button className="blue_button" onClick={() => addFolder(folderName)}>Add folder</button>
         </div>
       </div>
 
