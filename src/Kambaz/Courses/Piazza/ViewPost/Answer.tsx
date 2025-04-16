@@ -31,7 +31,7 @@ export default function Answer(props: AnswerProps) {
                 <WipAnswer
                     initialAnswer={answer ? answer.content : ""} // TODO improve this check 
                     onSave={handleOnSave}
-                    onCancel={() => { setIsEditing(false) }}
+                    onCancel={() => { setIsEditing(false); setShowDropdown(false); }}
                     type={type}
                 />
             ) : (

@@ -44,6 +44,7 @@ const useAnswer = (answerId: string, type: string, setPost: (post: any) => void)
             console.error("Error updating answer:", error);
         }
         setIsEditing(false);
+        setShowDropdown(false);
     };
 
     const handleDelete = async () => {
