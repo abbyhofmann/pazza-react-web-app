@@ -103,10 +103,25 @@ const markDiscussionUnresolved = async (
   return res.data;
 };
 
+/**
+ * Deletes a followup discussion.
+ * @param fudId The id of the followup discussion to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteFollowupDiscussion = async (fudId: string): Promise<boolean> => {
+  const res = await api.delete(`${FOLLOWUP_DISCUSSION_API_URL}/${fudId}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting followup discussion");
+  }
+  return res.data; 
+};
+
 export {
   getFollowupDiscussionById,
   createDiscussion,
   addReplyToDiscussion,
   markDiscussionResolved,
   markDiscussionUnresolved,
+  deleteFollowupDiscussion
 };

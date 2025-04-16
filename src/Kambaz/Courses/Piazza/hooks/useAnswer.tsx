@@ -11,7 +11,7 @@ const useAnswer = (answerId: string, type: string, setPost: (post: any) => void)
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    // keep track of if dropdown is showing 
+    // keep track of if actions dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
     // author(s) of the answer 
@@ -53,9 +53,6 @@ const useAnswer = (answerId: string, type: string, setPost: (post: any) => void)
                 // delete from db
                 const deletedRes = await deleteAnswer(answerId);
                 if (deletedRes) {
-
-
-                    console.log("deleted res: ", deletedRes);
                     // remove from post 
                     const postWithAnswerDeleted = await removeAnswerFromPost(answer?.postId, answerId, type);
 

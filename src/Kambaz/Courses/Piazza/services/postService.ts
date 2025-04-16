@@ -74,6 +74,13 @@ const addAnswerToPost = async (
   return res.data;
 };
 
+/**
+ * Removes an answer (sets the answer field value to null) from a post following the answer's deletion.
+ * @param pid The id of the post from which to remove the answer.
+ * @param aid The id of the answer being removed.
+ * @param type The type of post (student or instructor);
+ * @returns The post object with the answer removed.
+ */
 const removeAnswerFromPost = async (
   pid: string,
   aid: string,
@@ -88,10 +95,27 @@ const removeAnswerFromPost = async (
   return res.data;
 };
 
+/**
+ * Removes a followup discussion from a post's array of fuds.
+ * @param pid The id of the post from which to remove the fud.
+ * @param fudId The id of the fud to remove.
+ * @returns The updated post object with the fud removed from the array.
+ */
+const removeFudFromPost = async (pid: string, fudId: string): Promise<Post> => {
+  const data = { pid, fudId };
+  const res = await api.put(`${POST_API_URL}/removeFud`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing fud from post");
+  }
+  return res.data;
+};
+
 export {
   getPostById,
   getPosts,
   addDiscussionToPost,
   addAnswerToPost,
   removeAnswerFromPost,
+  removeFudFromPost,
 };

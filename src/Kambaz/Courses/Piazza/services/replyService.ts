@@ -32,4 +32,18 @@ const createReply = async (newReply: Reply): Promise<Reply> => {
   return res.data;
 };
 
-export { getReplyById, createReply };
+/**
+ * Deletes a reply.
+ * @param aid The id of the reply to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteReply = async (rid: string): Promise<boolean> => {
+  const res = await api.delete(`${REPLY_API_URL}/${rid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting reply");
+  }
+  return res.data;
+};
+
+export { getReplyById, createReply, deleteReply };

@@ -4,15 +4,17 @@ import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
 import { type FollowupDiscussion } from "../../../../types";
 import EditorComponent from "../EditorComponent";
 import useFollowupDiscussion from "../../hooks/useFollowupDiscussion";
+import ActionsDropdown from "../ActionsDropdown";
 
 interface FollowupDiscussionProps {
     fudId: string;
+    setPost: (post: any) => void;
 }
 
 // Component for rendering an individual followup discussion.
 export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
-    const { fudId } = props;
+    const { fudId, setPost } = props;
 
     const {
         resolved,
@@ -25,11 +27,22 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         replyContent,
         setReplyContent,
         handleSubmit,
-    } = useFollowupDiscussion(fudId);
+        showDropdown,
+        setShowDropdown,
+        handleDelete
+    } = useFollowupDiscussion(fudId, setPost);
 
     return (
         <div className="g-1 row">
-            <ResolvedButtons fudId={fudId} resolved={resolved} setResolved={setResolved} />
+            <div className="align-items-center row">
+            <div className="col-auto">
+                <ResolvedButtons fudId={fudId} resolved={resolved} setResolved={setResolved} />
+                </div>
+                <div className="col-auto ms-auto me-0">
+                {/* dropdown for editing and deleting */}
+                <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsReplying} handleDelete={handleDelete} />
+                </div>
+            </div>
             <div className="mx-0 col-auto">
                 <img className="avatar" width="30px" height="30px" aria-hidden="true" src="images/anonProfilePic.jpg" />
             </div>

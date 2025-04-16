@@ -12,13 +12,12 @@ export default function ActionsDropdown(props: ActionsDropdownProps) {
 
     return (
         <div className="float-end dropdown">
-            {/* actions dropdown for edit and delete */}
             <button
                 aria-haspopup="true"
                 aria-expanded={showDropdown}
                 data-id="postActionMenuId"
                 type="button"
-                className="dropdown-toggle btn btn-action"
+                className="dropdown-toggle btn"
                 onClick={() => setShowDropdown(!showDropdown)}
             >Actions</button>
             {showDropdown && (

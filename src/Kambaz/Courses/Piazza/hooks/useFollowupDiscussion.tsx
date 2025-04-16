@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { addReplyToDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
-import { createReply } from "../services/replyService";
+import { addReplyToDiscussion, deleteFollowupDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
+import { createReply, deleteReply } from "../services/replyService";
 import usePostSidebar from "./usePostSidebar";
 import { FollowupDiscussion, Reply, User } from "../../../types";
 import { getUser } from "../services/userService";
+import { removeFudFromPost } from "../services/postService";
 
-const useFollowupDiscussion = (fudId: string) => {
-    
+const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
+
     // followup discussion being rendered
     const [fud, setFud] = useState<FollowupDiscussion | null>(null);
 
@@ -21,6 +22,9 @@ const useFollowupDiscussion = (fudId: string) => {
 
     // content of new reply 
     const [replyContent, setReplyContent] = useState<string>("");
+
+    // keep track of if actions dropdown is showing 
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
     // function for formatting the date
     const { formatDate } = usePostSidebar();
@@ -49,7 +53,43 @@ const useFollowupDiscussion = (fudId: string) => {
         }
         // close the editor component
         setIsReplying(false);
-    }
+        setShowDropdown(false);
+    };
+
+    const handleDelete = async () => {
+        try {
+            if (fud) {
+                // delete from db
+                const deletedRes = await deleteFollowupDiscussion(fudId);
+                if (deletedRes) {
+                    // delete the fud's replies 
+                    await Promise.all(
+                        fud.replies.map(async replyId => {
+                            const deletedReplyRes = await deleteReply(replyId);
+                            if (!deletedReplyRes) {
+                                throw new Error(`Reply deletion ${replyId} unsuccessful`);
+                            }
+                        }));
+
+                    // remove from post 
+                    const postWithFudDeleted = await removeFudFromPost(fud?.postId, fudId);
+
+                    // set the post so the new answer component is displayed 
+                    if (postWithFudDeleted) {
+                        setPost(postWithFudDeleted);
+                    }
+                    else {
+                        throw new Error("Answer deletion unsuccessful");
+                    }
+                }
+
+            } else {
+                throw new Error("Cannot delete an answer that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting answer:", error);
+        }
+    };
 
     useEffect(() => {
         /**
@@ -103,6 +143,9 @@ const useFollowupDiscussion = (fudId: string) => {
         replyContent,
         setReplyContent,
         handleSubmit,
+        showDropdown,
+        setShowDropdown,
+        handleDelete
     }
 }
 

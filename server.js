@@ -129,7 +129,7 @@ app.delete('/api/answer/:aid', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when deleting answer: ${err}`);
     }
-})
+});
 
 // update an answer's content 
 app.put('/api/answer/updateAnswer', async (req, res) => {
@@ -307,6 +307,25 @@ app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
     }
 });
 
+// delete a followup discussion 
+app.delete('/api/followupDiscussion/:fudId', async (req, res) => {
+    try {
+        // fud id is a request parameter 
+        const { fudId } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const fudDeletion = (await followupDiscussions.deleteOne({ _id: new ObjectId(fudId) }));
+        res.json(fudDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting fud: ${err}`);
+    }
+});
+
 // add a followup discussion to post 
 app.put('/api/post/addDiscussion', async (req, res) => {
     try {
@@ -389,7 +408,35 @@ app.put('/api/post/removeAnswer', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when removing answer from post: ${err}`);
     }
-})
+});
+
+// remove a followup discussion from a post - called when deleting a followup discussion
+app.put('/api/post/removeFud', async (req, res) => {
+    try {
+        const { pid, fudId } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            {
+                _id: new ObjectId(pid),
+            },
+            {
+                $pull: {
+                    followupDiscussions: fudId, // remove fudId from the array
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when removing fud from post: ${err}`);
+    }
+});
 
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
@@ -432,6 +479,25 @@ app.post('/api/reply/createReply', async (req, res) => {
         res.json(createdReply);
     } catch (err) {
         res.status(500).send(`Error when creating reply: ${err}`);
+    }
+});
+
+// delete a reply 
+app.delete('/api/reply/:rid', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const replyDeletion = (await replies.deleteOne({ _id: new ObjectId(rid) }));
+        res.json(replyDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting reply: ${err}`);
     }
 });
 
