@@ -57,6 +57,14 @@ export default function NewPostPage() {
       }
    };
 
+//UNIQUE 3 DIGIT ID GENERATOR
+   const generateId = () => {
+      const timeStamp = Date.now();
+      const randomSuffix = Math.floor(Math.random() * 1000); 
+      let postId = timeStamp % 1000 + randomSuffix; 
+      return postId.toString().padStart(4, '0'); 
+  };
+
    const postButton = async () => {
       if (!selectedOption) {
          alert("Please choose a post yype: Question/Note");
@@ -79,8 +87,10 @@ export default function NewPostPage() {
          return;
       }
 
+      const newPostId = generateId();
+
       const newPost = {
-         _id: `P${Date.now()}`,
+         _id: newPostId,
          folderId: selectedFolders.join(','),
          authorId: 'user123',
          datePosted: new Date().toISOString(),
