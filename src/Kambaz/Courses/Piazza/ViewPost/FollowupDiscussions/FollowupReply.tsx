@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import usePostSidebar from "../../hooks/usePostSidebar";
 import { FollowupDiscussion, Reply, User } from "../../../../types";
-import { deleteReply, getReplyById } from "../../services/replyService";
+import { deleteReply, getReplyById, updateReply } from "../../services/replyService";
 import { getUser } from "../../services/userService";
 import ActionsDropdown from "../ActionsDropdown";
 import { removeReplyFromFud } from "../../services/followupDiscussionService";
+import WipFollowupDiscussion from "./WipFollowupDiscussion";
 
 interface FollowupReplyProps {
     replyId: string;
@@ -59,6 +60,29 @@ export default function FollowupReply(props: FollowupReplyProps) {
         } catch (error) {
             console.error("Error deleting reply:", error);
         }
+    };
+
+    // handle saving a reply when it is being edited 
+    const handleOnSave = async (updatedContent: string) => {
+
+        try {
+            // convert HTML content from React Quill to plain text before saving in database 
+            const doc = new DOMParser().parseFromString(updatedContent, "text/html");
+            const plainTextContent = doc.body.textContent || "";
+
+            if (reply && reply._id) {
+                // update existing reply
+                const updatedReply = await updateReply(reply._id, plainTextContent);
+                setReply({ ...reply, content: updatedReply.content });
+            }
+            else {
+                throw new Error("Cannot update a reply that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error updating reply:", error);
+        }
+        setIsEditing(false);
+        setShowDropdown(false);
     };
 
 
@@ -116,28 +140,36 @@ export default function FollowupReply(props: FollowupReplyProps) {
             <div className="col">
                 <div className="align-items-center row">
                     <div className="col-auto">
-                    <b>
-                    <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`} </span>
-                </b>
-                <span className="helper-text">
-                    <time>
-                        {/* TODO - is the MM/DD/YYYY the format we want here? */}
-                        {formatDate(reply ? reply.datePosted : "")}
-                    </time>
-                </span>
+                        <b>
+                            <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`} </span>
+                        </b>
+                        <span className="helper-text">
+                            <time>
+                                {/* TODO - is the MM/DD/YYYY the format we want here? */}
+                                {formatDate(reply ? reply.datePosted : "")}
+                            </time>
+                        </span>
 
                     </div>
                     <div className="col-auto ms-auto me-0">
-                    {/* dropdown for editing and deleting */}
-                    <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                        {/* dropdown for editing and deleting */}
+                        <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                    </div>
                 </div>
-                </div>
-                
-                <div
-                    id="m7mvuzhntd4fj_render"
-                    className="render-html-content overflow-hidden latex_process"
-                >
-                    {reply?.content}
+                <div>
+
+                    {isEditing ? (
+                        <WipFollowupDiscussion initialFud={reply ? reply.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                    ) : (
+
+                        <div
+                            id="m7mvuzhntd4fj_render"
+                            className="render-html-content overflow-hidden latex_process"
+                        >
+                            {reply?.content}
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div>

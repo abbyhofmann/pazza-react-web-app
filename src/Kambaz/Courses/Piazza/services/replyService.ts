@@ -46,4 +46,21 @@ const deleteReply = async (rid: string): Promise<boolean> => {
   return res.data;
 };
 
-export { getReplyById, createReply, deleteReply };
+/**
+ * Updates a reply upon a user editing its content.
+ *
+ * @param rid The id of the reply being updated.
+ * @param newContent The updated content of the answer.
+ * @returns The updated answer object.
+ */
+const updateReply = async (rid: string, newContent: string): Promise<Reply> => {
+  const data = { rid, newContent };
+  const res = await api.put(`${REPLY_API_URL}/updateReply`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating reply");
+  }
+  return res.data;
+};
+
+export { getReplyById, createReply, deleteReply, updateReply };

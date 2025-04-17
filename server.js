@@ -553,6 +553,30 @@ app.delete('/api/reply/:rid', async (req, res) => {
     }
 });
 
+// update a reply's content 
+app.put('/api/reply/updateReply', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedReply = await replies.findOneAndUpdate(
+            { _id: new ObjectId(rid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedReply);
+    } catch (err) {
+        res.status(500).send(`Error when updating reply: ${err}`);
+    }
+});
+
 // app.listen(3000, 'localhost', () => {
 //     console.log('Server running on Port 3000');
 // });
