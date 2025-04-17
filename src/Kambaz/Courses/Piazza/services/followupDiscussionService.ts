@@ -114,7 +114,27 @@ const deleteFollowupDiscussion = async (fudId: string): Promise<boolean> => {
   if (res.status !== 200) {
     throw new Error("Error while deleting followup discussion");
   }
-  return res.data; 
+  return res.data;
+};
+
+/**
+ * Updates a followup discussion upon a user editing its content.
+ *
+ * @param fudId The id of the fud being updated.
+ * @param newContent The updated content of the fud.
+ * @returns The updated fud object.
+ */
+const updateFud = async (
+  fudId: string,
+  newContent: string
+): Promise<FollowupDiscussion> => {
+  const data = { fudId, newContent };
+  const res = await api.put(`${FOLLOWUP_DISCUSSION_API_URL}/updateFud`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating fud");
+  }
+  return res.data;
 };
 
 export {
@@ -123,5 +143,6 @@ export {
   addReplyToDiscussion,
   markDiscussionResolved,
   markDiscussionUnresolved,
-  deleteFollowupDiscussion
+  deleteFollowupDiscussion,
+  updateFud,
 };

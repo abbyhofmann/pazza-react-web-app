@@ -326,6 +326,30 @@ app.delete('/api/followupDiscussion/:fudId', async (req, res) => {
     }
 });
 
+// update a followup discussion's content 
+app.put('/api/followupDiscussion/updateFud', async (req, res) => {
+    try {
+        // fud id is a request parameter 
+        const { fudId, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedFud = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedFud);
+    } catch (err) {
+        res.status(500).send(`Error when updating fud: ${err}`);
+    }
+});
+
 // add a followup discussion to post 
 app.put('/api/post/addDiscussion', async (req, res) => {
     try {

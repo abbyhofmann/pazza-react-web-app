@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addReplyToDiscussion, deleteFollowupDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
+import { addReplyToDiscussion, deleteFollowupDiscussion, getFollowupDiscussionById, updateFud } from "../services/followupDiscussionService";
 import { createReply, deleteReply } from "../services/replyService";
 import usePostSidebar from "./usePostSidebar";
 import { FollowupDiscussion, Reply, User } from "../../../types";
@@ -26,9 +26,13 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
     // keep track of if actions dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
+    // keep track of if the user is editing the followup discussion 
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
     // function for formatting the date
     const { formatDate } = usePostSidebar();
 
+    // handle submitting a new fud 
     const handleSubmit = async (newReplyContent: string) => {
         try {
             const doc = new DOMParser().parseFromString(newReplyContent, "text/html");
@@ -56,6 +60,30 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
         setShowDropdown(false);
     };
 
+    // handle saving a fud when it is being edited 
+    const handleOnSave = async (updatedContent: string) => {
+
+        try {
+            // convert HTML content from React Quill to plain text before saving in database 
+            const doc = new DOMParser().parseFromString(updatedContent, "text/html");
+            const plainTextContent = doc.body.textContent || "";
+
+            if (fud && fud._id) {
+                // update existing fud
+                const updatedFud = await updateFud(fud._id, plainTextContent);
+                setFud({ ...fud, content: updatedFud.content });
+            }
+            else {
+                throw new Error("Cannot update a fud that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error updating fud:", error);
+        }
+        setIsEditing(false);
+        setShowDropdown(false);
+    };
+
+    // handle deleting a fud
     const handleDelete = async () => {
         try {
             if (fud) {
@@ -145,7 +173,10 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
         handleSubmit,
         showDropdown,
         setShowDropdown,
-        handleDelete
+        handleDelete,
+        isEditing,
+        setIsEditing,
+        handleOnSave
     }
 }
 

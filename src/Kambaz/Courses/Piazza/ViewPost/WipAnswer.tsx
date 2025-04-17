@@ -13,7 +13,7 @@ interface WipAnswerProps {
 // Component for rendering view for editing (updating or adding a new) answer.
 export default function WipAnswer(props: WipAnswerProps) {
 
-    const { initialAnswer, onSave, onCancel, type, } = props;
+    const { initialAnswer, onSave, onCancel, type } = props;
 
     // variable to keep track of the answer's content
     const [answerContent, setAnswerContent] = useState<string>(initialAnswer);

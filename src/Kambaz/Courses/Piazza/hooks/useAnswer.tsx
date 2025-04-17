@@ -47,6 +47,7 @@ const useAnswer = (answerId: string, type: string, setPost: (post: any) => void)
         setShowDropdown(false);
     };
 
+    // handle deleting answer
     const handleDelete = async () => {
         try {
             if (answer) {
