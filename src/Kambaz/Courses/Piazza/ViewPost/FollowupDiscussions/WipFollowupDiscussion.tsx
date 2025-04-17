@@ -19,11 +19,8 @@ export default function WipFollowupDiscussion(props: WipFollowupDiscussionProps)
 
     return (
         <article data-id="fud" className="answer" aria-label="Followup Discussion">
-
             <div className="content container-fluid">
-
                 <EditorComponent content={fudContent} setContent={setFudContent} />
-
             </div>
             {/* save and cancel buttons only appear when user is editing */}
             <footer className="border-top container-fluid">

@@ -102,20 +102,20 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
                     // remove from post 
                     const postWithFudDeleted = await removeFudFromPost(fud?.postId, fudId);
 
-                    // set the post so the new answer component is displayed 
+                    // set the post so the new fud component is displayed 
                     if (postWithFudDeleted) {
                         setPost(postWithFudDeleted);
                     }
                     else {
-                        throw new Error("Answer deletion unsuccessful");
+                        throw new Error("Fud deletion unsuccessful");
                     }
                 }
 
             } else {
-                throw new Error("Cannot delete an answer that doesn't exist");
+                throw new Error("Cannot delete a fud that doesn't exist");
             }
         } catch (error) {
-            console.error("Error deleting answer:", error);
+            console.error("Error deleting fud:", error);
         }
     };
 
@@ -166,6 +166,7 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
         author,
         formatDate,
         fud,
+        setFud,
         isReplying,
         setIsReplying,
         replyContent,

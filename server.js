@@ -350,6 +350,34 @@ app.put('/api/followupDiscussion/updateFud', async (req, res) => {
     }
 });
 
+// remove a reply from a followup discussion - called when deleting a reply
+app.put('/api/followupDiscussion/removeReply', async (req, res) => {
+    try {
+        const { fudId, replyId } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(replyId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedFud = await followupDiscussions.findOneAndUpdate(
+            {
+                _id: new ObjectId(fudId),
+            },
+            {
+                $pull: {
+                    replies: replyId, // remove replyId from the array
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedFud);
+    } catch (err) {
+        res.status(500).send(`Error when removing reply from fud: ${err}`);
+    }
+});
+
 // add a followup discussion to post 
 app.put('/api/post/addDiscussion', async (req, res) => {
     try {

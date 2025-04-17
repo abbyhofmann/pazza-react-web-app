@@ -23,6 +23,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         author,
         formatDate,
         fud,
+        setFud,
         isReplying,
         setIsReplying,
         replyContent,
@@ -76,7 +77,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                     )}
                 </div>
                 {/* loop through the replies list to render each reply */}
-                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} />)))}
+                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} setFud={setFud}/>)))}
 
                 <div className="gx-1 followup comment pr-0 pl-0 pb-0 row">
                     <div className="pr-0 mr-0 pl-0 pb-0 col">

@@ -137,6 +137,22 @@ const updateFud = async (
   return res.data;
 };
 
+/**
+ * Removes a reply from a followup discussion's array of reply ids.
+ * @param fudId The id of the followup discussion from which to remove the reply.
+ * @param replyId The id of the reoly to remove.
+ * @returns The updated followup discussion object with the reply id removed from the array.
+ */
+const removeReplyFromFud = async (fudId: string, replyId: string): Promise<FollowupDiscussion> => {
+  const data = { fudId, replyId }; 
+  const res = await api.put(`${FOLLOWUP_DISCUSSION_API_URL}/removeReply`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing reply from fud");
+  }
+  return res.data;
+}
+
 export {
   getFollowupDiscussionById,
   createDiscussion,
@@ -145,4 +161,5 @@ export {
   markDiscussionUnresolved,
   deleteFollowupDiscussion,
   updateFud,
+  removeReplyFromFud
 };

@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import usePostSidebar from "../../hooks/usePostSidebar";
-import { Reply, User } from "../../../../types";
-import { getReplyById } from "../../services/replyService";
+import { FollowupDiscussion, Reply, User } from "../../../../types";
+import { deleteReply, getReplyById } from "../../services/replyService";
 import { getUser } from "../../services/userService";
+import ActionsDropdown from "../ActionsDropdown";
+import { removeReplyFromFud } from "../../services/followupDiscussionService";
 
 interface FollowupReplyProps {
     replyId: string;
+    setFud: (newFud: FollowupDiscussion) => void;
 }
 
 // Component for rendering a reply to a followup discussion.
 export default function FollowupReply(props: FollowupReplyProps) {
 
-    const { replyId } = props;
+    const { replyId, setFud } = props;
 
     const { formatDate } = usePostSidebar();
 
@@ -23,6 +26,41 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     // variable for determining which icon to display alongside reply 
     const [isStudent, setIsStudent] = useState<boolean>(false);
+
+    // keep track of if actions dropdown is showing 
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
+    // keep track of if the user is editing the reply
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
+    // handle deleting a reply
+    const handleDelete = async () => {
+        try {
+            if (reply) {
+                // delete from db
+                const deletedRes = await deleteReply(replyId);
+                if (deletedRes) {
+                    // remove from fud 
+                    const fudWithReplyDeleted = await removeReplyFromFud(reply?.followupDiscussionId, replyId);
+
+                    // set the post so the new answer component is displayed 
+                    if (fudWithReplyDeleted) {
+                        // TODO - maybe need to call setFud
+                        setFud(fudWithReplyDeleted);
+                    }
+                    else {
+                        throw new Error("Reply deletion unsuccessful");
+                    }
+                }
+
+            } else {
+                throw new Error("Cannot delete a reply that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting reply:", error);
+        }
+    };
+
 
     useEffect(() => {
         /**
@@ -76,7 +114,9 @@ export default function FollowupReply(props: FollowupReplyProps) {
                 <img className="" width="14px" height="16px" aria-hidden="true" src={isStudent ? "images/studentIcon.jpg" : "images/instructorIcon.jpg"} />
             </div>
             <div className="col">
-                <b>
+                <div className="align-items-center row">
+                    <div className="col-auto">
+                    <b>
                     <span data-id="contributors">{`${author?.firstName} ${author?.lastName}`} </span>
                 </b>
                 <span className="helper-text">
@@ -85,6 +125,14 @@ export default function FollowupReply(props: FollowupReplyProps) {
                         {formatDate(reply ? reply.datePosted : "")}
                     </time>
                 </span>
+
+                    </div>
+                    <div className="col-auto ms-auto me-0">
+                    {/* dropdown for editing and deleting */}
+                    <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                </div>
+                </div>
+                
                 <div
                     id="m7mvuzhntd4fj_render"
                     className="render-html-content overflow-hidden latex_process"
