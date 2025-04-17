@@ -74,6 +74,17 @@ app.get('/api/post/posts', async (req, res) => {
     }
 });
 
+// get all posts in a specific course
+app.get('/api/post/posts/course', async (req, res) => {
+    try {
+        const { cid } = req.body;
+        const allPostsInCourse = await posts.find({ courseId: cid }).toArray();
+        res.status(200).send(allPostsInCourse);
+    } catch (err) {
+        res.status(500).send(`Error fetching posts in course ${cid}: ${err}`);
+    }
+});
+
 // get an individual post by its post ID
 app.get('/api/post/:pid', async (req, res) => {
     try {
