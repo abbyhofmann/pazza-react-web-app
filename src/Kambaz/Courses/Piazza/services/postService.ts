@@ -33,6 +33,20 @@ const getPosts = async (): Promise<Post[]> => {
 };
 
 /**
+ * Gets all the posts in a specific course.
+ *
+ * @param 
+ * @returns The posts in the course.
+ */
+const getPostsInCourse = async (courseId: string): Promise<Post[]> => {
+  const res = await api.get(`${POST_API_URL}/posts/course/${courseId}`);
+  if (res.status !== 200) {
+    throw new Error(`Error while fetching posts in a course: ${res.statusText}`);
+  }
+  return res.data;
+};
+
+/**
  * Adds a followup discussion id to a post's list of followup discussion ids.
  *
  * @param pid The post to which the followup discussion id is being added.
@@ -74,4 +88,4 @@ const addAnswerToPost = async (
   return res.data;
 };
 
-export { getPostById, getPosts, addDiscussionToPost, addAnswerToPost };
+export { getPostById, getPosts, getPostsInCourse, addDiscussionToPost, addAnswerToPost };

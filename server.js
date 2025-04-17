@@ -75,9 +75,9 @@ app.get('/api/post/posts', async (req, res) => {
 });
 
 // get all posts in a specific course
-app.get('/api/post/posts/course', async (req, res) => {
+app.get('/api/post/posts/course/:cid', async (req, res) => {
     try {
-        const { cid } = req.body;
+        const { cid } = req.params;
         const allPostsInCourse = await posts.find({ courseId: cid }).toArray();
         res.status(200).send(allPostsInCourse);
     } catch (err) {
