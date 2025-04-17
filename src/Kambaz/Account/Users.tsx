@@ -10,6 +10,7 @@ export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
   const { uid } = useParams();
   const [role, setRole] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [name, setName] = useState("");
   const createUser = async () => {
     const user = await client.createUser({
