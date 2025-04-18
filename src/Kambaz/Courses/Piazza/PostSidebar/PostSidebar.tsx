@@ -9,7 +9,7 @@ import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 export default function PostSidebar() {
 
   const { posts } = usePostSidebarContext();
-  
+
   const {
     formatDate,
     extractTime,

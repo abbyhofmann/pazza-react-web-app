@@ -29,11 +29,9 @@ export default function PostBox(props: PostBoxProps) {
                     setAuthor(fetchedAuthor);
                 }
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error('Error fetching answer:', error);
             }
         };
-        // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
     }, [post]);
 
@@ -62,7 +60,7 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="col">
                         <div className="float-end dropdown">
                             {/* actions dropdown */}
-                            <button aria-haspopup="false" aria-expanded="false" data-id="postActionMenuId" type="button" className="dropdown-toggle btn btn-action">Actions</button>  { /* TODO - should only be visible to creator of post and instructors */}
+                            <button aria-haspopup="false" aria-expanded="false" data-id="postActionMenuId" type="button" className="dropdown-toggle btn btn-action">Actions</button>  { /* TODO: - should only be visible to creator of post and instructors */}
                         </div>
                         <div className="py-3 history-selection">
                             {/* post title */}
@@ -71,10 +69,13 @@ export default function PostBox(props: PostBoxProps) {
                             <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
                         </div>
                         <div id="folder_select" className="folder_selector pb-3" role="list">
-                            <span role="listitem">
-                                {/* folder */}
-                                <button id="folder_0" type="button" className="folder_button btn btn-primary">hw3</button> { /* TODO - need to use the folder id of the post object to retrieve the folder name */}
-                            </span>
+                            {post.folders &&
+                                post.folders.map((folder, index) =>
+                                    <span role="listitem">
+                                        <button id={`folder_` + index} type="button" className="folder_button btn btn-primary">{folder}</button>
+                                    </span>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

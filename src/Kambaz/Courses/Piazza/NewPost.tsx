@@ -1,12 +1,13 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import { folders } from "../../Database";
 import "./../../styles.css";
+import { getFolders } from "./services/folderService";
+import { Folder } from "../../types";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
@@ -14,9 +15,17 @@ export default function NewPostPage() {
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
    const [postSumary, setPostSummary] = useState("");
+   const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
 
    const navigate = useNavigate();
    const { cid } = useParams();
+
+   useEffect(() => {
+      const fetchFoldersInCourse = async () => {
+         setCourseFolders(await getFolders(cid ?? ""));
+      };
+      fetchFoldersInCourse();
+   }, [cid]);
 
 
    const DeleteButton = () => {
@@ -56,7 +65,7 @@ export default function NewPostPage() {
 
    const postButton = async () => {
       if (!selectedOption) {
-         alert("Please choose a post yype: Question/Note");
+         alert("Please choose a post type: Question/Note");
          return;
       }
       if (!selectedPostTo) {
@@ -78,8 +87,8 @@ export default function NewPostPage() {
 
       const newPost = {
          _id: `P${Date.now()}`,
-         folderId: selectedFolders.join(','),
-         authorId: 'user123',
+         folders: selectedFolders,
+         authorId: 'user123', // TODO: update to current user ID
          datePosted: new Date().toISOString(),
          type: 2,
          instructor: 1,
@@ -121,7 +130,7 @@ export default function NewPostPage() {
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px"}}>
+                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px" }}>
                   Post Type*
                   <div id="">
                      <div className="">
@@ -252,10 +261,10 @@ export default function NewPostPage() {
                            <Form>
                               <FormGroup className="mb-3">
                                  <div className="wd-checkbox-custom">
-                                    {folders.map((folder) => (
+                                    {courseFolders.map((folder) => (
                                        <FormCheck
-                                          key={folder.id}
-                                          id={folder.id}
+                                          key={folder._id}
+                                          id={folder._id}
                                           type="checkbox"
                                           label={folder.name}
                                           value={folder.name}
