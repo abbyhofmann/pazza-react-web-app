@@ -11,13 +11,13 @@ export default function HwFolderNav() {
     <div className="wd-hw-folder-nav-bar">
       <div id="wd-hw-nav" className="d-flex align-items-start">
 
-        <div className="d-flex wd-hw-height me-3">
+        <div className="d-flex wd-hw-height me-3 wd-margin-top">
           <FaFolder className="fs-5 me-2" />
           LIVE Q&A
         </div>
 
 
-        <div className="d-flex wd-hw-height">
+        <div className="d-flex wd-hw-height vertical-line">
           <FaFolder className="fs-5 me-2" />
           Drafts
         </div>
