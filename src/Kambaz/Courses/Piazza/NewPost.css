@@ -1,0 +1,11 @@
+.new-post-content {
+    flex-grow: 1; /* Allows it to take up remaining space */
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+} 
+
+.d-flex.flex-column.align-items-stretch {
+    height: calc(100vh - 50px); 
+    overflow-y: auto; 
+  }

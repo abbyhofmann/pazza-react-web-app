@@ -1,0 +1,12 @@
+.view-post-content {
+    height: 100%;
+    overflow-y: auto;
+    flex-direction: column;
+    overflow-x: hidden;
+    padding: 10px;
+} 
+
+.d-flex.flex-column.align-items-stretch {
+    height: calc(100vh - 50px); 
+    overflow-y: auto; 
+  }

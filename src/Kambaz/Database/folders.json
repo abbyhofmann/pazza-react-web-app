@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "name": "hw1",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "2",
+    "name": "hw2",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "3",
+    "name": "hw3",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "5",
+    "name": "hw5",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "6",
+    "name": "office-hours",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "7",
+    "name": "logistics",
+    "course_id": "101",
+    "posts": []
+  },
+  {
+    "id": "8",
+    "name": "project",
+    "course_id": "101",
+    "posts": []
+  }
+]
