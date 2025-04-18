@@ -1,13 +1,52 @@
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
+import NewPostPage from '../NewPost';
+import Piazza from '../RightSidePage';
+
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 import { FaCaretLeft } from "react-icons/fa";
+import { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
+  const {cid, pid} = useParams();
+  const locaton = useLocation();
+  
+  const handleFullScreen = () => {
+    setIsFullScreen((prev) => !prev);
+  //  setScreen(handleScreenType(locaton.pathname));
+  };
+
+  const handleScreenType = (pathname: string) => {
+    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`)) return "NewPostPage";
+    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza`)) return "Piazza";
+    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza/${pid}`)) return "ViewPostPage";
+    return 'defaults';
+  }
+
+  const sidebarClass = isFullScreen ? "fullscreen" : "";
+  const widthStyle = isFullScreen ? { width: "100%" } : { width: "380px" };
+
+  const renderFullScreenContent = () => {
+    const hash = location.hash;
+    if (hash.includes("NewPostPage")) {
+      return "NewPostPage";
+    } else if (hash.includes("Piazza")) {
+      return "Piazza";
+    } else if (hash.includes("ViewPostPage")) {
+      return "ViewPostPage";
+    } else {
+      return <h2>You're in Full Screen Mode!</h2>;
+    }
+  };
+
 
   const { posts } = usePostSidebarContext();
   
@@ -27,14 +66,21 @@ export default function PostSidebar() {
 
   return (
     <div
-      className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end"
-      style={{ width: "380px" }}
+      className={`d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end 
+        ${isFullScreen ? 'fullscreen' : ''}`}
+      style={{ width: isFullScreen ? '100%' : '380px'}}
     >
       <div>
       <div id="carrot_bar">
-      <button id="carrot_button" type="button" onClick={navButton}>
+      <button id="carrot_button" type="button" onClick={handleFullScreen}>
+        {isFullScreen? "Exi FullScreen" : "Go FullScreen"}
             <FaCaretLeft className="me-1 mb-1 fs-5" />
           </button>
+          {isFullScreen && (
+          <div>
+            {renderFullScreenContent()}
+          </div>
+        )}
 
         <div className="vertical-line"></div>
           
@@ -225,4 +271,4 @@ export default function PostSidebar() {
       </div>
     </div>
   );
-}
+  }
