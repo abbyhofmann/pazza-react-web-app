@@ -1,44 +1,34 @@
 [
   {
-    "_id": "67f16dddcb8a803b894d07b3", 
+    "_id": {
+      "$oid": "67f16dddcb8a803b894d07b3"
+    },
+    "posts": [],
     "name": "hw1",
-    "courseId": "101",
-    "posts": []
+    "courseId": "RS101"
   },
   {
-    "_id": "67f16dddcb8a803b894d07b3", 
+    "_id": {
+      "$oid": "67f75c2fdf070e8b32e2caec"
+    },
     "name": "hw2",
-    "courseId": "101",
+    "courseId": "RS101",
     "posts": []
   },
   {
-    "_id": "67f16dddcb8a803b894d07b3", 
+    "_id": {
+      "$oid": "67f84c6da976a1c31464ce36"
+    },
     "name": "hw3",
-    "courseId": "101",
+    "courseId": "RS101",
     "posts": []
   },
   {
-    "_id": "67f16dddcb8a803b894d07b3", 
-    "name": "hw5",
-    "courseId": "101",
-    "posts": []
-  },
-  {
-    "_id": "67f16dddcb8a803b894d07b3", 
-    "name": "office-hours",
-    "courseId": "101",
-    "posts": []
-  },
-  {
-    "_id": "67f16dddcb8a803b894d07b3", 
-    "name": "logistics",
-    "courseId": "101",
-    "posts": []
-  },
-  {
-    "_id": "67f16dddcb8a803b894d07b3", 
+    "_id": {
+      "$oid": "68018ab436f6f4eaf7b4b189"
+    },
+    "courseId": "RS102",
     "name": "project",
-    "courseId": "101",
     "posts": []
   }
 ]
