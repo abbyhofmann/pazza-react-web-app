@@ -30,6 +30,17 @@ export default function PostSidebar() {
       style={{ width: "380px" }}
     >
       <div>
+      <div id="carrot_bar">
+          
+          <div className="d-flex wd-carrot-filters">
+            <div>Unread</div>
+            <div className="ms-2">Updated</div>  
+            <div className="ms-2">Unresolved</div> 
+            <div className="ms-2">Following</div> 
+            
+          </div>
+        </div>
+
         <div id="feed_search_bar">
           <button id="new_post_button" type="button" onClick={navButton}>
             <BsFileEarmarkPostFill className="me-1 mb-1 fs-6" />

@@ -125,6 +125,19 @@
   border-bottom: 1px solid #ccc;
 }
 
+.wd-carrot-filters {
+  font-size: 11px;
+  color:#666;
+}
+
+#carrot_bar {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #f3f3f3;
+  border-bottom: 1px solid #ccc;
+}
+
 #new_post_button {
   background: #3A73A1;
   border: none;
