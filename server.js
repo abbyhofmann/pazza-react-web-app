@@ -35,11 +35,6 @@ const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
 const folders = db.collection("folders");
 
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-const postsFilePath = '/Users/katiewinkleblack/Desktop/2025/WEBDEV_NEW/PazzaProject/ACTUAL/pazza-react-web-app/src/Kambaz/Database/posts.json';
-
 // create a new post 
 app.post('/api/post/createPost', async (req, res) => {
     if (!(req.body.folders !== undefined &&
@@ -71,9 +66,7 @@ app.post('/api/post/createPost', async (req, res) => {
     const newPost = req.body;
     try {
         const result = await posts.insertOne(newPost);
-        console.log('result: ', result);
         const createdPost = await posts.findOne({ _id: result.insertedId });
-        console.log('created post: ', createdPost)
         res.json(createdPost);
     } catch (err) {
         res.status(500).send(`Error when creating post: ${err}`);
