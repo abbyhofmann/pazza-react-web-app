@@ -17,6 +17,11 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
+   const [isFullScreen, setFullScreen] = useState(false);
+
+   const handleFullScreenToggle = () => {
+     setFullScreen(prev => !prev);
+   };
 
 
    const DeleteButton = () => {
@@ -116,7 +121,13 @@ export default function NewPostPage() {
 
    return (
 
-      <div id="wd-new-post" className="new-post-content">
+      <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
+      style={{
+        width: isFullScreen ? '100%' : '100vw',
+        height: isFullScreen ? '100%' : 'auto',
+        transition: 'all 0.3 ease', 
+      }}
+    > 
 
          <div className="">
             <div>

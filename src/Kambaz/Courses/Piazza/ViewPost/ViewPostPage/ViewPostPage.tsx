@@ -6,6 +6,7 @@ import ".././ViewPost.css";
 import NewAnswerInputBox from "../NewAnswerInputBox";
 import Answer from "../Answer";
 import useViewPostPage from "../../hooks/useViewPostPage";
+import { useState } from "react";
 
 
 /**
@@ -14,6 +15,11 @@ import useViewPostPage from "../../hooks/useViewPostPage";
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
+      const [isFullScreen, setFullScreen] = useState(false);
+    
+       const handleFullScreenToggle = () => {
+         setFullScreen(prev => !prev);
+       };
 
   const { post,
     setPost,
@@ -27,7 +33,13 @@ const ViewPostPage = () => {
   if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
   return (
-    <div className="view-post-content">
+    <div className={`view-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
+      style={{
+        width: isFullScreen ? '100%' : '100vw',
+        height: isFullScreen ? '100%' : 'auto',
+        transition: 'all 0.3 ease', 
+      }}
+    > 
 
       {/* POST COMPONENT */}
       <PostBox post={post} />
