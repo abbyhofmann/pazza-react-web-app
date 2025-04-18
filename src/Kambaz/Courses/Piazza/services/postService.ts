@@ -111,6 +111,21 @@ const removeFudFromPost = async (pid: string, fudId: string): Promise<Post> => {
   return res.data;
 };
 
+/**
+ * Adds a new post to the database.
+ *
+ * @param newPost The new post object being created.
+ * @returns The new post object.
+ */
+const createPost = async (newPost: Post): Promise<Post> => {
+  const res = await api.post(`${POST_API_URL}/createPost`, newPost);
+
+  if (res.status !== 200) {
+    throw new Error("Error while creating post");
+  }
+  return res.data;
+};
+
 export {
   getPostById,
   getPosts,
@@ -118,4 +133,5 @@ export {
   addAnswerToPost,
   removeAnswerFromPost,
   removeFudFromPost,
+  createPost,
 };
