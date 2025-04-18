@@ -281,25 +281,23 @@ export default function NewPostPage() {
                      </div>
 
 
-                     <Form>
-                        <Form.Group as={Row} className="mb-4 d-flex align-items-center">
-                           <Col sm={2}>
-                              <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                                 style={{ fontSize: "14px" }}>
+                     <div className="d-flex mt-3">
+                        <div id="wd-class-stats" 
+                        className="d-flex wd-text-grey wd-font-bold me-4"
+                           style={{ fontSize: "14px" }}>
 
-                                 Summary*
-                              </div>
-                           </Col>
-                           <Col sm={9}>
+                           Summary
+                        </div>
+                     <Form>
                               <Form.Control id="wd-name" type="text"
                                  placeholder="Enter a one line summary here, 100 characters or less"
-                                 style={{ fontSize: "13px" }}
+                                 style={{ fontSize: "13px", width: '100ch' }}
                                  value={postSumary}
                                  onChange={handleSummaryChange}
+                                 maxLength={100}
                               />
-                           </Col>
-                        </Form.Group>
                      </Form>
+                     </div>
 
                      <Form>
                         <Form.Group as={Row} className="mb-3 d-flex ">
