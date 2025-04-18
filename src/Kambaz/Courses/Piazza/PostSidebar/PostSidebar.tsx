@@ -16,7 +16,7 @@ export default function PostSidebar() {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
-  const {cid, pid} = useParams();
+  const {pid} = useParams();
   const locaton = useLocation();
   
   const handleFullScreen = () => {
@@ -24,15 +24,8 @@ export default function PostSidebar() {
   //  setScreen(handleScreenType(locaton.pathname));
   };
 
-  const handleScreenType = (pathname: string) => {
-    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`)) return "NewPostPage";
-    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza`)) return "Piazza";
-    if (pathname.includes(`/Kambaz/Courses/${cid}/Piazza/${pid}`)) return "ViewPostPage";
-    return 'defaults';
-  }
+  
 
-  const sidebarClass = isFullScreen ? "fullscreen" : "";
-  const widthStyle = isFullScreen ? { width: "100%" } : { width: "380px" };
 
   const renderFullScreenContent = () => {
     const hash = location.hash;
@@ -40,7 +33,7 @@ export default function PostSidebar() {
       return <NewPostPage/>;
     } else if (hash.includes("Piazza")) {
       return <Piazza/>;
-    } else if (hash.includes("ViewPostPage")) {
+    } else if (pid) {
       return <ViewPostPage/>;
     } else {
       return <h2>You're in Full Screen Mode!</h2>;
@@ -99,13 +92,13 @@ export default function PostSidebar() {
       
 
         <div id="feed_search_bar" 
-        className={`${isFullScreen ? 'fullscreen' : ''}`}
+        className={`d-flex ${isFullScreen ? 'fullscreen' : ''}`}
           style={{ width: isFullScreen ? '100%' : '380px',
                display: isFullScreen ? "none" : "block",
                transition: "all 0..3s east",
       }}
     >
-          <button id="new_post_button" type="button" onClick={navButton}>
+         <button id="new_post_button" type="button" onClick={navButton}>
             <BsFileEarmarkPostFill className="me-1 mb-1 fs-6" />
             New Post
           </button>

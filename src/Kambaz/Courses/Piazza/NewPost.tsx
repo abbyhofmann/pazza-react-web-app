@@ -9,7 +9,7 @@ import { folders } from "../../Database";
 import "./../../styles.css";
 
 export default function NewPostPage() {
-   const [selectedOption, setSelectedOption] = useState<string>('');
+   const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
