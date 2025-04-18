@@ -71,7 +71,26 @@ app.post('/api/post/createPost', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when creating post: ${err}`);
     }
-})
+});
+
+// delete a post 
+app.delete('/api/post/:pid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { pid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const postDeletion = (await posts.deleteOne({ _id: new ObjectId(pid) }));
+        res.json(postDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting post: ${err}`);
+    }
+});
 
 // get all posts in database
 app.get('/api/post/posts', async (req, res) => {

@@ -2,21 +2,107 @@ import { useEffect, useState } from "react";
 import { Post, User } from "../../../types";
 import "./ViewPost.css";
 import { getUser } from "../services/userService";
+import { useNavigate, useParams } from "react-router";
+import { deleteAnswer } from "../services/answerService";
+import { deleteFollowupDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
+import { deleteReply } from "../services/replyService";
+import ActionsDropdown from "./ActionsDropdown";
+import { deletePost } from "../services/postService";
+import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 
 interface PostBoxProps {
     post: Post;
+    setPost: (postToSet: Post | null) => void;
 }
 
 // Component for the individual post item in the sidebar. 
 export default function PostBox(props: PostBoxProps) {
 
-    const { post } = props;
+    const { post, setPost } = props;
+
+    const { cid } = useParams();
+
+    const navigate = useNavigate();
+
+    const { fetchPosts } = usePostSidebarContext();
 
     // author of the post 
     const [author, setAuthor] = useState<User | null>(null);
 
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
+
+    // keep track of if actions dropdown is showing 
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
+    // handle deleting answer
+    const handleDelete = async () => {
+        try {
+            if (post && post._id) {
+                // delete from db
+                const deletedRes = await deletePost(post._id);
+                if (deletedRes) {
+
+                    // delete student answer if exists
+                    if (post.studentAnswer) {
+                        const deletedStudentAnswerRes = await deleteAnswer(post.studentAnswer);
+                        if (!deletedStudentAnswerRes) {
+                            throw new Error(`Error deleting student answer`);
+                        }
+                    }
+
+                    // delete instructor answer if exists
+                    if (post.instructorAnswer) {
+                        const deletedInstructorAnswerRes = await deleteAnswer(post.instructorAnswer);
+                        if (!deletedInstructorAnswerRes) {
+                            throw new Error(`Error deleting instructor answer`);
+                        }
+                    }
+
+                    // delete follow up discussions and their associated replies 
+                    await Promise.all(
+                        post.followupDiscussions.map(async fudId => {
+                            const fetchedFud = await getFollowupDiscussionById(fudId);
+                            if (fetchedFud._id !== undefined) {
+                                // delete the fud's replies
+                                await Promise.all(
+                                    fetchedFud.replies.map(async rid => {
+                                        const deletedReplyRes = await deleteReply(rid);
+                                        if (!deletedReplyRes) {
+                                            throw new Error(`Error deleting reply ${rid}`);
+                                        }
+                                    })
+                                );
+
+                                // delete the fud itself 
+                                const deletedFudRes = await deleteFollowupDiscussion(fudId);
+                                if (!deletedFudRes) {
+                                    throw new Error(`Error deleting fud ${fudId}`);
+                                }
+                            }
+                            else {
+                                throw new Error(`Error fetching fud ${fudId}`);
+                            }
+                        }));
+
+                    // set post to null 
+                    setPost(null);
+                    // update sidebar 
+                    await fetchPosts();
+                    // navigate to home page 
+                    navigate(`/Kambaz/Courses/${cid}/Piazza`);
+                }
+                else {
+                    throw new Error("Post deletion unsuccessful");
+                }
+            }
+            else {
+                throw new Error("Cannot delete a post that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting post:", error);
+        }
+    };
 
     useEffect(() => {
         /**
@@ -62,7 +148,7 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="col">
                         <div className="float-end dropdown">
                             {/* actions dropdown */}
-                            <button aria-haspopup="false" aria-expanded="false" data-id="postActionMenuId" type="button" className="dropdown-toggle btn btn-action">Actions</button>  { /* TODO - should only be visible to creator of post and instructors */}
+                            <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
                         </div>
                         <div className="py-3 history-selection">
                             {/* post title */}
