@@ -74,6 +74,17 @@ app.get('/api/post/posts', async (req, res) => {
     }
 });
 
+// get all posts in a specific course
+app.get('/api/post/posts/course/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const allPostsInCourse = await posts.find({ courseId: cid }).toArray();
+        res.status(200).send(allPostsInCourse);
+    } catch (err) {
+        res.status(500).send(`Error fetching posts in course ${cid}: ${err}`);
+    }
+});
+
 // get an individual post by its post ID
 app.get('/api/post/:pid', async (req, res) => {
     try {
@@ -584,11 +595,11 @@ app.post('/api/reply/createReply', async (req, res) => {
 });
 
 // get all the folders in a course
-app.get('/api/folders', async (req, res) => {
+app.get('/api/folders/:courseId', async (req, res) => {
     try {
         // course id is in the request body 
-        const { cid } = req.body;
-        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const { courseId } = req.params;
+        const fetchedFolders = await folders.find({ courseId }).toArray();
         res.status(200).json(fetchedFolders);
     } catch (err) {
         res.status(500).send(`Error when fetching folders: ${err}`);
@@ -596,10 +607,10 @@ app.get('/api/folders', async (req, res) => {
 });
 
 // get the names of all the folders in a course
-app.get('/api/folders/names', async (req, res) => {
+app.get('/api/folders/names/:courseId', async (req, res) => {
     try {
-        const { cid } = req.body;
-        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const { courseId } = req.params;
+        const fetchedFolders = await folders.find({ courseId }).toArray();
         const names = fetchedFolders.map(folder => folder.name);
         res.status(200).json(names);
     } catch (err) {
@@ -610,7 +621,7 @@ app.get('/api/folders/names', async (req, res) => {
 // get all the posts in a course's folder
 app.get('/api/folders/posts', async (req, res) => {
     try {
-        const { folder, cid } = req.body;
+        const { folder, cid } = req.params;
         const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
         const posts = fetchedFolders.map(folder => folder.posts);
         res.status(200).json(posts);

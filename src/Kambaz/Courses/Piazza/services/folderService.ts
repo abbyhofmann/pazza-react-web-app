@@ -5,7 +5,7 @@ import api from "./api.ts";
 const FOLDERS_API_URL = `${import.meta.env.VITE_API_URL}/folders`;
 
 const getFolders = async (courseId: string): Promise<Folder[]> => {
-  const res = await api.get(`${FOLDERS_API_URL}`, { params: { cid: courseId } });
+  const res = await api.get(`${FOLDERS_API_URL}/${courseId}`);
   if (res.status !== 200) {
     throw new Error(res.statusText);
   }
@@ -21,7 +21,7 @@ const getPostsInFolder = async (courseId: string, folderName: string): Promise<P
 }
 
 const createFolder = async (courseId: string, folderName: string): Promise<Folder> => {
-  const res = await api.post(`${FOLDERS_API_URL}`, { folder: { cid: courseId, name: folderName } });
+  const res = await api.post(`${FOLDERS_API_URL}`, { folder: { courseId, name: folderName } });
   if (res.status != 200) {
     throw new Error(res.statusText);
   } else {
