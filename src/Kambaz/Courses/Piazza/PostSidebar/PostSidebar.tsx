@@ -4,6 +4,7 @@ import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
+import { FaCaretLeft } from "react-icons/fa";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
@@ -31,8 +32,13 @@ export default function PostSidebar() {
     >
       <div>
       <div id="carrot_bar">
+      <button id="carrot_button" type="button" onClick={navButton}>
+            <FaCaretLeft className="me-1 mb-1 fs-5" />
+          </button>
+
+        <div className="vertical-line"></div>
           
-          <div className="d-flex wd-carrot-filters">
+          <div className="d-flex wd-carrot-filters ms-2 align-items-center">
             <div>Unread</div>
             <div className="ms-2">Updated</div>  
             <div className="ms-2">Unresolved</div> 

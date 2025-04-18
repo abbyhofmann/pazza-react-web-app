@@ -132,10 +132,14 @@
 
 #carrot_bar {
   display: flex;
-  align-items: center;
-  padding: 8px;
   background: #f3f3f3;
   border-bottom: 1px solid #ccc;
+  height: 25px;
+}
+
+.vertical-line {
+  border-left: 1px solid #666; 
+  height: 25px; 
 }
 
 #new_post_button {
@@ -150,8 +154,16 @@
   cursor: pointer;
 }
 
-#new_post_button:hover {
-  background: #3A73A1;
+#carrot_button {
+  border: none;
+  color: rgb(70, 68, 68);
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#carrot_button:hover {
+  background: rgb(214, 212, 212);
 }
 
 #search_bar {

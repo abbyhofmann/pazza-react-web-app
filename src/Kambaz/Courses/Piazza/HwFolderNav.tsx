@@ -22,12 +22,13 @@ export default function HwFolderNav() {
           Drafts
         </div>
 
-        <div className="d-flex wd-hw-height">
+        <div className="d-flex wd-hw-height ms-3 vertical-line">
           <FaFolder className="fs-5 me-2 ms-2 folders-icon" />
         </div>
 
         {folders.map((folder, index) =>
-          <div key={index} className="d-flex wd-folder-height">{folder.name}</div>)}
+          <div key={index} className="d-flex wd-folder-height wd-margin-top">{folder.name}</div>)}
+         
       </div>
     </div>
   )
