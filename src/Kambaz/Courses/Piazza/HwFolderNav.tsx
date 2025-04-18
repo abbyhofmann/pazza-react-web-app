@@ -1,7 +1,10 @@
 import { FaFolder } from "react-icons/fa";
 import "./hwFolderNav.css";
+import useFolders from "./hooks/useFolders";
 
 export default function HwFolderNav() {
+
+  const { folders } = useFolders();
 
   return (
 
@@ -23,18 +26,8 @@ export default function HwFolderNav() {
           <FaFolder className="fs-5 me-2 ms-2 folders-icon" />
         </div>
 
-        <div className="d-flex wd-folder-height">
-          hw1
-        </div>
-        <div className="d-flex wd-hw-height">
-          hw2
-        </div>
-        <div className="d-flex wd-hw-height">
-          hw3
-        </div>
-        <div className="d-flex wd-hw-height">
-          hw4
-        </div>
+        {folders.map((folder, index) =>
+          <div key={index} className="d-flex wd-folder-height">{folder.name}</div>)}
       </div>
     </div>
   )

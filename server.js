@@ -33,6 +33,7 @@ const answers = db.collection("answers");
 const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
+const folders = db.collection("folders");
 
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -593,9 +594,86 @@ app.put('/api/reply/updateReply', async (req, res) => {
     }
 });
 
-// app.listen(3000, 'localhost', () => {
-//     console.log('Server running on Port 3000');
-// });
+// get all the folders in a course
+app.get('/api/folders', async (req, res) => {
+    try {
+        // course id is in the request body 
+        const { cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        res.status(200).json(fetchedFolders);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folders: ${err}`);
+    }
+});
+
+// get the names of all the folders in a course
+app.get('/api/folders/names', async (req, res) => {
+    try {
+        const { cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const names = fetchedFolders.map(folder => folder.name);
+        res.status(200).json(names);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folder names: ${err}`);
+    }
+});
+
+// get all the posts in a course's folder
+app.get('/api/folders/posts', async (req, res) => {
+    try {
+        const { folder, cid } = req.body;
+        const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
+        const posts = fetchedFolders.map(folder => folder.posts);
+        res.status(200).json(posts);
+    } catch (err) {
+        res.status(500).send(`Error when fetching folder posts: ${err}`);
+    }
+});
+
+// add folder in a specific course
+app.post('/api/folders', async (req, res) => {
+    try {
+        const { folder } = req.body;
+        const resp = await folders.insertOne(folder);
+        res.status(200).send(resp);
+    } catch (err) {
+        res.status(500).send(`Error when creating folder: ${err}`);
+    }
+});
+
+// delete folders 
+app.delete('/api/folders', async (req, res) => {
+    try {
+        const toDelete = req.body;
+        const responses = [];
+        for (const f of toDelete) {
+            const resp = await folders.deleteOne(
+                { name: f.name, course: f.course },
+                (err, obj) => {
+                    if (err) throw err;
+                });
+            responses.push(resp);
+        }
+        res.status(200).send(`Successful in deleting ${responses.length} folders`);
+    } catch (err) {
+        res.status(500).send(`Error when deleting folder: ${err}`);
+    }
+});
+
+// to edit a folder name
+app.put('/api/folders', async (req, res) => {
+    try {
+        const { courseId, oldName, newName } = req.body;
+        const resp = await folders.updateOne(
+            { name: oldName, course: courseId },
+            { $set: { name: newName } }
+        );
+        res.status(200).send(resp);
+    } catch (err) {
+        res.status(500).send(`Error when editing folder name: ${err}`);
+    }
+})
+
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log(`Server running on Port ${process.env.PORT || 3000}`);
 });
