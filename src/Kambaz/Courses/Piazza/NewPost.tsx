@@ -341,7 +341,7 @@ export default function NewPostPage() {
                                  selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)
                                  : "Question"}{" "}
 
-                              to CS4550-02! </button>
+                              {cid}! </button>
                         </div>
 
                         <div className="d-flex">
