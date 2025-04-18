@@ -9,6 +9,7 @@ import { folders } from "../../Database";
 import "./../../styles.css";
 import { createPost } from "./services/postService";
 import { Post } from "../../types";
+import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
@@ -19,7 +20,7 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
-
+   const { fetchPosts } = usePostSidebarContext();
 
    const DeleteButton = () => {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
@@ -97,6 +98,7 @@ export default function NewPostPage() {
 
             if (newPostFromDb && newPostFromDb._id) {
                navigate(`/Kambaz/Courses/${cid}/Piazza`);
+               await fetchPosts();
             }
             else {
                console.error("Failed to Post");
