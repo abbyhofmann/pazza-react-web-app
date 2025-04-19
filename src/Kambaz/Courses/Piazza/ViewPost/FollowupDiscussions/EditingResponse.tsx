@@ -1,16 +1,16 @@
 
 import { useState } from "react";
 import "./../ViewPost.css";
-import EditorComponent from "./../EditorComponent";
+import EditorComponent from "../EditorComponent";
 
-interface WipFollowupDiscussionProps {
+interface EditingResponseProps {
     initialFud: string;
     onSave: (updatedFud: string) => void;
     onCancel: () => void;
 }
 
 // Component for rendering view for editing a followup discussion.
-export default function WipFollowupDiscussion(props: WipFollowupDiscussionProps) {
+export default function EditingResponse(props: EditingResponseProps) {
 
     const { initialFud, onSave, onCancel } = props;
 

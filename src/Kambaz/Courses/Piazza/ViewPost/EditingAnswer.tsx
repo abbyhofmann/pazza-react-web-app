@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./ViewPost.css";
 import EditorComponent from "./EditorComponent";
 
-interface WipAnswerProps {
+interface EditingAnswerProps {
     initialAnswer: string;
     onSave: (updatedAnswer: string, type: string) => void;
     onCancel: () => void;
@@ -11,7 +11,7 @@ interface WipAnswerProps {
 }
 
 // Component for rendering view for editing (updating or adding a new) answer.
-export default function WipAnswer(props: WipAnswerProps) {
+export default function EditingAnswer(props: EditingAnswerProps) {
 
     const { initialAnswer, onSave, onCancel, type } = props;
 

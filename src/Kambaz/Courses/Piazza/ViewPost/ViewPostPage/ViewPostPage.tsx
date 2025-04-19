@@ -1,7 +1,7 @@
 import PostBox from "../PostBox";
 import FollowupDiscussions from "../FollowupDiscussions/FollowupDiscussions";
 import "./ViewPostPage.css";
-import WipAnswer from "../WipAnswer";
+import EditingAnswer from "../EditingAnswer";
 import ".././ViewPost.css";
 import NewAnswerInputBox from "../NewAnswerInputBox";
 import Answer from "../Answer";
@@ -43,7 +43,7 @@ const ViewPostPage = () => {
         ) : isWipStudentAnswer ? (
 
           // if a student answer is being created, render the wip display
-          <WipAnswer
+          <EditingAnswer
             initialAnswer=""
             onSave={handleOnSubmit}
             onCancel={() => {
@@ -67,7 +67,7 @@ const ViewPostPage = () => {
         ) : isWipInstructorAnswer ? (
 
           // if an instructor answer is being created, render the wip display 
-          <WipAnswer
+          <EditingAnswer
             initialAnswer=""
             onSave={handleOnSubmit}
             onCancel={() => {

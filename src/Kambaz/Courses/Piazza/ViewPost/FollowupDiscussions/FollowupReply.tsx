@@ -1,6 +1,6 @@
 import { FollowupDiscussion } from "../../../../types";
 import ActionsDropdown from "../ActionsDropdown";
-import WipFollowupDiscussion from "./WipFollowupDiscussion";
+import EditingResponse from "./EditingResponse";
 import useFollowupReply from "../../hooks/useFollowupReply";
 
 interface FollowupReplyProps {
@@ -60,7 +60,7 @@ export default function FollowupReply(props: FollowupReplyProps) {
                 <div>
 
                     {isEditing ? (
-                        <WipFollowupDiscussion initialFud={reply ? reply.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                        <EditingResponse initialFud={reply ? reply.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
                     ) : (
 
                         <div
