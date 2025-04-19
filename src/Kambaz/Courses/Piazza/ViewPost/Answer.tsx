@@ -1,5 +1,5 @@
 import { type Answer } from "../../../types";
-import WipAnswer from "./WipAnswer";
+import EditingAnswer from "./EditingAnswer";
 import useAnswer from "../hooks/useAnswer";
 import ActionsDropdown from "./ActionsDropdown";
 
@@ -29,7 +29,7 @@ export default function Answer(props: AnswerProps) {
     return (
         <div>
             {isEditing ? (
-                <WipAnswer
+                <EditingAnswer
                     initialAnswer={answer ? answer.content : ""} // TODO improve this check 
                     onSave={handleOnSave}
                     onCancel={() => { setIsEditing(false); setShowDropdown(false); }}

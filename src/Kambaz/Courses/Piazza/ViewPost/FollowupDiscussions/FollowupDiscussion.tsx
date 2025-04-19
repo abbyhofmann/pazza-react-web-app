@@ -5,7 +5,7 @@ import { type FollowupDiscussion } from "../../../../types";
 import EditorComponent from "../EditorComponent";
 import useFollowupDiscussion from "../../hooks/useFollowupDiscussion";
 import ActionsDropdown from "../ActionsDropdown";
-import WipFollowupDiscussion from "./WipFollowupDiscussion";
+import EditingResponse from "./EditingResponse";
 
 interface FollowupDiscussionProps {
     fudId: string;
@@ -66,7 +66,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                 <div className="mb-2">
                     {/* if the user is editing the followup discussion, display a text editor; otherwise, display the fud content */}
                     {isEditing ? (
-                        <WipFollowupDiscussion initialFud={fud ? fud.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                        <EditingResponse initialFud={fud ? fud.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
                     ) : (
                         <div
                             id="m7mvt9ipcj61pk_render"
