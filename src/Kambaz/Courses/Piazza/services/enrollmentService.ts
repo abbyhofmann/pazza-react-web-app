@@ -1,4 +1,4 @@
-import { Enrollment, Folder, Post } from "./../../../types.tsx";
+import { Enrollment } from "./../../../types.tsx";
 import api from "./api.ts";
 
 // we are using VITE, so import.meta.env is used instead of process.env for importing environment variables
