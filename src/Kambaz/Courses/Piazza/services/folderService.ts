@@ -1,4 +1,4 @@
-import { Folder, Post } from "./../../../types.tsx";
+import { Folder } from "./../../../types.tsx";
 import api from "./api.ts";
 
 // we are using VITE, so import.meta.env is used instead of process.env for importing environment variables
@@ -11,14 +11,6 @@ const getFolders = async (courseId: string): Promise<Folder[]> => {
   }
   return res.data;
 };
-
-const getPostsInFolder = async (courseId: string, folderName: string): Promise<Post[]> => {
-  const res = await api.get(`${FOLDERS_API_URL}/posts`, { params: { cid: courseId, name: folderName } });
-  if (res.status !== 200) {
-    throw new Error(res.statusText);
-  }
-  return res.data;
-}
 
 const createFolder = async (courseId: string, folderName: string): Promise<Folder> => {
   const res = await api.post(`${FOLDERS_API_URL}`, { folder: { cid: courseId, name: folderName } });
@@ -47,4 +39,4 @@ const editFolder = async (courseId: string, oldName: string, newName: string) =>
   }
 }
 
-export { getFolders, getPostsInFolder, createFolder, deleteFolders, editFolder };
+export { getFolders, createFolder, deleteFolders, editFolder };
