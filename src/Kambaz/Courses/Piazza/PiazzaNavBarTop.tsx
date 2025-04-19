@@ -37,6 +37,7 @@ export default function PiazzaNavBarTop() {
             >
               Manage Class
             </Link>
+            {/* TODO: protect this button */}
           </li>
         </ul>
       </div>
