@@ -1,10 +1,35 @@
 import { FaFolder } from "react-icons/fa";
 import "./hwFolderNav.css";
 import useFolders from "./hooks/useFolders";
+import usePostSidebar from "./hooks/usePostSidebar";
+import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { getPostsInFolder } from "./services/postService";
 
 export default function HwFolderNav() {
 
+  const { cid } = useParams();
   const { folders } = useFolders();
+  const { setPosts } = usePostSidebar();
+  const [filterBy, setFilterBy] = useState("");
+
+  const filterByFolder = async (folderName: string) => {
+    const filteredPosts = await getPostsInFolder(cid ?? "", folderName);
+    setPosts(filteredPosts);
+  }
+
+  useEffect(() => {
+    filterByFolder(filterBy);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterBy])
+
+  const FilterByComponent = () => {
+    if (filterBy == "") {
+      return <></>;
+    } else {
+      return <div className="wd-filter-chip">filter: {filterBy}</div>;
+    }
+  }
 
   return (
 
@@ -23,11 +48,22 @@ export default function HwFolderNav() {
         </div>
 
         <div className="d-flex wd-hw-height">
+          <FilterByComponent />
+        </div>
+
+        <div className="d-flex wd-hw-height">
           <FaFolder className="fs-5 me-2 ms-2 folders-icon" />
         </div>
 
         {folders.map((folder, index) =>
-          <div key={index} className="d-flex wd-folder-height">{folder.name}</div>)}
+          <div
+            key={index}
+            className="d-flex wd-folder-height cursor-pointer"
+            onClick={() => setFilterBy(folder.name)}
+          >
+            {folder.name}
+          </div>
+        )}
       </div>
     </div>
   )
