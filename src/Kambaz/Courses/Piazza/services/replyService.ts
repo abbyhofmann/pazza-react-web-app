@@ -32,4 +32,35 @@ const createReply = async (newReply: Reply): Promise<Reply> => {
   return res.data;
 };
 
-export { getReplyById, createReply };
+/**
+ * Deletes a reply.
+ * @param aid The id of the reply to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteReply = async (rid: string): Promise<boolean> => {
+  const res = await api.delete(`${REPLY_API_URL}/${rid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting reply");
+  }
+  return res.data;
+};
+
+/**
+ * Updates a reply upon a user editing its content.
+ *
+ * @param rid The id of the reply being updated.
+ * @param newContent The updated content of the answer.
+ * @returns The updated answer object.
+ */
+const updateReply = async (rid: string, newContent: string): Promise<Reply> => {
+  const data = { rid, newContent };
+  const res = await api.put(`${REPLY_API_URL}/updateReply`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating reply");
+  }
+  return res.data;
+};
+
+export { getReplyById, createReply, deleteReply, updateReply };

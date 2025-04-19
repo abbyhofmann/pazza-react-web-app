@@ -103,10 +103,63 @@ const markDiscussionUnresolved = async (
   return res.data;
 };
 
+/**
+ * Deletes a followup discussion.
+ * @param fudId The id of the followup discussion to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteFollowupDiscussion = async (fudId: string): Promise<boolean> => {
+  const res = await api.delete(`${FOLLOWUP_DISCUSSION_API_URL}/${fudId}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting followup discussion");
+  }
+  return res.data;
+};
+
+/**
+ * Updates a followup discussion upon a user editing its content.
+ *
+ * @param fudId The id of the fud being updated.
+ * @param newContent The updated content of the fud.
+ * @returns The updated fud object.
+ */
+const updateFud = async (
+  fudId: string,
+  newContent: string
+): Promise<FollowupDiscussion> => {
+  const data = { fudId, newContent };
+  const res = await api.put(`${FOLLOWUP_DISCUSSION_API_URL}/updateFud`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating fud");
+  }
+  return res.data;
+};
+
+/**
+ * Removes a reply from a followup discussion's array of reply ids.
+ * @param fudId The id of the followup discussion from which to remove the reply.
+ * @param replyId The id of the reoly to remove.
+ * @returns The updated followup discussion object with the reply id removed from the array.
+ */
+const removeReplyFromFud = async (fudId: string, replyId: string): Promise<FollowupDiscussion> => {
+  const data = { fudId, replyId }; 
+  const res = await api.put(`${FOLLOWUP_DISCUSSION_API_URL}/removeReply`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing reply from fud");
+  }
+  return res.data;
+}
+
 export {
   getFollowupDiscussionById,
   createDiscussion,
   addReplyToDiscussion,
   markDiscussionResolved,
   markDiscussionUnresolved,
+  deleteFollowupDiscussion,
+  updateFud,
+  removeReplyFromFud
 };
