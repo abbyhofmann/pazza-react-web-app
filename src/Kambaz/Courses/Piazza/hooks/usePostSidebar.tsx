@@ -11,7 +11,7 @@ const usePostSidebar = () => {
   const navigate = useNavigate();
   const { cid } = useParams();
 
-  const { posts, fetchPosts } = usePostSidebarContext();
+  const { posts, fetchPosts, setPosts } = usePostSidebarContext();
 
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
@@ -19,14 +19,9 @@ const usePostSidebar = () => {
     navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
   }
 
-  // const [posts, setPosts] = useState<Post[]>([]);
-
-  // fetch posts  
-  
-
   useEffect(() => {
-    // eslint-disable-next-line no-console
     fetchPosts().catch(e => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -200,6 +195,7 @@ const usePostSidebar = () => {
     isUnanswered,
     navButton,
     posts,
+    setPosts,
   };
 };
 
