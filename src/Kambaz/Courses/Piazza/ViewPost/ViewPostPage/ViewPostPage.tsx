@@ -30,7 +30,7 @@ const ViewPostPage = () => {
     <div className="view-post-content">
 
       {/* POST COMPONENT */}
-      <PostBox post={post} />
+      <PostBox post={post} setPost={setPost} />
 
       {/* TODO - add logic for only creating a student response if the user is a student */}
       {/* only posts of type question should have the student and instructor response components */}
