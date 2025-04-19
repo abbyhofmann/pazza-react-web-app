@@ -1,7 +1,7 @@
 import { Post } from "../../../types";
 import "./ViewPost.css";
 import ActionsDropdown from "./ActionsDropdown";
-import WipFollowupDiscussion from "./FollowupDiscussions/WipFollowupDiscussion";
+import EditingResponse from "./FollowupDiscussions/EditingResponse";
 import usePostBox from "../hooks/usePostBox";
 
 interface PostBoxProps {
@@ -57,7 +57,7 @@ export default function PostBox(props: PostBoxProps) {
                             {/* post content */}
                             <div>
                                 {isEditing ? (
-                                    <WipFollowupDiscussion initialFud={post ? post.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                                    <EditingResponse initialFud={post ? post.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
                                 ) : (
                                     <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
 
