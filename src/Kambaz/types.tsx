@@ -72,3 +72,9 @@ export interface Reply {
     datePosted: string;
     content: string;
 }
+
+export interface Enrollment {
+    _id?: string;
+    user: string;
+    course: string;
+}
