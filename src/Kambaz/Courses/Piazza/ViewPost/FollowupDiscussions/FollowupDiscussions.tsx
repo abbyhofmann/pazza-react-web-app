@@ -42,7 +42,7 @@ export default function FollowupDiscussions(props: FollowupDiscussionsProps) {
       {/* existing convo goes here */}
       {convoExists && (
         <div className="followup_content_wrapper col mx-3">
-          {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId} />))}
+          {fudIds.map((fudId) => (<FollowupDiscussion fudId={fudId} setPost={setPost} />))}
         </div>
       )}
 

@@ -7,17 +7,20 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { folders } from "../../Database";
 import "./../../styles.css";
+import { createPost } from "./services/postService";
+import { Post } from "../../types";
+import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
-   const [postSumary, setPostSummary] = useState("");
+   const [postSummary, setPostSummary] = useState("");
 
    const navigate = useNavigate();
    const { cid } = useParams();
-
+   const { fetchPosts } = usePostSidebarContext();
 
    const DeleteButton = () => {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
@@ -41,10 +44,8 @@ export default function NewPostPage() {
       setEditorValue(value);
    };
 
-
    const handleFolderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = event.target;
-
 
       if (checked) {
          setSelectedFolders((prev) => [...prev, value]);
@@ -56,7 +57,7 @@ export default function NewPostPage() {
 
    const postButton = async () => {
       if (!selectedOption) {
-         alert("Please choose a post yype: Question/Note");
+         alert("Please choose a post type: Question/Note");
          return;
       }
       if (!selectedPostTo) {
@@ -67,7 +68,7 @@ export default function NewPostPage() {
          alert("Please choose a folder(s)");
          return;
       }
-      if (!postSumary) {
+      if (!postSummary) {
          alert("Please put a summary for your post");
          return;
       }
@@ -76,41 +77,35 @@ export default function NewPostPage() {
          return;
       }
 
-      const newPost = {
-         _id: `P${Date.now()}`,
-         folderId: selectedFolders.join(','),
-         authorId: 'user123',
-         datePosted: new Date().toISOString(),
-         type: 2,
-         instructor: 1,
-         title: postSumary,
-         content: editorValue,
-         followUpQuestions: '',
-         studentAnswer: '',
-         instructorAnswer: '',
-         viewers: '',
-         courseId: cid,
-      };
+      if (cid) {
+         const newPost: Post = {
+            folders: selectedFolders,
+            authorId: 'user123', // TODO - update to be logged in user
+            datePosted: new Date().toISOString(),
+            type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
+            instructor: false, // TODO - need to determine if author is an instructor (i.e. logged in user is instructor)
+            title: postSummary,
+            content: editorValue,
+            followupDiscussions: [],
+            studentAnswer: null,
+            instructorAnswer: null,
+            viewers: [],
+            courseId: cid,
+         };
 
-      try {
+         try {
+            const newPostFromDb = await createPost(newPost);
 
-         const response = await fetch("http://localhost:3000/api/post", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newPost),
-         });
-
-         if (response.ok) {
-            console.log("New Post Added");
-            navigate(`/Kambaz/Courses/${cid}/Piazza`);
+            if (newPostFromDb && newPostFromDb._id) {
+               navigate(`/Kambaz/Courses/${cid}/Piazza`);
+               await fetchPosts();
+            }
+            else {
+               console.error("Failed to Post");
+            }
+         } catch (error) {
+            console.error("Error creating post: ", error);
          }
-         else {
-            console.error("Failed to Post");
-         }
-      } catch (error) {
-         console.error("Server Error Katie:", error);
       }
    };
 
@@ -121,7 +116,7 @@ export default function NewPostPage() {
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px"}}>
+                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px" }}>
                   Post Type*
                   <div id="">
                      <div className="">
@@ -283,7 +278,7 @@ export default function NewPostPage() {
                               <Form.Control id="wd-name" type="text"
                                  placeholder="Enter a one line summary here, 100 characters or less"
                                  style={{ fontSize: "13px" }}
-                                 value={postSumary}
+                                 value={postSummary}
                                  onChange={handleSummaryChange}
                               />
                            </Col>
@@ -316,8 +311,6 @@ export default function NewPostPage() {
 
                         <span className="wd-rotated-asterick">*</span>Required fields
 
-
-
                      </div>
 
                      <div className="d-flex">
@@ -343,9 +336,7 @@ export default function NewPostPage() {
                </div>
             </div>
          </div>
-         {/* </div> */}
       </div>
-
 
    );
 }

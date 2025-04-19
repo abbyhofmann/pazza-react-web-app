@@ -52,4 +52,18 @@ const createAnswer = async (newAnswer: Answer): Promise<Answer> => {
   return res.data;
 };
 
-export { getAnswerById, updateAnswer, createAnswer };
+/**
+ * Deletes an answer.
+ * @param aid The id of the answer to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteAnswer = async (aid: string): Promise<boolean> => {
+  const res = await api.delete(`${ANSWER_API_URL}/${aid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting answer");
+  }
+  return res.data;
+};
+
+export { getAnswerById, updateAnswer, createAnswer, deleteAnswer };

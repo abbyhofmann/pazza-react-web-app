@@ -19,11 +19,6 @@ const usePostSidebar = () => {
     navigate(`/Kambaz/Courses/${cid}/Piazza/NewPostPage`);
   }
 
-  // const [posts, setPosts] = useState<Post[]>([]);
-
-  // fetch posts  
-  
-
   useEffect(() => {
     // eslint-disable-next-line no-console
     fetchPosts().catch(e => console.log(e));
