@@ -94,6 +94,26 @@ app.get('/api/post/:pid', async (req, res) => {
     }
 });
 
+// get all posts in a course's folder
+app.get('/api/post/posts/folder', async (req, res) => {
+    try {
+        const { courseId, folderName } = req.query;
+        const allPosts = await posts.find({}).toArray();
+        const filteredPosts = [];
+        for (const post of allPosts) {
+            if (post.courseId === courseId) {
+                if (post.folders && post.folders.includes(folderName)) {
+                    filteredPosts.push(post);
+                }
+            }
+        }
+
+        res.json(filteredPosts);
+    } catch (err) {
+        res.status(500).send(`Error when fetching posts of a folder: ${err}`);
+    }
+});
+
 // get an individual answer by its answer ID
 app.get('/api/answer/:aid', async (req, res) => {
     try {
@@ -607,22 +627,11 @@ app.get('/api/folders/names', async (req, res) => {
     }
 });
 
-// get all the posts in a course's folder
-app.get('/api/folders/posts', async (req, res) => {
-    try {
-        const { folder, cid } = req.body;
-        const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
-        const posts = fetchedFolders.map(folder => folder.posts);
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).send(`Error when fetching folder posts: ${err}`);
-    }
-});
 
 // add folder in a specific course
 app.post('/api/folders', async (req, res) => {
     try {
-        const { folder } = req.body;
+        const { folder } = req.body; // TODO: change to params
         const resp = await folders.insertOne(folder);
         res.status(200).send(resp);
     } catch (err) {
