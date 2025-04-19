@@ -81,7 +81,7 @@ export default function NewPostPage() {
          const newPost: Post = {
             folders: selectedFolders,
             authorId: 'user123', // TODO - update to be logged in user
-            datePosted: new Date().toISOString(),
+            datePosted: new Date().toDateString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
             instructor: false, // TODO - need to determine if author is an instructor (i.e. logged in user is instructor)
             title: postSummary,

@@ -140,6 +140,26 @@ const deletePost = async (pid: string): Promise<boolean> => {
   return res.data;
 };
 
+/**
+ * Updates a post upon a user editing its content.
+ *
+ * @param pid The id of the post being updated.
+ * @param newContent The updated content of the post.
+ * @returns The updated post object.
+ */
+const updatePost = async (
+  pid: string,
+  newContent: string
+): Promise<Post> => {
+  const data = { pid, newContent };
+  const res = await api.put(`${POST_API_URL}/updatePost`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating post");
+  }
+  return res.data;
+};
+
 export {
   getPostById,
   getPosts,
@@ -148,5 +168,6 @@ export {
   removeAnswerFromPost,
   removeFudFromPost,
   createPost,
-  deletePost
+  deletePost,
+  updatePost
 };

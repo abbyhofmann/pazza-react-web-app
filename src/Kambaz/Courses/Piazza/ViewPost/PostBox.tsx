@@ -1,14 +1,8 @@
-import { useEffect, useState } from "react";
-import { Post, User } from "../../../types";
+import { Post } from "../../../types";
 import "./ViewPost.css";
-import { getUser } from "../services/userService";
-import { useNavigate, useParams } from "react-router";
-import { deleteAnswer } from "../services/answerService";
-import { deleteFollowupDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
-import { deleteReply } from "../services/replyService";
 import ActionsDropdown from "./ActionsDropdown";
-import { deletePost } from "../services/postService";
-import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
+import WipFollowupDiscussion from "./FollowupDiscussions/WipFollowupDiscussion";
+import usePostBox from "../hooks/usePostBox";
 
 interface PostBoxProps {
     post: Post;
@@ -20,108 +14,15 @@ export default function PostBox(props: PostBoxProps) {
 
     const { post, setPost } = props;
 
-    const { cid } = useParams();
-
-    const navigate = useNavigate();
-
-    const { fetchPosts } = usePostSidebarContext();
-
-    // author of the post 
-    const [author, setAuthor] = useState<User | null>(null);
-
-    // keep track of if the user is editing the answer 
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-
-    // keep track of if actions dropdown is showing 
-    const [showDropdown, setShowDropdown] = useState<boolean>(false);
-
-    // handle deleting answer
-    const handleDelete = async () => {
-        try {
-            if (post && post._id) {
-                // delete from db
-                const deletedRes = await deletePost(post._id);
-                if (deletedRes) {
-
-                    // delete student answer if exists
-                    if (post.studentAnswer) {
-                        const deletedStudentAnswerRes = await deleteAnswer(post.studentAnswer);
-                        if (!deletedStudentAnswerRes) {
-                            throw new Error(`Error deleting student answer`);
-                        }
-                    }
-
-                    // delete instructor answer if exists
-                    if (post.instructorAnswer) {
-                        const deletedInstructorAnswerRes = await deleteAnswer(post.instructorAnswer);
-                        if (!deletedInstructorAnswerRes) {
-                            throw new Error(`Error deleting instructor answer`);
-                        }
-                    }
-
-                    // delete follow up discussions and their associated replies 
-                    await Promise.all(
-                        post.followupDiscussions.map(async fudId => {
-                            const fetchedFud = await getFollowupDiscussionById(fudId);
-                            if (fetchedFud._id !== undefined) {
-                                // delete the fud's replies
-                                await Promise.all(
-                                    fetchedFud.replies.map(async rid => {
-                                        const deletedReplyRes = await deleteReply(rid);
-                                        if (!deletedReplyRes) {
-                                            throw new Error(`Error deleting reply ${rid}`);
-                                        }
-                                    })
-                                );
-
-                                // delete the fud itself 
-                                const deletedFudRes = await deleteFollowupDiscussion(fudId);
-                                if (!deletedFudRes) {
-                                    throw new Error(`Error deleting fud ${fudId}`);
-                                }
-                            }
-                            else {
-                                throw new Error(`Error fetching fud ${fudId}`);
-                            }
-                        }));
-
-                    // set post to null 
-                    setPost(null);
-                    // update sidebar 
-                    await fetchPosts();
-                    // navigate to home page 
-                    navigate(`/Kambaz/Courses/${cid}/Piazza`);
-                }
-                else {
-                    throw new Error("Post deletion unsuccessful");
-                }
-            }
-            else {
-                throw new Error("Cannot delete a post that doesn't exist");
-            }
-        } catch (error) {
-            console.error("Error deleting post:", error);
-        }
-    };
-
-    useEffect(() => {
-        /**
-         * Function to fetch the post-related data.
-         */
-        const fetchData = async () => {
-            try {
-                const fetchedAuthor = await getUser(post.authorId);
-                if (fetchedAuthor._id !== undefined) {
-                    setAuthor(fetchedAuthor);
-                }
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error('Error fetching answer:', error);
-            }
-        };
-        // eslint-disable-next-line no-console
-        fetchData().catch(e => console.log(e));
-    }, [post]);
+    const {
+        showDropdown,
+        setShowDropdown,
+        isEditing,
+        setIsEditing,
+        handleOnSave,
+        handleDelete,
+        author
+    } = usePostBox(post, setPost);
 
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
@@ -154,7 +55,14 @@ export default function PostBox(props: PostBoxProps) {
                             {/* post title */}
                             <h1 id="postViewSummaryId" className="title">{post.title}</h1>
                             {/* post content */}
-                            <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
+                            <div>
+                                {isEditing ? (
+                                    <WipFollowupDiscussion initialFud={post ? post.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                                ) : (
+                                    <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
+
+                                )}
+                            </div>
                         </div>
                         <div id="folder_select" className="folder_selector pb-3" role="list">
                             <span role="listitem">

@@ -519,6 +519,30 @@ app.put('/api/post/removeFud', async (req, res) => {
     }
 });
 
+// update a post's content 
+app.put('/api/post/updatePost', async (req, res) => {
+    try {
+        // post id is a request parameter 
+        const { pid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when updating post: ${err}`);
+    }
+});
+
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
     try {
