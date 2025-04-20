@@ -409,7 +409,7 @@ app.get("/api/users/courses", async (req, res) => {
 
 // get a specific user
 app.get("/api/users/:userId", async (req, res) => {
-    const user = await dao.findUserById(req.params.userId);
+    const user = await users.findOne({ _id: req.params.userId });
     res.json(user);
 });
 
