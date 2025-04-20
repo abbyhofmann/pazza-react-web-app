@@ -33,6 +33,20 @@ const getPosts = async (): Promise<Post[]> => {
 };
 
 /**
+ * Gets all the posts in a specific course.
+ *
+ * @param 
+ * @returns The posts in the course.
+ */
+const getPostsInCourse = async (courseId: string): Promise<Post[]> => {
+  const res = await api.get(`${POST_API_URL}/posts/course/${courseId}`);
+  if (res.status !== 200) {
+    throw new Error(`Error while fetching posts in a course: ${res.statusText}`);
+  }
+  return res.data;
+};
+
+/**
  * Adds a followup discussion id to a post's list of followup discussion ids.
  *
  * @param pid The post to which the followup discussion id is being added.
@@ -127,11 +141,45 @@ const createPost = async (newPost: Post): Promise<Post> => {
 };
 
 /**
+ * Deletes a post.
+ * @param pid The id of the post to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deletePost = async (pid: string): Promise<boolean> => {
+  const res = await api.delete(`${POST_API_URL}/${pid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting post");
+  }
+  return res.data;
+};
+
+/**
+ * Updates a post upon a user editing its content.
+ *
+ * @param pid The id of the post being updated.
+ * @param newContent The updated content of the post.
+ * @returns The updated post object.
+ */
+const updatePost = async (
+  pid: string,
+  newContent: string
+): Promise<Post> => {
+  const data = { pid, newContent };
+  const res = await api.put(`${POST_API_URL}/updatePost`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating post");
+  }
+  return res.data;
+};
+
+/**
  * Gets the number of unanswered posts for a given course.
  * @param cid The course id of the course for which to get the number of unread posts.
  * @returns Number of unread posts.
  */
-const getUnansweredPostsCount = async (cid: string): Promise<Number> => {
+const getUnansweredPostsCount = async (cid: string): Promise<number> => {
   const res = await api.get(`${POST_API_URL}/unanswered/${cid}`);
 
   if (res.status !== 200) {
@@ -148,7 +196,7 @@ const getUnansweredPostsCount = async (cid: string): Promise<Number> => {
  * @param cid The course id of the course for which to get the number of posts.
  * @returns Total number of posts.
  */
-const getPostsCount = async (cid: string): Promise<Number> => {
+const getPostsCount = async (cid: string): Promise<number> => {
   const res = await api.get(`${POST_API_URL}/countPosts/${cid}`);
 
   if (res.status !== 200) {
@@ -166,7 +214,7 @@ const getPostsCount = async (cid: string): Promise<Number> => {
  * @param uid The user id of the user.
  * @returns Total number of unread posts.
  */
-const getUnreadPostsCount = async (cid: string, uid: string): Promise<Number> => {
+const getUnreadPostsCount = async (cid: string, uid: string): Promise<number> => {
   const res = await api.get(`${POST_API_URL}/unreadCount/${cid}/${uid}`);
 
   if (res.status !== 200) {
@@ -186,6 +234,9 @@ export {
   removeAnswerFromPost,
   removeFudFromPost,
   createPost,
+  deletePost,
+  updatePost,
+  getPostsInCourse,
   getUnreadPostsCount,
   getPostsCount,
   getUnansweredPostsCount

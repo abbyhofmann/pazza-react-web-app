@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { Post } from "../../types";
-import { getPosts } from "./services/postService";
+import { getPostsInCourse } from "./services/postService";
+import { useParams } from "react-router";
 
 // Context items that need to be used across the application. 
 type PostSidebarContextType = {
@@ -14,11 +15,12 @@ const PostSidebarContext = createContext<PostSidebarContextType | null>(null);
 
 export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const { cid } = useParams();
 
   // function for fetching the posts 
   const fetchPosts = async () => {
     try {
-      const res = await getPosts();
+      const res = await getPostsInCourse(cid ?? "");
       setPosts(res);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -27,7 +29,8 @@ export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cid]);
 
   return (
     <PostSidebarContext.Provider value={{ posts, fetchPosts }}>

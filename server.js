@@ -71,7 +71,26 @@ app.post('/api/post/createPost', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when creating post: ${err}`);
     }
-})
+});
+
+// delete a post 
+app.delete('/api/post/:pid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { pid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const postDeletion = (await posts.deleteOne({ _id: new ObjectId(pid) }));
+        res.json(postDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting post: ${err}`);
+    }
+});
 
 // get all posts in database
 app.get('/api/post/posts', async (req, res) => {
@@ -80,6 +99,17 @@ app.get('/api/post/posts', async (req, res) => {
         res.status(200).send(allPosts);
     } catch (err) {
         res.status(500).send(`Error fetching posts: ${err}`);
+    }
+});
+
+// get all posts in a specific course
+app.get('/api/post/posts/course/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const allPostsInCourse = await posts.find({ courseId: cid }).toArray();
+        res.status(200).send(allPostsInCourse);
+    } catch (err) {
+        res.status(500).send(`Error fetching posts in course ${cid}: ${err}`);
     }
 });
 
@@ -106,18 +136,18 @@ app.get('/api/post/:pid', async (req, res) => {
 // get number of unread posts for a user in a course
 app.get('/api/post/unreadCount/:cid/:uid', async (req, res) => {
     try {
-      const { cid, uid } = req.params;
-  
-      const count = await posts.countDocuments({
-        courseId: cid,
-        viewers: { $ne: uid } // uid is not in viewers array
-      });
-  
-      res.send(count.toString());
+        const { cid, uid } = req.params;
+
+        const count = await posts.countDocuments({
+            courseId: cid,
+            viewers: { $ne: uid } // uid is not in viewers array
+        });
+
+        res.send(count.toString());
     } catch (err) {
-      res.status(500).send(`Error getting unread post count: ${err}`);
+        res.status(500).send(`Error getting unread post count: ${err}`);
     }
-  });
+});
 
 // get an individual answer by its answer ID
 app.get('/api/answer/:aid', async (req, res) => {
@@ -311,9 +341,21 @@ app.get('/api/user/:uid', async (req, res) => {
         const fetchedUser = (await users.findOne({ _id: uid }));
         res.json(fetchedUser);
     } catch (err) {
-        res.status(500).send(`Error when fetching ansuserwer: ${err}`);
+        res.status(500).send(`Error when fetching user: ${err}`);
     }
 });
+
+// get all the instructors and TAs of a course 
+app.get('/api/user/getInstructors', async (req, res) => {
+    try {
+        const { cid } = req.body;
+
+        const fetchedInstructors = (await users.find({}))
+
+    } catch (err) {
+        res.status(500).send(`Error when fetching instructors: ${err}`);
+    }
+})
 
 // get an individual followup discussion by its ID
 app.get('/api/followupDiscussion/:fudid', async (req, res) => {
@@ -642,6 +684,30 @@ app.get('/api/post/countPosts/:cid', async (req, res) => {
     }
 });
 
+// update a post's content 
+app.put('/api/post/updatePost', async (req, res) => {
+    try {
+        // post id is a request parameter 
+        const { pid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when updating post: ${err}`);
+    }
+});
+
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
     try {
@@ -730,11 +796,11 @@ app.put('/api/reply/updateReply', async (req, res) => {
 });
 
 // get all the folders in a course
-app.get('/api/folders', async (req, res) => {
+app.get('/api/folders/:courseId', async (req, res) => {
     try {
         // course id is in the request body 
-        const { cid } = req.body;
-        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const { courseId } = req.params;
+        const fetchedFolders = await folders.find({ courseId }).toArray();
         res.status(200).json(fetchedFolders);
     } catch (err) {
         res.status(500).send(`Error when fetching folders: ${err}`);
@@ -742,10 +808,10 @@ app.get('/api/folders', async (req, res) => {
 });
 
 // get the names of all the folders in a course
-app.get('/api/folders/names', async (req, res) => {
+app.get('/api/folders/names/:courseId', async (req, res) => {
     try {
-        const { cid } = req.body;
-        const fetchedFolders = await folders.find({ course_id: cid }).toArray();
+        const { courseId } = req.params;
+        const fetchedFolders = await folders.find({ courseId }).toArray();
         const names = fetchedFolders.map(folder => folder.name);
         res.status(200).json(names);
     } catch (err) {
@@ -756,7 +822,7 @@ app.get('/api/folders/names', async (req, res) => {
 // get all the posts in a course's folder
 app.get('/api/folders/posts', async (req, res) => {
     try {
-        const { folder, cid } = req.body;
+        const { folder, cid } = req.params;
         const fetchedFolders = await folders.find({ course_id: cid, name: folder }).toArray();
         const posts = fetchedFolders.map(folder => folder.posts);
         res.status(200).json(posts);
@@ -845,6 +911,18 @@ app.get('/api/enrollments/countStudentEnrollments/:cid', async (req, res) => {
         res.json((studentCount[0]?.studentCount || 0).toString());
     } catch (err) {
         res.status(500).json({ error: 'Error fetching student enrollment count' });
+    }
+});
+
+// get enrollments for a course
+app.get('/api/enrollments/:cid', async (req, res) => {
+    try {
+        // course id is a request param 
+        const { cid } = req.params;
+        const fetchedEnrollments = await enrollments.find({ course: cid }).toArray();
+        res.status(200).json(fetchedEnrollments);
+    } catch (err) {
+        res.status(500).send(`Error when fetching enrollments: ${err}`);
     }
 });
 

@@ -1,7 +1,7 @@
 [
   {
     "_id": { "$oid": "67dc37f92d09afff6e1e079d" },
-    "folderId": "",
+    "folders": ["hw1"],
     "authorId": "234",
     "datePosted": "2025-02-17T04:40:00.000Z",
     "type": 0,
@@ -16,7 +16,7 @@
   },
   {
     "_id": { "$oid": "67dc37fe978d92187857ac31" },
-    "folderId": "",
+    "folders": ["hw2"],
     "authorId": "234",
     "datePosted": "2025-02-16T01:00:00.000Z",
     "type": 0,
@@ -31,7 +31,7 @@
   },
   {
     "_id": { "$oid": "67dc3810665a2ee864b31230" },
-    "folderId": "",
+    "folders": ["project"],
     "authorId": "456",
     "datePosted": "2025-02-16T15:45:00.000Z",
     "type": 0,
@@ -46,7 +46,7 @@
   },
   {
     "_id": { "$oid": "67dc3814408e99abeff9cac5" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-02-15T09:30:00.000Z",
     "type": 1,
@@ -61,7 +61,7 @@
   },
   {
     "_id": { "$oid": "67dc38180192213241aac0a2" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-02-15T12:17:00.000Z",
     "type": 1,
@@ -76,7 +76,7 @@
   },
   {
     "_id": { "$oid": "67dc381cb5ec32fab4b9e2d0" },
-    "folderId": "",
+    "folders": [],
     "authorId": "456",
     "datePosted": "2025-03-30T15:45:00.000Z",
     "type": 0,
@@ -91,7 +91,7 @@
   },
   {
     "_id": { "$oid": "67dc3821e8352fc8ed1f5fd0" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-02-14T15:45:00.000Z",
     "type": 1,
@@ -106,7 +106,7 @@
   },
   {
     "_id": { "$oid": "67dc3825820bdb30b5eca7cd" },
-    "folderId": "",
+    "folders": [],
     "authorId": "678",
     "datePosted": "2025-02-13T15:45:00.000Z",
     "type": 0,
@@ -121,7 +121,7 @@
   },
   {
     "_id": { "$oid": "67dc3829a6e3a62dbe4a6a6d" },
-    "folderId": "",
+    "folders": [],
     "authorId": "678",
     "datePosted": "2025-02-12T15:45:00.000Z",
     "type": 0,
@@ -136,7 +136,7 @@
   },
   {
     "_id": { "$oid": "67dc382d95812a1e9275b6ad" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-04-06T15:45:00.000Z",
     "type": 1,
@@ -151,7 +151,7 @@
   },
   {
     "_id": { "$oid": "67dc3832b873951d7b67322e" },
-    "folderId": "",
+    "folders": [],
     "authorId": "234",
     "datePosted": "2025-03-15T15:45:00.000Z",
     "type": 0,
@@ -166,7 +166,7 @@
   },
   {
     "_id": { "$oid": "67dc3836baf851b1da3ef530" },
-    "folderId": "",
+    "folders": [],
     "authorId": "234",
     "datePosted": "2025-02-10T15:45:00.000Z",
     "type": 0,
@@ -181,7 +181,7 @@
   },
   {
     "_id": { "$oid": "67dc383aba95db4fd879303f" },
-    "folderId": "",
+    "folders": [],
     "authorId": "678",
     "datePosted": "2025-04-02T15:45:00.000Z",
     "type": 1,
@@ -196,7 +196,7 @@
   },
   {
     "_id": { "$oid": "67dc383edc662b406ca2e2b1" },
-    "folderId": "",
+    "folders": [],
     "authorId": "234",
     "datePosted": "2025-02-01T15:45:00.000Z",
     "type": 0,
@@ -211,7 +211,7 @@
   },
   {
     "_id": { "$oid": "67dc3843a719f021b6ab7e54" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-01-27T15:45:00.000Z",
     "type": 0,
@@ -226,7 +226,7 @@
   },
   {
     "_id": { "$oid": "67dc38472cd42fcbfb00ed21" },
-    "folderId": "",
+    "folders": [],
     "authorId": "678",
     "datePosted": "2025-04-06T15:45:00.000Z",
     "type": 0,
@@ -241,7 +241,7 @@
   },
   {
     "_id": { "$oid": "67dc38533fa520bad1dbfe3d" },
-    "folderId": "",
+    "folders": [],
     "authorId": "456",
     "datePosted": "2025-02-18T15:45:00.000Z",
     "type": 0,
@@ -256,7 +256,7 @@
   },
   {
     "_id": { "$oid": "67dc38571484841a09f89fc5" },
-    "folderId": "",
+    "folders": [],
     "authorId": "123",
     "datePosted": "2025-02-17T15:45:00.000Z",
     "type": 1,

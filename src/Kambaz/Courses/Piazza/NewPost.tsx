@@ -1,38 +1,65 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import { folders } from "../../Database";
 import "./../../styles.css";
+import { getFolders } from "./services/folderService";
+import { Folder } from "../../types";
 import { createPost } from "./services/postService";
-import { Post } from "../../types";
+import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
+import InstructorDropdown from "./InstructorsDropdown";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
-   const [postSummary, setPostSummary] = useState("");
+   const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
+
+   // keep track of which instructors are selected to see a new post
+   const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
+
+   // if the "instructors" button is selected in the post to of a new post, show the dropdown selection component
+   const [instructorButtonSelected, setInstructorButtonSelected] = useState<boolean>(false);
 
    const navigate = useNavigate();
    const { cid } = useParams();
+
+   useEffect(() => {
+      const fetchFoldersInCourse = async () => {
+         setCourseFolders(await getFolders(cid ?? ""));
+      };
+      fetchFoldersInCourse();
+   }, [cid]);
+
+   const [postSummary, setPostSummary] = useState("");
+
    const { fetchPosts } = usePostSidebarContext();
 
    const DeleteButton = () => {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
    }
 
-
    const handleChangePostType = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedOption(event.target.value);
    };
 
    const handleChangePostTo = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSelectedPostTo(event.target.value);
+      // if instructors option is selected, show the dropdown for selecting the instructors 
+      if (event.target.value === 'instructor') {
+         setSelectedPostTo(event.target.value);
+         setInstructorButtonSelected(true);
+      }
+      else {
+         // if everyone is selected, we don't want selected instructors to only view post
+         setInstructorButtonSelected(false);
+         setUsersCanViewPost([]);
+         setSelectedPostTo(event.target.value);
+      }
    };
 
 
@@ -80,10 +107,10 @@ export default function NewPostPage() {
       if (cid) {
          const newPost: Post = {
             folders: selectedFolders,
-            authorId: 'user123', // TODO - update to be logged in user
-            datePosted: new Date().toISOString(),
+            authorId: 'user123', // TODO: update to be logged in user
+            datePosted: new Date().toDateString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
-            instructor: false, // TODO - need to determine if author is an instructor (i.e. logged in user is instructor)
+            instructor: false, // TODO: need to determine if author is an instructor (i.e. logged in user is instructor)
             title: postSummary,
             content: editorValue,
             followupDiscussions: [],
@@ -190,8 +217,7 @@ export default function NewPostPage() {
                         <div className="mt-1 d-flex ms-3">
                            <Form>
                               <Form.Group className="mb-3">
-
-                                 <div className="d-flex">
+                                 <div className="d-flex align-items-center">
                                     <Form.Check
                                        type="radio"
                                        label={
@@ -227,12 +253,11 @@ export default function NewPostPage() {
                                        onChange={handleChangePostTo}
                                        className="me-3"
                                     />
+                                    {instructorButtonSelected && <InstructorDropdown selectedInstructors={usersCanViewPost} setSelectedInstructors={setUsersCanViewPost} />}
                                  </div>
                               </Form.Group>
                            </Form>
                         </div>
-
-
                      </div>
 
 
@@ -247,10 +272,10 @@ export default function NewPostPage() {
                            <Form>
                               <FormGroup className="mb-3">
                                  <div className="wd-checkbox-custom">
-                                    {folders.map((folder) => (
+                                    {courseFolders.map((folder) => (
                                        <FormCheck
-                                          key={folder.id}
-                                          id={folder.id}
+                                          key={folder._id}
+                                          id={folder._id}
                                           type="checkbox"
                                           label={folder.name}
                                           value={folder.name}
