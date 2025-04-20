@@ -126,6 +126,40 @@ const createPost = async (newPost: Post): Promise<Post> => {
   return res.data;
 };
 
+/**
+ * Deletes a post.
+ * @param pid The id of the post to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deletePost = async (pid: string): Promise<boolean> => {
+  const res = await api.delete(`${POST_API_URL}/${pid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting post");
+  }
+  return res.data;
+};
+
+/**
+ * Updates a post upon a user editing its content.
+ *
+ * @param pid The id of the post being updated.
+ * @param newContent The updated content of the post.
+ * @returns The updated post object.
+ */
+const updatePost = async (
+  pid: string,
+  newContent: string
+): Promise<Post> => {
+  const data = { pid, newContent };
+  const res = await api.put(`${POST_API_URL}/updatePost`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating post");
+  }
+  return res.data;
+};
+
 export {
   getPostById,
   getPosts,
@@ -134,4 +168,6 @@ export {
   removeAnswerFromPost,
   removeFudFromPost,
   createPost,
+  deletePost,
+  updatePost
 };
