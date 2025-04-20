@@ -98,11 +98,6 @@ app.post('/api/post/createPost', async (req, res) => {
     }
 });
 
-app.get("/api/debug-session", (req, res) => {
-    console.log("session:", req.session);
-    res.send(req.session);
-});
-
 // delete a post 
 app.delete('/api/post/:pid', async (req, res) => {
     try {
