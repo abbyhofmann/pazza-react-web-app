@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPostsCount, getUnansweredPostsCount, getUnreadPostsCount } from "./services/postService";
+import { getPostsCount, getUnansweredPostsCount } from "./services/postService";
 import { useParams } from "react-router";
 import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
@@ -15,6 +15,8 @@ export default function RightSidePage() {
   const [enrollmentsCount, setEnrollmentsCount] = useState<Number>(0);
   const [unreadPostCount, setUnreadPostCount] = useState<Number>(0);
 
+  // todo - remove log after implementation.. this is just to pass the build
+  console.log(setUnreadPostCount);
   useEffect(() => {
     const fetchData = async () => {
       try {
