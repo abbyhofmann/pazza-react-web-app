@@ -3,7 +3,6 @@ import express from 'express';
 import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
-import path from 'path';
 import { ObjectId } from 'mongodb';
 
 dotenv.config();
@@ -34,6 +33,7 @@ const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
 const folders = db.collection("folders");
+const enrollments = db.collection("enrollments");
 
 // create a new post 
 app.post('/api/post/createPost', async (req, res) => {
@@ -187,6 +187,102 @@ app.post('/api/answer/createAnswer', async (req, res) => {
         res.json(createdAnswer);
     } catch (err) {
         res.status(500).send(`Error when creating answer: ${err}`);
+    }
+});
+
+// get the number of instructor and student responses (i.e. answers)
+app.get('/api/answer/responseCounts/:cid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { cid } = req.params;
+
+        // const countsArray = await answers.aggregate([
+        //     {
+        //         // join answers with posts 
+        //         $lookup: {
+        //             from: 'posts',
+        //             localField: 'postId',
+        //             foreignField: '_id',
+        //             as: 'post'
+        //         }
+        //     },
+        //     {
+        //         // unwind the joined post array
+        //         $unwind: '$post'
+        //     },
+        //     {
+        //         // match only posts from the specific course
+        //         $match: {
+        //             'post.courseId': cid
+        //         }
+        //     },
+        //     {
+        //         // group by 'type' of answer: 0 = student, 1 = instructor
+        //         $group: {
+        //             _id: '$type',
+        //             count: { $sum: 1 }
+        //         }
+        //     }
+        // ]).toArray();
+        const countsArray = await answers.aggregate([
+            {
+                // convert postId string to ObjectId
+                $addFields: {
+                    postObjId: { $toObjectId: '$postId' }
+                }
+            },
+            {
+                // join answers with posts
+                $lookup: {
+                    from: 'posts',
+                    localField: 'postObjId',
+                    foreignField: '_id',
+                    as: 'post'
+                }
+            },
+            {
+                // unwind joined posts array
+                $unwind: '$post'
+            },
+            {
+                // match only posts from the specific course
+                $match: {
+                    'post.courseId': cid
+                }
+            },
+            {
+                // group by 'type' of answer: 0 = student, 1 = instructor
+                $group: {
+                    _id: '$type',
+                    count: { $sum: 1 }
+                }
+            }
+        ]).toArray();
+
+        /*
+        structure of response
+      [
+          { _id: 0, count: _ }, // student responses
+          { _id: 1, count: _ }  // instructor responses
+      ]
+      */
+
+        // convert countsArray into [studentCount, instructorCount] array
+        let studentCount = 0;
+        let instructorCount = 0;
+
+        for (const entry of countsArray) {
+            if (entry._id === 0) {
+                studentCount = entry.count;
+            } else if (entry._id === 1) {
+                instructorCount = entry.count;
+            }
+        }
+
+        res.json([studentCount, instructorCount]);
+
+    } catch (err) {
+        res.status(500).send(`Error when fetching answer counts: ${err}`);
     }
 });
 
@@ -500,6 +596,36 @@ app.put('/api/post/removeFud', async (req, res) => {
     }
 });
 
+// get the number of unanswered posts for a course
+app.get('/api/post/unanswered/:cid', async (req, res) => {
+    const { cid } = req.params;
+
+    try {
+        const count = await posts.countDocuments({
+            courseId: cid,
+            studentAnswer: null,
+            instructorAnswer: null
+        });
+
+        res.json(count);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching unanswered count' });
+    }
+});
+
+// get the total number of posts for a course
+app.get('/api/post/countPosts/:cid', async (req, res) => {
+    const { cid } = req.params;
+
+    try {
+        const count = await posts.countDocuments({});
+
+        res.json(count);
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching total count' });
+    }
+});
+
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
     try {
@@ -665,7 +791,46 @@ app.put('/api/folders', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when editing folder name: ${err}`);
     }
-})
+});
+
+// get student enrollment count for course 
+app.get('/api/enrollments/countStudentEnrollments/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+
+        const studentCount = await enrollments.aggregate([
+            {
+                // join with users collection
+                $lookup: {
+                    from: 'users',
+                    localField: 'user',     // field in enrollment
+                    foreignField: '_id',    // field in user
+                    as: 'userData'
+                }
+            },
+            {
+                // unwind joined userData array
+                $unwind: '$userData'
+            },
+            {
+                // filter by cid and role = STUDENT
+                $match: {
+                    course: cid,
+                    'userData.role': 'STUDENT'
+                }
+            },
+            {
+                // count results 
+                $count: 'studentCount'
+            }
+        ]).toArray();
+
+        // mongo join queries return results in this weird array so need to extract the number
+        res.json((studentCount[0]?.studentCount || 0).toString());
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching student enrollment count' });
+    }
+});
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log(`Server running on Port ${process.env.PORT || 3000}`);

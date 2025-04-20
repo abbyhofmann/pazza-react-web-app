@@ -126,6 +126,40 @@ const createPost = async (newPost: Post): Promise<Post> => {
   return res.data;
 };
 
+/**
+ * Gets the number of unread posts for a given course.
+ * @param cid The course id of the course for which to get the number of unread posts.
+ * @returns Number of unread posts.
+ */
+const getUnreadPostsCount = async (cid: string): Promise<Number> => {
+  const res = await api.get(`${POST_API_URL}/unanswered/${cid}`);
+
+  if (res.status !== 200) {
+    throw new Error(
+      `Error while getting number of unread posts for course ${cid}`
+    );
+  }
+
+  return res.data;
+};
+
+/**
+ * Gets the total number of posts for a given course.
+ * @param cid The course id of the course for which to get the number of posts.
+ * @returns Total number of posts.
+ */
+const getPostsCount = async (cid: string): Promise<Number> => {
+  const res = await api.get(`${POST_API_URL}/countPosts/${cid}`);
+
+  if (res.status !== 200) {
+    throw new Error(
+      `Error while getting total number of posts for course ${cid}`
+    );
+  }
+
+  return res.data;
+};
+
 export {
   getPostById,
   getPosts,
@@ -134,4 +168,6 @@ export {
   removeAnswerFromPost,
   removeFudFromPost,
   createPost,
+  getUnreadPostsCount,
+  getPostsCount,
 };

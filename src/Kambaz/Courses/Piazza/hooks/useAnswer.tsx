@@ -86,12 +86,10 @@ const useAnswer = (answerId: string, type: string, setPost: (post: any) => void)
                 }
 
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error('Error fetching answer:', error);
             }
         };
 
-        // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
     }, [answerId]);
 
