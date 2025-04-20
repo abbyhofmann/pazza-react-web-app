@@ -183,5 +183,6 @@ export {
   removeFudFromPost,
   createPost,
   deletePost,
-  updatePost
+  updatePost,
+  getPostsInCourse
 };
