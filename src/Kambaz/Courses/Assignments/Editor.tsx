@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 import { assignments } from "../../Database";
-import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import * as assignmentClient from "./client";
 import { Link, useParams } from "react-router";
