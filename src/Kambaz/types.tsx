@@ -1,6 +1,6 @@
 export interface Post {
     _id?: string; // MongoDB ObjectId stored as a string
-    folders: string[];
+    folders: string[]; // names of all the folders the post is in
     authorId: string;
     datePosted: string;
     type: number;

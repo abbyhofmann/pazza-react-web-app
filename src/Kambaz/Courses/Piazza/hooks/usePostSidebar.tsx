@@ -20,8 +20,8 @@ const usePostSidebar = () => {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     fetchPosts().catch(e => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -135,7 +135,7 @@ const usePostSidebar = () => {
   * @param posts The posts being grouped.
   * @returns A mapping of string date range to list of posts that fall in that date range.
   */
-  function groupPostsByWeek(datesToExclude: String[], posts: Post[]): Map<string, Post[]> {
+  function groupPostsByWeek(datesToExclude: string[], posts: Post[]): Map<string, Post[]> {
     // map to keep track of which week each post belongs in
     const groupedPosts: Map<string, Post[]> = new Map();
 

@@ -1,12 +1,13 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import { folders } from "../../Database";
 import "./../../styles.css";
+import { getFolders } from "./services/folderService";
+import { Folder } from "../../types";
 import { createPost } from "./services/postService";
 import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
@@ -17,7 +18,7 @@ export default function NewPostPage() {
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
-   const [postSummary, setPostSummary] = useState("");
+   const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
 
    // keep track of which instructors are selected to see a new post
    const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
@@ -27,6 +28,16 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
+
+   useEffect(() => {
+      const fetchFoldersInCourse = async () => {
+         setCourseFolders(await getFolders(cid ?? ""));
+      };
+      fetchFoldersInCourse();
+   }, [cid]);
+
+   const [postSummary, setPostSummary] = useState("");
+
    const { fetchPosts } = usePostSidebarContext();
 
    const DeleteButton = () => {
@@ -96,10 +107,10 @@ export default function NewPostPage() {
       if (cid) {
          const newPost: Post = {
             folders: selectedFolders,
-            authorId: 'user123', // TODO - update to be logged in user
+            authorId: 'user123', // TODO: update to be logged in user
             datePosted: new Date().toDateString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
-            instructor: false, // TODO - need to determine if author is an instructor (i.e. logged in user is instructor)
+            instructor: false, // TODO: need to determine if author is an instructor (i.e. logged in user is instructor)
             title: postSummary,
             content: editorValue,
             followupDiscussions: [],
@@ -261,10 +272,10 @@ export default function NewPostPage() {
                            <Form>
                               <FormGroup className="mb-3">
                                  <div className="wd-checkbox-custom">
-                                    {folders.map((folder) => (
+                                    {courseFolders.map((folder) => (
                                        <FormCheck
-                                          key={folder.id}
-                                          id={folder.id}
+                                          key={folder._id}
+                                          id={folder._id}
                                           type="checkbox"
                                           label={folder.name}
                                           value={folder.name}

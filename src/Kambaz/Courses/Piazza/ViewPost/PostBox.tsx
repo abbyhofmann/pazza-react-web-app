@@ -65,10 +65,13 @@ export default function PostBox(props: PostBoxProps) {
                             </div>
                         </div>
                         <div id="folder_select" className="folder_selector pb-3" role="list">
-                            <span role="listitem">
-                                {/* folder */}
-                                <button id="folder_0" type="button" className="folder_button btn btn-primary">hw3</button> { /* TODO - need to use the folder id of the post object to retrieve the folder name */}
-                            </span>
+                            {post.folders &&
+                                post.folders.map((folder, index) =>
+                                    <span role="listitem">
+                                        <button id={`folder_` + index} type="button" className="folder_button btn btn-primary">{folder}</button>
+                                    </span>
+                                )
+                            }
                         </div>
                     </div>
                 </div>
