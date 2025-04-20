@@ -299,25 +299,24 @@ export default function NewPostPage() {
                      </Form>
                      </div>
 
-                     <Form>
-                        <Form.Group as={Row} className="mb-3 d-flex ">
-                           <Col sm={2}>
-                              <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                                 style={{ fontSize: "14px" }}>
 
-                                 Details*
-                              </div>
-                           </Col>
-                           <Col sm={9}>
+                     <div className="d-flex mt-3">
+                        <div id="wd-class-stats" 
+                        className="d-flex wd-text-grey wd-font-bold me-4"
+                           style={{ fontSize: "14px" }}>
+
+                           Summary
+                        </div>
+                     <Form>
                               <ReactQuill
                                  theme="snow"
                                  className="custom-editor"
                                  value={editorValue}
                                  onChange={handleDetailsChange}
+                                 style={{ fontSize: "13px", width: '100ch' }}
                               />
-                           </Col>
-                        </Form.Group>
                      </Form>
+                     </div>
 
 
                      <div id="wd-class-stats" className="mt-5 wd-text-grey wd-font-bold"
