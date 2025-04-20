@@ -1,39 +1,28 @@
-import { useEffect, useState } from "react";
-import { Post, User } from "../../../types";
+import { Post } from "../../../types";
 import "./ViewPost.css";
-import { getUser } from "../services/userService";
+import ActionsDropdown from "./ActionsDropdown";
+import EditingResponse from "./FollowupDiscussions/EditingResponse";
+import usePostBox from "../hooks/usePostBox";
 
 interface PostBoxProps {
     post: Post;
+    setPost: (postToSet: Post | null) => void;
 }
 
 // Component for the individual post item in the sidebar. 
 export default function PostBox(props: PostBoxProps) {
 
-    const { post } = props;
+    const { post, setPost } = props;
 
-    // author of the post 
-    const [author, setAuthor] = useState<User | null>(null);
-
-    // keep track of if the user is editing the answer 
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-
-    useEffect(() => {
-        /**
-         * Function to fetch the post-related data.
-         */
-        const fetchData = async () => {
-            try {
-                const fetchedAuthor = await getUser(post.authorId);
-                if (fetchedAuthor._id !== undefined) {
-                    setAuthor(fetchedAuthor);
-                }
-            } catch (error) {
-                console.error('Error fetching answer:', error);
-            }
-        };
-        fetchData().catch(e => console.log(e));
-    }, [post]);
+    const {
+        showDropdown,
+        setShowDropdown,
+        isEditing,
+        setIsEditing,
+        handleOnSave,
+        handleDelete,
+        author
+    } = usePostBox(post, setPost);
 
     return (
         <article id="qaContentViewId" className="main" aria-label="question">
@@ -60,13 +49,20 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="col">
                         <div className="float-end dropdown">
                             {/* actions dropdown */}
-                            <button aria-haspopup="false" aria-expanded="false" data-id="postActionMenuId" type="button" className="dropdown-toggle btn btn-action">Actions</button>  { /* TODO: - should only be visible to creator of post and instructors */}
+                            <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
                         </div>
                         <div className="py-3 history-selection">
                             {/* post title */}
                             <h1 id="postViewSummaryId" className="title">{post.title}</h1>
                             {/* post content */}
-                            <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
+                            <div>
+                                {isEditing ? (
+                                    <EditingResponse initialFud={post ? post.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                                ) : (
+                                    <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
+
+                                )}
+                            </div>
                         </div>
                         <div id="folder_select" className="folder_selector pb-3" role="list">
                             {post.folders &&

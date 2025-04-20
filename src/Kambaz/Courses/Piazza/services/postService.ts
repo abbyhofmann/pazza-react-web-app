@@ -88,4 +88,100 @@ const addAnswerToPost = async (
   return res.data;
 };
 
-export { getPostById, getPosts, getPostsInCourse, addDiscussionToPost, addAnswerToPost };
+/**
+ * Removes an answer (sets the answer field value to null) from a post following the answer's deletion.
+ * @param pid The id of the post from which to remove the answer.
+ * @param aid The id of the answer being removed.
+ * @param type The type of post (student or instructor);
+ * @returns The post object with the answer removed.
+ */
+const removeAnswerFromPost = async (
+  pid: string,
+  aid: string,
+  type: string
+): Promise<Post> => {
+  const data = { pid, aid, type };
+  const res = await api.put(`${POST_API_URL}/removeAnswer`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing answer from post");
+  }
+  return res.data;
+};
+
+/**
+ * Removes a followup discussion from a post's array of fuds.
+ * @param pid The id of the post from which to remove the fud.
+ * @param fudId The id of the fud to remove.
+ * @returns The updated post object with the fud removed from the array.
+ */
+const removeFudFromPost = async (pid: string, fudId: string): Promise<Post> => {
+  const data = { pid, fudId };
+  const res = await api.put(`${POST_API_URL}/removeFud`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while removing fud from post");
+  }
+  return res.data;
+};
+
+/**
+ * Adds a new post to the database.
+ *
+ * @param newPost The new post object being created.
+ * @returns The new post object.
+ */
+const createPost = async (newPost: Post): Promise<Post> => {
+  const res = await api.post(`${POST_API_URL}/createPost`, newPost);
+
+  if (res.status !== 200) {
+    throw new Error("Error while creating post");
+  }
+  return res.data;
+};
+
+/**
+ * Deletes a post.
+ * @param pid The id of the post to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deletePost = async (pid: string): Promise<boolean> => {
+  const res = await api.delete(`${POST_API_URL}/${pid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting post");
+  }
+  return res.data;
+};
+
+/**
+ * Updates a post upon a user editing its content.
+ *
+ * @param pid The id of the post being updated.
+ * @param newContent The updated content of the post.
+ * @returns The updated post object.
+ */
+const updatePost = async (
+  pid: string,
+  newContent: string
+): Promise<Post> => {
+  const data = { pid, newContent };
+  const res = await api.put(`${POST_API_URL}/updatePost`, data);
+
+  if (res.status !== 200) {
+    throw new Error("Error while updating post");
+  }
+  return res.data;
+};
+
+export {
+  getPostById,
+  getPosts,
+  addDiscussionToPost,
+  addAnswerToPost,
+  removeAnswerFromPost,
+  removeFudFromPost,
+  createPost,
+  deletePost,
+  updatePost
+};

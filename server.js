@@ -35,33 +35,61 @@ const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
 const folders = db.collection("folders");
 
+// create a new post 
+app.post('/api/post/createPost', async (req, res) => {
+    if (!(req.body.folders !== undefined &&
+        req.body.folders.length !== 0 && // folders should be defined and at least one folder should be selected
+        req.body.authorId !== undefined &&
+        req.body.authorId !== '' &&
+        req.body.datePosted !== undefined &&
+        req.body.datePosted !== '' &&
+        req.body.type !== undefined &&
+        req.body.instructor !== undefined &&
+        req.body.title !== undefined &&
+        req.body.title !== '' &&
+        req.body.content !== undefined &&
+        req.body.content !== '' &&
+        req.body.followupDiscussions !== undefined &&
+        req.body.followupDiscussions.length === 0 && // should be no fuds initially 
+        req.body.studentAnswer !== undefined &&
+        req.body.studentAnswer === null &&
+        req.body.instructorAnswer !== undefined &&
+        req.body.instructorAnswer === null &&
+        req.body.viewers !== undefined &&
+        req.body.viewers.length === 0 && // no viewers upon creation 
+        req.body.courseId !== undefined &&
+        req.body.courseId !== '')) {
+        res.status(400).send('Invalid post body');
+        return;
+    }
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-const postsFilePath = '/Users/katiewinkleblack/Desktop/2025/WEBDEV_NEW/PazzaProject/ACTUAL/pazza-react-web-app/src/Kambaz/Database/posts.json';
-
-
-app.post('/api/post', (req, res) => {
-    console.log("received body");
-    console.log(postsFilePath);
     const newPost = req.body;
+    try {
+        const result = await posts.insertOne(newPost);
+        const createdPost = await posts.findOne({ _id: result.insertedId });
+        res.json(createdPost);
+    } catch (err) {
+        res.status(500).send(`Error when creating post: ${err}`);
+    }
+});
 
-    fs.readFile(postsFilePath, "utf-8", (err, data) => {
-        if (err) {
-            return res.status(500).send('Error reading posts');
+// delete a post 
+app.delete('/api/post/:pid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { pid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
         }
 
-        const posts = JSON.parse(data || '[]');
-        posts.push(newPost);
-
-        fs.writeFile(postsFilePath, JSON.stringify(posts, null, 2), (err) => {
-            if (err) {
-                return res.status(500).send('Error saving post');
-            }
-            res.status(201).send('Post added successfully');
-        });
-    });
-
+        const postDeletion = (await posts.deleteOne({ _id: new ObjectId(pid) }));
+        res.json(postDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting post: ${err}`);
+    }
 });
 
 // get all posts in database
@@ -121,6 +149,25 @@ app.get('/api/answer/:aid', async (req, res) => {
         res.json(fetchedAnswer);
     } catch (err) {
         res.status(500).send(`Error when fetching answer: ${err}`);
+    }
+});
+
+// delete an answer 
+app.delete('/api/answer/:aid', async (req, res) => {
+    try {
+        // answer id is a request parameter 
+        const { aid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const answerDeletion = (await answers.deleteOne({ _id: new ObjectId(aid) }));
+        res.json(answerDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting answer: ${err}`);
     }
 });
 
@@ -300,198 +347,74 @@ app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
     }
 });
 
-// add a followup discussion to post 
-app.put('/api/post/addDiscussion', async (req, res) => {
+// delete a followup discussion 
+app.delete('/api/followupDiscussion/:fudId', async (req, res) => {
     try {
-
-        const { pid, fudId } = req.body;
+        // fud id is a request parameter 
+        const { fudId } = req.params;
 
         // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+        if (!mongoDB.ObjectId.isValid(fudId)) {
             res.status(400).send('Invalid ID format');
             return;
         }
 
-        const updatedPost = await posts.findOneAndUpdate(
-            { _id: new ObjectId(pid) },
-            { $addToSet: { followupDiscussions: fudId } },
-            { returnDocument: "after" }
-        );
-
-        res.json(updatedPost);
+        const fudDeletion = (await followupDiscussions.deleteOne({ _id: new ObjectId(fudId) }));
+        res.json(fudDeletion);
     } catch (err) {
-        res.status(500).send(`Error when adding discussion to post: ${err}`);
+        res.status(500).send(`Error when deleting fud: ${err}`);
     }
 });
 
-// add an answer to post 
-app.put('/api/post/addAnswer', async (req, res) => {
+// update a followup discussion's content 
+app.put('/api/followupDiscussion/updateFud', async (req, res) => {
     try {
-        const { pid, aid, type } = req.body;
+        // fud id is a request parameter 
+        const { fudId, newContent } = req.body;
 
         // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+        if (!mongoDB.ObjectId.isValid(fudId)) {
             res.status(400).send('Invalid ID format');
             return;
         }
 
-        if (type !== "student" && type !== "instructor") {
-            return res.status(400).send("Invalid answer type");
+        const updatedFud = await followupDiscussions.findOneAndUpdate(
+            { _id: new ObjectId(fudId) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedFud);
+    } catch (err) {
+        res.status(500).send(`Error when updating fud: ${err}`);
+    }
+});
+
+// remove a reply from a followup discussion - called when deleting a reply
+app.put('/api/followupDiscussion/removeReply', async (req, res) => {
+    try {
+        const { fudId, replyId } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(replyId)) {
+            res.status(400).send('Invalid ID format');
+            return;
         }
 
-        const updatedPost = await posts.findOneAndUpdate(
-            { _id: new ObjectId(pid) },
+        const updatedFud = await followupDiscussions.findOneAndUpdate(
             {
-                $set: {
-                    [type === "student" ? "studentAnswer" : "instructorAnswer"]: aid,
+                _id: new ObjectId(fudId),
+            },
+            {
+                $pull: {
+                    replies: replyId, // remove replyId from the array
                 },
             },
             { returnDocument: "after" }
         );
 
-        res.json(updatedPost);
+        res.json(updatedFud);
     } catch (err) {
-        res.status(500).send(`Error when adding student answer to post: ${err}`);
-    }
-})
-
-// get an individual followup discussion reply by its ID
-app.get('/api/reply/:rid', async (req, res) => {
-    try {
-        // reply id is a request parameter 
-        const { rid } = req.params;
-
-        // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(rid)) {
-            res.status(400).send('Invalid ID format');
-            return;
-        }
-
-        const fetchedReply = (await replies.findOne({ _id: new ObjectId(rid) }));
-        res.json(fetchedReply);
-    } catch (err) {
-        res.status(500).send(`Error when fetching reply: ${err}`);
-    }
-});
-
-// create a new reply
-app.post('/api/reply/createReply', async (req, res) => {
-
-    if (!(req.body.followupDiscussionId !== undefined &&
-        req.body.followupDiscussionId !== '' &&
-        req.body.authorId !== undefined &&
-        // req.body.authorId !== '' && // TODO - uncomment when we add author
-        req.body.content !== undefined &&
-        req.body.content !== '' &&
-        req.body.datePosted !== undefined &&
-        req.body.datePosted !== '')) {
-        res.status(400).send('Invalid reply body');
-        return;
-    }
-
-    const newReply = req.body;
-    try {
-        const result = await replies.insertOne(newReply);
-        const createdReply = await replies.findOne({ _id: result.insertedId });
-        res.json(createdReply);
-    } catch (err) {
-        res.status(500).send(`Error when creating reply: ${err}`);
-    }
-});
-
-// create a new followup discussion 
-app.post('/api/followupDiscussion/createDiscussion', async (req, res) => {
-    if (!(req.body.postId !== undefined &&
-        req.body.postId !== '' &&
-        req.body.authorId !== undefined &&
-        req.body.authorId !== '' &&
-        req.body.datePosted !== undefined &&
-        req.body.datePosted !== '' &&
-        req.body.content !== undefined &&
-        req.body.content !== '' &&
-        req.body.replies !== undefined)) {
-        res.status(400).send('Invalid discussion body');
-        return;
-    }
-    const newDiscussion = req.body;
-    try {
-        const result = await followupDiscussions.insertOne(newDiscussion);
-        const createdDiscussion = await followupDiscussions.findOne({ _id: result.insertedId });
-        res.json(createdDiscussion);
-    } catch (err) {
-        res.status(500).send(`Error when creating discussion: ${err}`);
-    }
-});
-
-// add a reply to followup discussion 
-app.put('/api/followupDiscussion/addReply', async (req, res) => {
-    try {
-
-        const { fudId, rid } = req.body;
-
-        // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(fudId) || !mongoDB.ObjectId.isValid(rid)) {
-            res.status(400).send('Invalid ID format');
-            return;
-        }
-
-        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
-            { _id: new ObjectId(fudId) },
-            { $addToSet: { replies: rid } },
-            { returnDocument: "after" }
-        );
-
-        res.json(updatedDiscussion);
-    } catch (err) {
-        res.status(500).send(`Error when adding reply to discussion: ${err}`);
-    }
-});
-
-// marks a followup discussion as resolved
-app.put('/api/followupDiscussion/markResolved', async (req, res) => {
-    try {
-
-        const { fudId } = req.body;
-
-        // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(fudId)) {
-            res.status(400).send('Invalid ID format');
-            return;
-        }
-
-        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
-            { _id: new ObjectId(fudId) },
-            { $set: { resolved: true } },
-            { returnDocument: "after" }
-        );
-
-        res.json(updatedDiscussion);
-    } catch (err) {
-        res.status(500).send(`Error when marking discussion as resolved: ${err}`);
-    }
-});
-
-// marks a followup discussion as unresolved
-app.put('/api/followupDiscussion/markUnresolved', async (req, res) => {
-    try {
-
-        const { fudId } = req.body;
-
-        // ensure that the id is a valid id
-        if (!mongoDB.ObjectId.isValid(fudId)) {
-            res.status(400).send('Invalid ID format');
-            return;
-        }
-
-        const updatedDiscussion = await followupDiscussions.findOneAndUpdate(
-            { _id: new ObjectId(fudId) },
-            { $set: { resolved: false } },
-            { returnDocument: "after" }
-        );
-
-        res.json(updatedDiscussion);
-    } catch (err) {
-        res.status(500).send(`Error when marking discussion as unresolved: ${err}`);
+        res.status(500).send(`Error when removing reply from fud: ${err}`);
     }
 });
 
@@ -546,9 +469,90 @@ app.put('/api/post/addAnswer', async (req, res) => {
 
         res.json(updatedPost);
     } catch (err) {
-        res.status(500).send(`Error when adding student answer to post: ${err}`);
+        res.status(500).send(`Error when adding answer to post: ${err}`);
     }
-})
+});
+
+// remove an answer from a post - called when deleting an answer
+app.put('/api/post/removeAnswer', async (req, res) => {
+    try {
+        const { pid, aid, type } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(aid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            {
+                _id: new ObjectId(pid),
+                [`${type}Answer`]: aid, // match only if this answer id matches
+            },
+            {
+                $set: {
+                    [`${type}Answer`]: null,
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when removing answer from post: ${err}`);
+    }
+});
+
+// remove a followup discussion from a post - called when deleting a followup discussion
+app.put('/api/post/removeFud', async (req, res) => {
+    try {
+        const { pid, fudId } = req.body;
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid) || !mongoDB.ObjectId.isValid(fudId)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            {
+                _id: new ObjectId(pid),
+            },
+            {
+                $pull: {
+                    followupDiscussions: fudId, // remove fudId from the array
+                },
+            },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when removing fud from post: ${err}`);
+    }
+});
+
+// update a post's content 
+app.put('/api/post/updatePost', async (req, res) => {
+    try {
+        // post id is a request parameter 
+        const { pid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(pid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedPost = await posts.findOneAndUpdate(
+            { _id: new ObjectId(pid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(500).send(`Error when updating post: ${err}`);
+    }
+});
 
 // get an individual followup discussion reply by its ID
 app.get('/api/reply/:rid', async (req, res) => {
@@ -591,6 +595,49 @@ app.post('/api/reply/createReply', async (req, res) => {
         res.json(createdReply);
     } catch (err) {
         res.status(500).send(`Error when creating reply: ${err}`);
+    }
+});
+
+// delete a reply 
+app.delete('/api/reply/:rid', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid } = req.params;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const replyDeletion = (await replies.deleteOne({ _id: new ObjectId(rid) }));
+        res.json(replyDeletion);
+    } catch (err) {
+        res.status(500).send(`Error when deleting reply: ${err}`);
+    }
+});
+
+// update a reply's content 
+app.put('/api/reply/updateReply', async (req, res) => {
+    try {
+        // reply id is a request parameter 
+        const { rid, newContent } = req.body;
+
+        // ensure that the id is a valid id
+        if (!mongoDB.ObjectId.isValid(rid)) {
+            res.status(400).send('Invalid ID format');
+            return;
+        }
+
+        const updatedReply = await replies.findOneAndUpdate(
+            { _id: new ObjectId(rid) },
+            { $set: { content: newContent } },
+            { returnDocument: "after" }
+        );
+
+        res.json(updatedReply);
+    } catch (err) {
+        res.status(500).send(`Error when updating reply: ${err}`);
     }
 });
 

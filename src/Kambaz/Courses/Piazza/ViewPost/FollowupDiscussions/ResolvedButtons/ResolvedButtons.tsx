@@ -20,7 +20,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                     <input
                         // key added to force a re-render and show the radio button selection
                         key={String(resolved)}
-                        name="followup_resolution"
+                        name={`followup_resolution_${fudId}`}
                         type="radio"
                         className="custom-control-input"
                         checked={resolved}
@@ -36,7 +36,7 @@ export default function ResolvedButtons(props: ResolvedButtonsProps) {
                 <div className="custom-control custom-radio custom-control-inline">
                     <input
                         key={String(resolved)}
-                        name="followup_resolution"
+                        name={`followup_resolution_${fudId}`}
                         type="radio"
                         className="custom-control-input"
                         checked={!resolved}

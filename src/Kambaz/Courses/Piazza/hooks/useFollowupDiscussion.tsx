@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { addReplyToDiscussion, getFollowupDiscussionById } from "../services/followupDiscussionService";
-import { createReply } from "../services/replyService";
+import { addReplyToDiscussion, deleteFollowupDiscussion, getFollowupDiscussionById, updateFud } from "../services/followupDiscussionService";
+import { createReply, deleteReply } from "../services/replyService";
 import usePostSidebar from "./usePostSidebar";
 import { FollowupDiscussion, Reply, User } from "../../../types";
 import { getUser } from "../services/userService";
+import { removeFudFromPost } from "../services/postService";
 
-const useFollowupDiscussion = (fudId: string) => {
-    
+const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
+
     // followup discussion being rendered
     const [fud, setFud] = useState<FollowupDiscussion | null>(null);
 
@@ -22,9 +23,16 @@ const useFollowupDiscussion = (fudId: string) => {
     // content of new reply 
     const [replyContent, setReplyContent] = useState<string>("");
 
+    // keep track of if actions dropdown is showing 
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
+    // keep track of if the user is editing the followup discussion 
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
     // function for formatting the date
     const { formatDate } = usePostSidebar();
 
+    // handle submitting a new fud 
     const handleSubmit = async (newReplyContent: string) => {
         try {
             const doc = new DOMParser().parseFromString(newReplyContent, "text/html");
@@ -49,7 +57,67 @@ const useFollowupDiscussion = (fudId: string) => {
         }
         // close the editor component
         setIsReplying(false);
-    }
+        setShowDropdown(false);
+    };
+
+    // handle saving a fud when it is being edited 
+    const handleOnSave = async (updatedContent: string) => {
+
+        try {
+            // convert HTML content from React Quill to plain text before saving in database 
+            const doc = new DOMParser().parseFromString(updatedContent, "text/html");
+            const plainTextContent = doc.body.textContent || "";
+
+            if (fud && fud._id) {
+                // update existing fud
+                const updatedFud = await updateFud(fud._id, plainTextContent);
+                setFud({ ...fud, content: updatedFud.content });
+            }
+            else {
+                throw new Error("Cannot update a fud that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error updating fud:", error);
+        }
+        setIsEditing(false);
+        setShowDropdown(false);
+    };
+
+    // handle deleting a fud
+    const handleDelete = async () => {
+        try {
+            if (fud) {
+                // delete from db
+                const deletedRes = await deleteFollowupDiscussion(fudId);
+                if (deletedRes) {
+                    // delete the fud's replies 
+                    await Promise.all(
+                        fud.replies.map(async replyId => {
+                            const deletedReplyRes = await deleteReply(replyId);
+                            if (!deletedReplyRes) {
+                                throw new Error(`Reply deletion ${replyId} unsuccessful`);
+                            }
+                        }));
+
+                    // remove from post 
+                    const postWithFudDeleted = await removeFudFromPost(fud?.postId, fudId);
+
+                    // set the post so the new fud component is displayed 
+                    if (postWithFudDeleted) {
+                        setPost(postWithFudDeleted);
+                    }
+                    else {
+                        throw new Error("Fud deletion unsuccessful");
+                    }
+                }
+
+            } else {
+                throw new Error("Cannot delete a fud that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting fud:", error);
+        }
+    };
 
     useEffect(() => {
         /**
@@ -98,11 +166,18 @@ const useFollowupDiscussion = (fudId: string) => {
         author,
         formatDate,
         fud,
+        setFud,
         isReplying,
         setIsReplying,
         replyContent,
         setReplyContent,
         handleSubmit,
+        showDropdown,
+        setShowDropdown,
+        handleDelete,
+        isEditing,
+        setIsEditing,
+        handleOnSave
     }
 }
 
