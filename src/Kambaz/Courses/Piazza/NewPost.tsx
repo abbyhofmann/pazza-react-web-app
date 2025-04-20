@@ -9,8 +9,9 @@ import "./../../styles.css";
 import { getFolders } from "./services/folderService";
 import { Folder } from "../../types";
 import { createPost } from "./services/postService";
-import { Post } from "../../types";
+import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
+import InstructorDropdown from "./InstructorsDropdown";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState<string>('');
@@ -18,6 +19,12 @@ export default function NewPostPage() {
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
    const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
+
+   // keep track of which instructors are selected to see a new post
+   const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
+
+   // if the "instructors" button is selected in the post to of a new post, show the dropdown selection component
+   const [instructorButtonSelected, setInstructorButtonSelected] = useState<boolean>(false);
 
    const navigate = useNavigate();
    const { cid } = useParams();
@@ -37,13 +44,22 @@ export default function NewPostPage() {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
    }
 
-
    const handleChangePostType = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedOption(event.target.value);
    };
 
    const handleChangePostTo = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSelectedPostTo(event.target.value);
+      // if instructors option is selected, show the dropdown for selecting the instructors 
+      if (event.target.value === 'instructor') {
+         setSelectedPostTo(event.target.value);
+         setInstructorButtonSelected(true);
+      }
+      else {
+         // if everyone is selected, we don't want selected instructors to only view post
+         setInstructorButtonSelected(false);
+         setUsersCanViewPost([]);
+         setSelectedPostTo(event.target.value);
+      }
    };
 
 
@@ -201,8 +217,7 @@ export default function NewPostPage() {
                         <div className="mt-1 d-flex ms-3">
                            <Form>
                               <Form.Group className="mb-3">
-
-                                 <div className="d-flex">
+                                 <div className="d-flex align-items-center">
                                     <Form.Check
                                        type="radio"
                                        label={
@@ -238,12 +253,11 @@ export default function NewPostPage() {
                                        onChange={handleChangePostTo}
                                        className="me-3"
                                     />
+                                    {instructorButtonSelected && <InstructorDropdown selectedInstructors={usersCanViewPost} setSelectedInstructors={setUsersCanViewPost} />}
                                  </div>
                               </Form.Group>
                            </Form>
                         </div>
-
-
                      </div>
 
 

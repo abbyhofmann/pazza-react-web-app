@@ -34,6 +34,7 @@ const users = db.collection("users");
 const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
 const folders = db.collection("folders");
+const enrollments = db.collection("enrollments");
 
 // create a new post 
 app.post('/api/post/createPost', async (req, res) => {
@@ -229,9 +230,21 @@ app.get('/api/user/:uid', async (req, res) => {
         const fetchedUser = (await users.findOne({ _id: uid }));
         res.json(fetchedUser);
     } catch (err) {
-        res.status(500).send(`Error when fetching ansuserwer: ${err}`);
+        res.status(500).send(`Error when fetching user: ${err}`);
     }
 });
+
+// get all the instructors and TAs of a course 
+app.get('/api/user/getInstructors', async (req, res) => {
+    try {
+        const { cid } = req.body;
+        
+        const fetchedInstructors = (await users.find({}))
+
+    } catch (err) {
+        res.status(500).send(`Error when fetching instructors: ${err}`);
+    }
+})
 
 // get an individual followup discussion by its ID
 app.get('/api/followupDiscussion/:fudid', async (req, res) => {
@@ -720,6 +733,18 @@ app.put('/api/folders', async (req, res) => {
         res.status(500).send(`Error when editing folder name: ${err}`);
     }
 })
+
+// get enrollments for a course
+app.get('/api/enrollments/:cid', async (req, res) => {
+    try {
+        // course id is a request param 
+        const { cid } = req.params;
+        const fetchedEnrollments = await enrollments.find({ course: cid }).toArray();
+        res.status(200).json(fetchedEnrollments);
+    } catch (err) {
+        res.status(500).send(`Error when fetching enrollments: ${err}`);
+    }
+}); 
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log(`Server running on Port ${process.env.PORT || 3000}`);
