@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getPostsCount, getUnreadPostsCount } from "./services/postService";
+import { getPostsCount, getUnansweredPostsCount, getUnreadPostsCount } from "./services/postService";
 import { useParams } from "react-router";
 import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
@@ -8,18 +8,19 @@ export default function RightSidePage() {
 
   const { cid } = useParams();
 
-  const [unreadPostCount, setUnreadPostCount] = useState<Number>(0);
+  const [unansweredPostCount, setUnansweredPostCount] = useState<Number>(0);
   const [totalPostsCount, setTotalPostsCount] = useState<Number>(0);
   const [studentResponseCount, setStudentResponseCount] = useState<Number>(0);
   const [instructorResponseCount, setInstructorResponseCount] = useState<Number>(0);
   const [enrollmentsCount, setEnrollmentsCount] = useState<Number>(0);
+  const [unreadPostCount, setUnreadPostCount] = useState<Number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedUnreadCount = await getUnreadPostsCount(cid!);
-        if (fetchedUnreadCount) {
-          setUnreadPostCount(fetchedUnreadCount);
+        const fetchedUnansweredCount = await getUnansweredPostsCount(cid!);
+        if (fetchedUnansweredCount) {
+          setUnansweredPostCount(fetchedUnansweredCount);
         }
 
         const fetchedTotalCount = await getPostsCount(cid!);
@@ -37,6 +38,12 @@ export default function RightSidePage() {
         if (fetchedEnrollmentCount) {
           setEnrollmentsCount(fetchedEnrollmentCount);
         }
+
+        // TODO - uncomment and use uid of logged-in user 
+        // const fetchedUnreadCount = await getUnreadPostsCount(cid!, uid!);
+        // if (fetchedUnreadCount) {
+        //   setUnreadPostCount(fetchedEnrollmentCount);
+        // }
       }
       catch (error) {
         console.error('Error fetching class at a glance data:', error);
@@ -62,6 +69,11 @@ export default function RightSidePage() {
 
         <div className="wd-post-stats wd-bold">
           <img src="/images/warning5.jpg" height={30} />
+          <span> {unansweredPostCount.toString()} unanswered posts</span>
+        </div>
+
+        <div className="wd-post-stats wd-bold">
+          <img src="/images/warning5.jpg" height={30} />
           <span> {unreadPostCount.toString()} unread posts</span>
         </div>
 
@@ -79,13 +91,7 @@ export default function RightSidePage() {
           <img src="/images/checkmark.jpg" height={25} />
           <span>{enrollmentsCount.toString()} students enrolled</span>
         </div>
-
-        <div className="wd-post-stats wd-bold">
-          <img src="/images/warning5.jpg" height={30} />
-          <span>_ unanswered followups</span>
-        </div>
       </div>
     </div>
-
   );
 }

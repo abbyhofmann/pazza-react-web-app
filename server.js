@@ -103,6 +103,22 @@ app.get('/api/post/:pid', async (req, res) => {
     }
 });
 
+// get number of unread posts for a user in a course
+app.get('/api/post/unreadCount/:cid/:uid', async (req, res) => {
+    try {
+      const { cid, uid } = req.params;
+  
+      const count = await posts.countDocuments({
+        courseId: cid,
+        viewers: { $ne: uid } // uid is not in viewers array
+      });
+  
+      res.send(count.toString());
+    } catch (err) {
+      res.status(500).send(`Error getting unread post count: ${err}`);
+    }
+  });
+
 // get an individual answer by its answer ID
 app.get('/api/answer/:aid', async (req, res) => {
     try {
