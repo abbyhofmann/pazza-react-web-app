@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { getPostsCount, getUnansweredPostsCount } from "./services/postService";
+import { getPostsCount, getUnansweredPostsCount, getUnreadPostsCount } from "./services/postService";
 import { useParams } from "react-router";
 import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
+import { useSelector } from "react-redux";
 
 
 export default function RightSidePage() {
@@ -12,6 +13,8 @@ export default function RightSidePage() {
   };
 
   const { cid } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const [unansweredPostCount, setUnansweredPostCount] = useState<Number>(0);
   const [totalPostsCount, setTotalPostsCount] = useState<Number>(0);
@@ -46,11 +49,10 @@ export default function RightSidePage() {
           setEnrollmentsCount(fetchedEnrollmentCount);
         }
 
-        // TODO - uncomment and use uid of logged-in user 
-        // const fetchedUnreadCount = await getUnreadPostsCount(cid!, uid!);
-        // if (fetchedUnreadCount) {
-        //   setUnreadPostCount(fetchedEnrollmentCount);
-        // }
+        const fetchedUnreadCount = await getUnreadPostsCount(cid!, currentUser._id!);
+        if (fetchedUnreadCount) {
+          setUnreadPostCount(fetchedEnrollmentCount);
+        }
       }
       catch (error) {
         console.error('Error fetching class at a glance data:', error);
@@ -59,6 +61,7 @@ export default function RightSidePage() {
 
     fetchData().catch(e => console.log(e));
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

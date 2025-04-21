@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { addReplyToDiscussion, deleteFollowupDiscussion, getFollowupDiscussionById, updateFud } from "../services/followupDiscussionService";
 import { createReply, deleteReply } from "../services/replyService";
@@ -5,6 +6,7 @@ import usePostSidebar from "./usePostSidebar";
 import { FollowupDiscussion, Reply, User } from "../../../types";
 import { getUser } from "../services/userService";
 import { removeFudFromPost } from "../services/postService";
+import { useSelector } from "react-redux";
 
 const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
 
@@ -32,6 +34,8 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
     // function for formatting the date
     const { formatDate } = usePostSidebar();
 
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
     // handle submitting a new fud 
     const handleSubmit = async (newReplyContent: string) => {
         try {
@@ -40,7 +44,7 @@ const useFollowupDiscussion = (fudId: string, setPost: (post: any) => void) => {
 
             const newReply: Reply = {
                 followupDiscussionId: fudId,
-                authorId: "345", // TODO 
+                authorId: currentUser._id,
                 datePosted: new Date().toDateString(),
                 content: plainTextContent.trim()
             };

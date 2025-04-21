@@ -98,7 +98,7 @@ const ViewPostPage = () => {
         convoExists={post.followupDiscussions.length !== 0}
         fudIds={post.followupDiscussions}
         setPost={setPost}
-        postId={post._id!!}
+        postId={post._id ?? ""}
       />{" "}
     </div>
   );

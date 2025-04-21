@@ -4,6 +4,7 @@ import { Answer, Post } from "../../../types";
 import { createAnswer } from "../services/answerService";
 import { addAnswerToPost, getPostById } from "../services/postService";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
+import { useSelector } from "react-redux";
 
 const useViewPostPage = () => {
     const { pid } = useParams();
@@ -12,6 +13,9 @@ const useViewPostPage = () => {
 
     // post being rendered
     const [post, setPost] = useState<Post | null>(null);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     // keep track of if answers are a work-in-progress (i.e. being edited or created)
     const [isWipStudentAnswer, setIsWipStudentAnswer] = useState(false);
@@ -30,7 +34,7 @@ const useViewPostPage = () => {
                 const newAnswer: Answer = {
                     postId: post._id,
                     type: answerType === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
-                    authors: [], // TODO - add the logged in user
+                    authors: [currentUser._id],
                     content: plainTextContent,
                     dateEdited: new Date().toDateString(),
                 }

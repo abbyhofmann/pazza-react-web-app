@@ -1090,7 +1090,7 @@ app.get('/api/folders/posts', async (req, res) => {
 // add folder in a specific course
 app.post('/api/folders', async (req, res) => {
     try {
-        const { folder } = req.body; // TODO: change to params
+        const { folder } = req.body;
         const resp = await folders.insertOne(folder);
         res.status(200).send(resp);
     } catch (err) {

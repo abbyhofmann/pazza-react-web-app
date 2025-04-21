@@ -39,7 +39,7 @@ export default function PostBox(props: PostBoxProps) {
                     </div>
                     <div className="text-right col">
                         {/* post view count */}
-                        <span id="postViewCountId" className="view-count"><b>5</b> {/* TODO - make this length of viewers list */}
+                        <span id="postViewCountId" className="view-count"><b>{post.viewers.length ?? 0}</b>
                             &nbsp;views</span>
                     </div>
                 </div>
