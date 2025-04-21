@@ -1,6 +1,6 @@
 export interface Post {
     _id?: string; // MongoDB ObjectId stored as a string
-    folderId: string;
+    folders: string[]; // names of all the folders the post is in
     authorId: string;
     datePosted: string;
     type: number;
@@ -71,4 +71,10 @@ export interface Reply {
     authorId: string;
     datePosted: string;
     content: string;
+}
+
+export interface Enrollment {
+    _id?: string;
+    user: string;
+    course: string;
 }

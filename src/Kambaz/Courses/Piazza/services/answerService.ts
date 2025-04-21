@@ -52,4 +52,33 @@ const createAnswer = async (newAnswer: Answer): Promise<Answer> => {
   return res.data;
 };
 
-export { getAnswerById, updateAnswer, createAnswer };
+/**
+ * Deletes an answer.
+ * @param aid The id of the answer to delete.
+ * @returns boolean indicating the success of the deletion.
+ */
+const deleteAnswer = async (aid: string): Promise<boolean> => {
+  const res = await api.delete(`${ANSWER_API_URL}/${aid}`);
+
+  if (res.status !== 200) {
+    throw new Error("Error while deleting answer");
+  }
+  return res.data;
+};
+
+/**
+ * Gets an the instructor and student answer counts for course. Returns an array of [studentResponseCount, instructorResponseCount].
+ *
+ * @param cid The ID of the course for which the number of answers is being fetched.
+ * @throws Error if there is an issue fetching the answers by course ID.
+ */
+const getResponseCounts = async (cid: string): Promise<Number[]> => {
+  const res = await api.get(`${ANSWER_API_URL}/responseCounts/${cid}`);
+  
+  if (res.status !== 200) {
+    throw new Error("Error while fetching response counts");
+  }
+  return res.data;
+};
+
+export { getAnswerById, updateAnswer, createAnswer, deleteAnswer, getResponseCounts };

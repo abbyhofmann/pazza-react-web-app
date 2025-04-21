@@ -4,15 +4,18 @@ import ResolvedButtons from "./ResolvedButtons/ResolvedButtons";
 import { type FollowupDiscussion } from "../../../../types";
 import EditorComponent from "../EditorComponent";
 import useFollowupDiscussion from "../../hooks/useFollowupDiscussion";
+import ActionsDropdown from "../ActionsDropdown";
+import EditingResponse from "./EditingResponse";
 
 interface FollowupDiscussionProps {
     fudId: string;
+    setPost: (post: any) => void;
 }
 
 // Component for rendering an individual followup discussion.
 export default function FollowupDiscussion(props: FollowupDiscussionProps) {
 
-    const { fudId } = props;
+    const { fudId, setPost } = props;
 
     const {
         resolved,
@@ -20,16 +23,32 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
         author,
         formatDate,
         fud,
+        setFud,
         isReplying,
         setIsReplying,
         replyContent,
         setReplyContent,
         handleSubmit,
-    } = useFollowupDiscussion(fudId);
+        showDropdown,
+        setShowDropdown,
+        handleDelete,
+        isEditing,
+        setIsEditing,
+        handleOnSave
+    } = useFollowupDiscussion(fudId, setPost);
 
     return (
+
         <div className="g-1 row">
-            <ResolvedButtons fudId={fudId} resolved={resolved} setResolved={setResolved} />
+            <div className="align-items-center row">
+                <div className="col-auto">
+                    <ResolvedButtons fudId={fudId} resolved={resolved} setResolved={setResolved} />
+                </div>
+                <div className="col-auto ms-auto me-0">
+                    {/* dropdown for editing and deleting */}
+                    <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                </div>
+            </div>
             <div className="mx-0 col-auto">
                 <img className="avatar" width="30px" height="30px" aria-hidden="true" src="images/anonProfilePic.jpg" />
             </div>
@@ -44,14 +63,21 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                         {formatDate(fud ? fud.datePosted : "")}
                     </time>
                 </span>
-                <div
-                    id="m7mvt9ipcj61pk_render"
-                    className="render-html-content overflow-hidden latex_process"
-                >
-                    {fud?.content}
+                <div className="mb-2">
+                    {/* if the user is editing the followup discussion, display a text editor; otherwise, display the fud content */}
+                    {isEditing ? (
+                        <EditingResponse initialFud={fud ? fud.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                    ) : (
+                        <div
+                            id="m7mvt9ipcj61pk_render"
+                            className="render-html-content overflow-hidden latex_process"
+                        >
+                            {fud?.content}
+                        </div>
+                    )}
                 </div>
                 {/* loop through the replies list to render each reply */}
-                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} />)))}
+                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} setFud={setFud}/>)))}
 
                 <div className="gx-1 followup comment pr-0 pl-0 pb-0 row">
                     <div className="pr-0 mr-0 pl-0 pb-0 col">

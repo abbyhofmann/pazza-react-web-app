@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Answer, User } from "../../../types";
-import { getAnswerById, updateAnswer } from "../services/answerService";
+import { deleteAnswer, getAnswerById, updateAnswer } from "../services/answerService";
 import { getUser } from "../services/userService";
+import { removeAnswerFromPost } from "../services/postService";
 
-const useAnswer = (answerId: string) => {
+const useAnswer = (answerId: string, type: string, setPost: (post: any) => void) => {
 
     const [answer, setAnswer] = useState<Answer | null>(null);
 
     // keep track of if the user is editing the answer 
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    // keep track of if dropdown is showing 
+    // keep track of if actions dropdown is showing 
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
     // author(s) of the answer 
@@ -43,7 +44,35 @@ const useAnswer = (answerId: string) => {
             console.error("Error updating answer:", error);
         }
         setIsEditing(false);
-    }
+        setShowDropdown(false);
+    };
+
+    // handle deleting answer
+    const handleDelete = async () => {
+        try {
+            if (answer) {
+                // delete from db
+                const deletedRes = await deleteAnswer(answerId);
+                if (deletedRes) {
+                    // remove from post 
+                    const postWithAnswerDeleted = await removeAnswerFromPost(answer?.postId, answerId, type);
+
+                    // set the post so the new answer component is displayed 
+                    if (postWithAnswerDeleted) {
+                        setPost(postWithAnswerDeleted);
+                    }
+                    else {
+                        throw new Error("Answer deletion unsuccessful");
+                    }
+                }
+
+            } else {
+                throw new Error("Cannot delete an answer that doesn't exist");
+            }
+        } catch (error) {
+            console.error("Error deleting answer:", error);
+        }
+    };
 
     useEffect(() => {
         /**
@@ -57,12 +86,10 @@ const useAnswer = (answerId: string) => {
                 }
 
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error('Error fetching answer:', error);
             }
         };
 
-        // eslint-disable-next-line no-console
         fetchData().catch(e => console.log(e));
     }, [answerId]);
 
@@ -102,7 +129,8 @@ const useAnswer = (answerId: string) => {
         setShowDropdown,
         formatAnswerDate,
         authors,
-        setAuthors
+        setAuthors,
+        handleDelete
     }
 }
 

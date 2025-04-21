@@ -54,7 +54,7 @@ const useViewPostPage = () => {
             }
 
             catch (error) {
-                console.error("Error updating answer:", error);
+                console.error("Error creating answer:", error);
             }
         }
     }
