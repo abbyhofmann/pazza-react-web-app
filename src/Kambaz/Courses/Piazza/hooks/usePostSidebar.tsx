@@ -11,7 +11,7 @@ const usePostSidebar = () => {
   const navigate = useNavigate();
   const { cid } = useParams();
 
-  const { posts, fetchPosts } = usePostSidebarContext();
+  const { posts, fetchPosts, setPosts } = usePostSidebarContext();
 
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
@@ -195,6 +195,7 @@ const usePostSidebar = () => {
     isUnanswered,
     navButton,
     posts,
+    setPosts,
   };
 };
 

@@ -9,25 +9,29 @@ import { useParams } from "react-router";
 import "./../../styles.css";
 import { getFolders } from "./services/folderService";
 import { Folder } from "../../types";
-import { createPost } from "./services/postService";
 import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
+import { useSelector } from "react-redux";
+import { createPost } from "./services/postService";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
-   const [postSumary, setPostSummary] = useState("");
+   const [postSummary, setPostSummary] = useState("");
    const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const { currentUser } = useSelector((state: any) => state.accountReducer);
+   const isFaculty = currentUser.role === "FACULTY";
 
    const navigate = useNavigate();
    const { cid } = useParams();
    const [isFullScreen, setFullScreen] = useState(false);
 
    const handleFullScreenToggle = () => {
-     setFullScreen(prev => !prev);
+      setFullScreen(prev => !prev);
    };
 
    useEffect(() => {
@@ -65,8 +69,6 @@ export default function NewPostPage() {
 
    const handleFolderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = event.target;
-
-
       if (checked) {
          setSelectedFolders((prev) => [...prev, value]);
       }
@@ -84,11 +86,11 @@ export default function NewPostPage() {
          alert("Please choose post destination: Everyone/Instructor(s)");
          return;
       }
-    //  if (selectedFolders.length === 0) {
-      //   alert("Please choose a folder(s)");
-     //    return;
-   //   }
-      if (!postSumary) {
+      if (selectedFolders.length === 0) {
+         alert("Please choose a folder(s)");
+         return;
+      }
+      if (!postSummary) {
          alert("Please put a summary for your post");
          return;
       }
@@ -97,49 +99,51 @@ export default function NewPostPage() {
          return;
       }
 
-      const newPost = {
-         folderId: selectedFolders,
-         authorId: 'user123',
-         datePosted: new Date().toISOString(),
-         type: 2,
-         instructor: 1,
-         title: postSumary,
-         content: editorValue,
-         followUpQuestions: [],
-         studentAnswer: null,
-         instructorAnswer: null,
-         viewers: [],
-         courseId: cid,
-      };
+      if (cid) {
+         const newPost: Post = {
+            folders: selectedFolders,
+            authorId: currentUser._id,
+            datePosted: new Date().toDateString(),
+            type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
+            instructor: !isFaculty,
+            title: postSummary,
+            content: editorValue,
+            followupDiscussions: [],
+            studentAnswer: null,
+            instructorAnswer: null,
+            viewers: [],
+            courseId: cid,
+         };
+         try {
+            const newPostFromDb = await createPost(newPost);
 
-      try {
-         const newPostFromDb = await createPost(newPost);
-
-         if (newPostFromDb && newPostFromDb._id) {
-            navigate(`/Kambaz/Courses/${cid}/Piazza`);
-            await fetchPosts();
+            if (newPostFromDb && newPostFromDb._id) {
+               navigate(`/Kambaz/Courses/${cid}/Piazza`);
+               await fetchPosts();
+            }
+            else {
+               console.error("Failed to Post");
+            }
+         } catch (error) {
+            console.error("Error creating post: ", error);
          }
-         else {
-            console.error("Failed to Post");
-         }
-      } catch (error) {
-         console.error("Error creating post: ", error);
       }
+   };
 
    return (
 
       <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
-      style={{
-        width: isFullScreen ? '100%' : '100vw',
-        height: isFullScreen ? '100%' : 'auto',
-        transition: 'all 0.3 ease', 
-      }}
-    > 
+         style={{
+            width: isFullScreen ? '100%' : '100vw',
+            height: isFullScreen ? '100%' : 'auto',
+            transition: 'all 0.3 ease',
+         }}
+      >
 
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px"}}>
+                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px" }}>
                   Post Type*
                   <div id="">
                      <div className="">
@@ -254,10 +258,7 @@ export default function NewPostPage() {
                               </Form.Group>
                            </Form>
                         </div>
-
-
                      </div>
-
 
                      <div className="d-flex mt-3">
                         <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
@@ -289,50 +290,45 @@ export default function NewPostPage() {
 
 
                      <div className="d-flex mt-3">
-                        <div id="wd-class-stats" 
-                        className="d-flex wd-text-grey wd-font-bold me-4"
+                        <div id="wd-class-stats"
+                           className="d-flex wd-text-grey wd-font-bold me-4"
                            style={{ fontSize: "14px" }}>
 
                            Summary
                         </div>
-                     <Form>
-                              <Form.Control id="wd-name" type="text"
-                                 placeholder="Enter a one line summary here, 100 characters or less"
-                                 style={{ fontSize: "13px", width: '100ch' }}
-                                 value={postSumary}
-                                 onChange={handleSummaryChange}
-                                 maxLength={100}
-                              />
-                     </Form>
+                        <Form>
+                           <Form.Control id="wd-name" type="text"
+                              placeholder="Enter a one line summary here, 100 characters or less"
+                              style={{ fontSize: "13px", width: '100ch' }}
+                              value={postSummary}
+                              onChange={handleSummaryChange}
+                              maxLength={100}
+                           />
+                        </Form>
                      </div>
 
 
                      <div className="d-flex mt-3">
-                        <div id="wd-class-stats" 
-                        className="d-flex wd-text-grey wd-font-bold me-5"
+                        <div id="wd-class-stats"
+                           className="d-flex wd-text-grey wd-font-bold me-5"
                            style={{ fontSize: "14px" }}>
-
                            Details
                         </div>
-                     <Form>
-                              <ReactQuill
-                                 theme="snow"
-                                 className="custom-editor"
-                                 value={editorValue}
-                                 onChange={handleDetailsChange}
-                                 style={{ fontSize: "13px", width: '100ch' }}
-                              />
-                     </Form>
-                     </div>
+                        <Form>
+                           <ReactQuill
+                              theme="snow"
+                              className="custom-editor"
+                              value={editorValue}
+                              onChange={handleDetailsChange}
+                              style={{ fontSize: "13px", width: '100ch' }}
+                           />
+                        </Form>
+                     </div >
 
 
                      <div id="wd-class-stats" className="mt-5 wd-text-grey wd-font-bold"
                         style={{ fontSize: "14px" }}>
-
                         <span className="wd-rotated-asterick">*</span>Required fields
-
-
-
                      </div>
 
                      <div className="d-flex">
@@ -358,9 +354,6 @@ export default function NewPostPage() {
                </div>
             </div>
          </div>
-         {/* </div> */}
       </div>
-
-
    );
 }

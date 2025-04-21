@@ -1,5 +1,6 @@
 
 import express from 'express';
+import session from "express-session";
 import * as mongoDB from "mongodb";
 import cors from 'cors';
 import * as dotenv from "dotenv";
@@ -7,7 +8,28 @@ import { ObjectId } from 'mongodb';
 
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+}));
+
+const sessionOptions = {
+    secret: process.env.SESSION_SECRET || "kambaz",
+    resave: false,
+    saveUninitialized: false,
+};
+
+if (process.env.NODE_ENV !== "development") {
+    sessionOptions.proxy = true;
+    sessionOptions.cookie = {
+        sameSite: "none",
+        secure: true,
+        domain: process.env.NODE_SERVER_DOMAIN,
+        maxAge: 1000 * 60 * 60 * 24,
+    };
+}
+
+app.use(session(sessionOptions));
 app.use(express.json());
 
 const dbConn = process.env.DB_CONN_STRING;
@@ -34,6 +56,9 @@ const followupDiscussions = db.collection("followupDiscussions");
 const replies = db.collection("replies");
 const folders = db.collection("folders");
 const enrollments = db.collection("enrollments");
+const courses = db.collection("courses");
+const modules = db.collection("modules");
+const assignments = db.collection("assignments");
 
 // create a new post 
 app.post('/api/post/createPost', async (req, res) => {
@@ -130,6 +155,26 @@ app.get('/api/post/:pid', async (req, res) => {
         res.json(fetchedPost);
     } catch (err) {
         res.status(500).send(`Error when fetching post: ${err}`);
+    }
+});
+
+// get all posts in a course's folder
+app.get('/api/post/posts/folder', async (req, res) => {
+    try {
+        const { courseId, folderName } = req.query;
+        const allPosts = await posts.find({}).toArray();
+        const filteredPosts = [];
+        for (const post of allPosts) {
+            if (post.courseId === courseId) {
+                if (post.folders && post.folders.includes(folderName)) {
+                    filteredPosts.push(post);
+                }
+            }
+        }
+
+        res.json(filteredPosts);
+    } catch (err) {
+        res.status(500).send(`Error when fetching posts of a folder: ${err}`);
     }
 });
 
@@ -355,7 +400,218 @@ app.get('/api/user/getInstructors', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when fetching instructors: ${err}`);
     }
-})
+});
+
+// add a new user to the database
+app.post("/api/users", async (req, res) => {
+    const user = await users.insertOne(req.body);
+    res.json(user);
+});
+
+// get all the users in the database
+app.get("/api/users", async (req, res) => {
+    const foundUsers = await users.find({}).toArray();
+    res.json(foundUsers);
+});
+
+// get the current user's courses
+app.get("/api/users/courses", async (req, res) => {
+    if (req.session.user) {
+        const myEnrollments = await enrollments.find({ user: req.session.user._id }).toArray();
+        const myCourses = [];
+        for (const e of myEnrollments) {
+            const c = await courses.findOne({ _id: e.course });
+            if (c) {
+                myCourses.push(c);
+            }
+        }
+        res.json(myCourses);
+    }
+});
+
+// get a specific user
+app.get("/api/users/:userId", async (req, res) => {
+    const user = await users.findOne({ _id: req.params.userId });
+    res.json(user);
+});
+
+// create a new user
+app.put("/api/users/:userId", async (req, res) => {
+    const { userId } = req.params;
+    const userUpdates = req.body;
+    await users.updateOne({ _id: userId }, { $set: userUpdates });
+    const currentUser = req.session.user;
+    if (currentUser && currentUser._id === userId) {
+        req.session.user = { ...currentUser, ...userUpdates };
+    }
+    res.json(currentUser);
+});
+
+// delete a specific user
+app.delete("/api/users/:userId", async (req, res) => {
+    const status = await users.deleteOne({ _id: req.params.userId });
+    res.json(status);
+});
+
+// create a new user on signup
+app.post("/api/users/signup", async (req, res) => {
+    const user = await users.findOne({ username: req.body.username });
+    if (user) {
+        res.status(400).json(
+            { message: "Username already in use" });
+        return;
+    }
+    const currentUser = await users.insertOne(req.body);
+    req.session.user = currentUser;
+    res.json(currentUser);
+});
+
+// log into the app and start a new session
+app.post("/api/users/signin", async (req, res) => {
+    const { username, password } = req.body;
+    const currentUser = await users.findOne({ username, password });
+    if (currentUser) {
+        req.session.user = currentUser;
+        res.json(currentUser);
+    } else {
+        res.status(401).json({ message: "Unable to login. Try again later." });
+    }
+});
+
+// sign out of the app and destroy session
+app.post("/api/users/signout", (req, res) => {
+    req.session.destroy();
+    res.sendStatus(200);
+});
+
+// get the current user's profile
+app.post("/api/users/profile", async (req, res) => {
+    const currentUser = req.session.user;
+    if (!currentUser) {
+        res.sendStatus(401);
+        return;
+    }
+});
+
+// get the courses of the current user
+app.post("/api/courses", async (req, res) => {
+    const currentUser = req.session.user;
+    const newCourse = await courses.insertOne(req.body);
+    await enrollments.insertOne({ user: currentUser._id, course: newCourse._id });
+    res.json(newCourse);
+});
+
+// get all the courses in the database
+app.get("/api/courses", async (req, res) => {
+    const allCourses = await courses.find({}).toArray();
+    res.send(allCourses);
+});
+
+// create a new course
+app.post("/api/courses", async (req, res) => {
+    // add course to list of courses
+    console.log("in server - api courses endpoint")
+    console.log(req.body);
+    const newCourse = await courses.insertOne(req.body).toArray();
+    console.log("added new course");
+    console.log(newCourse);
+    // enroll current user into the course
+    const enrollment = await enrollments.insertOne({ course: newCourse.insertedId, user: req.session.user });
+    console.log("added new enrollment");
+    console.log(enrollment);
+    // add folders of the new course to the folders database
+    const newFolders = await folders.insertMany(req.body.folders.map(f => { return { name: f, courseId: newCourse.insertedId, posts: [] } }))
+    console.log("added new folders");
+    console.log(newFolders);
+    res.send({ newCourse, enrollment, newFolders });
+});
+
+// delete a course from the database
+app.delete("/api/courses/:courseId", async (req, res) => {
+    const { courseId } = req.params;
+    const status = await courses.deleteOne({ _id: courseId });
+    res.send(status);
+});
+
+// update a course
+app.put("/api/courses/:courseId", async (req, res) => {
+    const { courseId } = req.params;
+    const courseUpdates = req.body;
+    const status = await courses.updateOne({ _id: courseId }, { $set: courseUpdates });
+    res.send(status);
+});
+
+// find the modules of a course
+app.get("/api/courses/:courseId/modules", async (req, res) => {
+    const { courseId } = req.params;
+    const modulesFound = await modules.find({ course: courseId }).toArray();
+    res.json(modulesFound);
+});
+
+// add a new module to the courses
+app.post("/api/courses/:courseId/modules", async (req, res) => {
+    const { courseId } = req.params;
+    const module = {
+        ...req.body,
+        course: courseId,
+    };
+    const newModule = await modules.insertOne(module);
+    res.send(newModule);
+});
+
+// delete a course's module
+app.delete("/api/modules/:moduleId", async (req, res) => {
+    const { moduleId } = req.params;
+    const status = await modules.deleteOne({ _id: moduleId });
+    res.send(status);
+});
+
+// update a course's module
+app.put("/api/modules/:moduleId", async (req, res) => {
+    const { moduleId } = req.params;
+    const moduleUpdates = req.body;
+    const status = await modules.updateOne({ _id: moduleId }, { $set: moduleUpdates });
+    res.send(status);
+});
+
+// get all the assignments in the database
+app.get("/api/assignments", async (req, res) => {
+    const results = await assignments.find({}).toArray();
+    res.send(results);
+});
+
+// get all the assignments of a course
+app.get("/api/assignments/:courseId/course", async (req, res) => {
+    const { courseId } = req.params;
+    const results = await assignments.find({ _id: courseId }).toArray();
+    res.send(results);
+});
+
+// delete a specific assignment
+app.delete("/api/assignments/:assignmentId", async (req, res) => {
+    const { assignmentId } = req.params;
+    const status = await assignments.deleteOne({ _id: assignmentId });
+    res.send(status);
+});
+
+// update a specific assignment
+app.put("/api/assignments/:assignmentId", (req, res) => {
+    const { assignmentId } = req.params;
+    const assignmentUpdates = req.body;
+    const status = assignments.updateOne({ _id: assignmentId }, { $set: assignmentUpdates });
+    res.send(status);
+});
+
+// create a new module
+app.post("/api/assignments/:assignmentId/modules", async (req, res) => {
+    const { assignmentId } = req.params;
+    const module = {
+        ...req.body,
+        assignment: assignmentId,
+    };
+    const newModule = await modules.insertOne(module);
+    res.send(newModule);
+});
 
 // get an individual followup discussion by its ID
 app.get('/api/followupDiscussion/:fudid', async (req, res) => {
@@ -834,7 +1090,7 @@ app.get('/api/folders/posts', async (req, res) => {
 // add folder in a specific course
 app.post('/api/folders', async (req, res) => {
     try {
-        const { folder } = req.body;
+        const { folder } = req.body; // TODO: change to params
         const resp = await folders.insertOne(folder);
         res.status(200).send(resp);
     } catch (err) {
@@ -873,6 +1129,20 @@ app.put('/api/folders', async (req, res) => {
     } catch (err) {
         res.status(500).send(`Error when editing folder name: ${err}`);
     }
+});
+
+app.put("/api/enrollments/:courseId", async (req, res) => {
+    const currentUser = req.session.user;
+    const { courseId } = req.params;
+    const status = await enrollments.insertOne({ user: currentUser._id, course: courseId });
+    res.send(status);
+});
+
+app.delete("/api/enrollments/:courseId", async (req, res) => {
+    const currentUser = req.session.user;
+    const { courseId } = req.params;
+    const status = await enrollments.deleteOne({ user: currentUser._id, course: courseId });
+    res.send(status);
 });
 
 // get student enrollment count for course 
@@ -920,6 +1190,7 @@ app.get('/api/enrollments/:cid', async (req, res) => {
         // course id is a request param 
         const { cid } = req.params;
         const fetchedEnrollments = await enrollments.find({ course: cid }).toArray();
+        console.log(fetchedEnrollments);
         res.status(200).json(fetchedEnrollments);
     } catch (err) {
         res.status(500).send(`Error when fetching enrollments: ${err}`);

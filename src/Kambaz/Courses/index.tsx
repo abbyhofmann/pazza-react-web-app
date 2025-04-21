@@ -1,4 +1,4 @@
-import { courses } from "../Database";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaAlignJustify } from "react-icons/fa";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
@@ -7,11 +7,13 @@ import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import { Route, Routes, useLocation, useParams } from "react-router";
 import PeopleTable from "./People/Table";
+import { useSelector } from "react-redux";
 import Piazza from "./Piazza";
 
 export default function Courses() {
   const { cid } = useParams();
-  const course = courses.find((course) => course._id === cid);
+  const { courses } = useSelector((state: any) => state.courseReducer);
+  const course = courses.find((course: any) => course._id === cid);
   const { pathname } = useLocation();
 
   return (
