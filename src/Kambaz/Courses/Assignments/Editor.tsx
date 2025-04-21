@@ -83,7 +83,6 @@ export default function AssignmentEditor() {
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="my-4">
-                {/* TODO: spacing */}
                 <Form.Label>Assign</Form.Label>
                 <Col>
                   <Form.Label htmlFor="wd-assign-to" column><b>Assign To</b></Form.Label>
@@ -174,7 +173,6 @@ export default function AssignmentEditor() {
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="my-4">
-            {/* TODO: spacing */}
             <Form.Label>Assign</Form.Label>
             <Col>
               <Form.Label htmlFor="wd-assign-to" column><b>Assign To</b></Form.Label>

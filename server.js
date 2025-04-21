@@ -158,6 +158,26 @@ app.get('/api/post/:pid', async (req, res) => {
     }
 });
 
+// get all posts in a course's folder
+app.get('/api/post/posts/folder', async (req, res) => {
+    try {
+        const { courseId, folderName } = req.query;
+        const allPosts = await posts.find({}).toArray();
+        const filteredPosts = [];
+        for (const post of allPosts) {
+            if (post.courseId === courseId) {
+                if (post.folders && post.folders.includes(folderName)) {
+                    filteredPosts.push(post);
+                }
+            }
+        }
+
+        res.json(filteredPosts);
+    } catch (err) {
+        res.status(500).send(`Error when fetching posts of a folder: ${err}`);
+    }
+});
+
 // get number of unread posts for a user in a course
 app.get('/api/post/unreadCount/:cid/:uid', async (req, res) => {
     try {
@@ -401,7 +421,9 @@ app.get("/api/users/courses", async (req, res) => {
         const myCourses = [];
         for (const e of myEnrollments) {
             const c = await courses.findOne({ _id: e.course });
-            myCourses.push(c);
+            if (c) {
+                myCourses.push(c);
+            }
         }
         res.json(myCourses);
     }
@@ -483,6 +505,25 @@ app.post("/api/courses", async (req, res) => {
 app.get("/api/courses", async (req, res) => {
     const allCourses = await courses.find({}).toArray();
     res.send(allCourses);
+});
+
+// create a new course
+app.post("/api/courses", async (req, res) => {
+    // add course to list of courses
+    console.log("in server - api courses endpoint")
+    console.log(req.body);
+    const newCourse = await courses.insertOne(req.body).toArray();
+    console.log("added new course");
+    console.log(newCourse);
+    // enroll current user into the course
+    const enrollment = await enrollments.insertOne({ course: newCourse.insertedId, user: req.session.user });
+    console.log("added new enrollment");
+    console.log(enrollment);
+    // add folders of the new course to the folders database
+    const newFolders = await folders.insertMany(req.body.folders.map(f => { return { name: f, courseId: newCourse.insertedId, posts: [] } }))
+    console.log("added new folders");
+    console.log(newFolders);
+    res.send({ newCourse, enrollment, newFolders });
 });
 
 // delete a course from the database
@@ -1049,7 +1090,7 @@ app.get('/api/folders/posts', async (req, res) => {
 // add folder in a specific course
 app.post('/api/folders', async (req, res) => {
     try {
-        const { folder } = req.body;
+        const { folder } = req.body; // TODO: change to params
         const resp = await folders.insertOne(folder);
         res.status(200).send(resp);
     } catch (err) {
@@ -1149,6 +1190,7 @@ app.get('/api/enrollments/:cid', async (req, res) => {
         // course id is a request param 
         const { cid } = req.params;
         const fetchedEnrollments = await enrollments.find({ course: cid }).toArray();
+        console.log(fetchedEnrollments);
         res.status(200).json(fetchedEnrollments);
     } catch (err) {
         res.status(500).send(`Error when fetching enrollments: ${err}`);

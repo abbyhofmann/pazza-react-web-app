@@ -18,13 +18,13 @@ export default function Kambaz() {
   const [allCourses, setAllCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [course, setCourse] = useState<any>({
-    _id: "0",
     name: "New Course",
     number: "New Number",
     startDate: "2023-09-10",
     endDate: "2023-12-15",
     image: "/images/reactjs.jpg",
-    description: "New Description"
+    description: "New Description",
+    folders: ["hw1", "hw2", "hw3", "hw4", "hw5", "hw6", "project", "exam", "logistics", "office_hours", "other"],
   });
 
   const updateCourse = async () => {
@@ -36,8 +36,8 @@ export default function Kambaz() {
   };
 
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
-    await enrollmentClient.enroll(newCourse._id);
+    const newCourse = await courseClient.createCourse(course);
+    await enrollmentClient.enroll(newCourse.insertedId);
     setCourses([...courses, newCourse]);
   };
 

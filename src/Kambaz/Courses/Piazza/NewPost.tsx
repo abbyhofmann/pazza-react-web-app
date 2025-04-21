@@ -11,6 +11,7 @@ import { Folder } from "../../types";
 import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
+import { useSelector } from "react-redux";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState('question');
@@ -18,6 +19,9 @@ export default function NewPostPage() {
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
    const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const { currentUser } = useSelector((state: any) => state.accountReducer);
+   const isFaculty = currentUser.role === "FACULTY";
 
    // keep track of which instructors are selected to see a new post
    const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
@@ -114,10 +118,10 @@ export default function NewPostPage() {
          const newPost: Post = {
             _id: `P${Date.now()}`,
             folders: selectedFolders,
-            authorId: 'user123', // TODO: update to be logged in user
+            authorId: currentUser._id,
             datePosted: new Date().toDateString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
-            instructor: false, // TODO: need to determine if author is an instructor (i.e. logged in user is instructor)
+            instructor: !isFaculty,
             title: postSummary,
             content: editorValue,
             followupDiscussions: [],

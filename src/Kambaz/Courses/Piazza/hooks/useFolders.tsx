@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router"
 import { Folder } from "../../../types";
-import { getFolders, getPostsInFolder, createFolder, deleteFolders, editFolder } from "../services/folderService";
+import { getFolders, createFolder, deleteFolders, editFolder } from "../services/folderService";
+import { getPostsInFolder } from "../services/postService";
 
 const useFolders = () => {
   const { cid } = useParams();

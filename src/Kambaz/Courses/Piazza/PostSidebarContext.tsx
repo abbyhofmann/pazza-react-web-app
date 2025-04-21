@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 type PostSidebarContextType = {
   posts: Post[];
   fetchPosts: () => Promise<void>;
+  setPosts: (newPosts: Post[]) => void;
 };
 
 // Context for sharing the posts data across the application. This is needed because as answers get added to a post, the 
@@ -33,7 +34,7 @@ export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   }, [cid]);
 
   return (
-    <PostSidebarContext.Provider value={{ posts, fetchPosts }}>
+    <PostSidebarContext.Provider value={{ posts, fetchPosts, setPosts }}>
       {children}
     </PostSidebarContext.Provider>
   );

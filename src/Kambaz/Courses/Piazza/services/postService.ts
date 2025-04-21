@@ -226,11 +226,22 @@ const getUnreadPostsCount = async (cid: string, uid: string): Promise<number> =>
   return res.data;
 };
 
+const getPostsInFolder = async (courseId: string, folderName: string): Promise<Post[]> => {
+  const config = { courseId, folderName };
+  const res = await api.get(`${POST_API_URL}/posts/folder`, { params: config });
+
+  if (res.status !== 200) {
+    throw new Error(`Error while fetching posts in ${courseId} > ${folderName}`);
+  }
+  return res.data;
+}
+
 export {
   getPostById,
   getPosts,
   addDiscussionToPost,
   addAnswerToPost,
+  getPostsInFolder,
   removeAnswerFromPost,
   removeFudFromPost,
   createPost,

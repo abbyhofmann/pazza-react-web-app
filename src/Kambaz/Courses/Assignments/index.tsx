@@ -42,7 +42,6 @@ export default function Assignments() {
 
   return (
     <div id="wd-assignments">
-      {/* TODO: magnifying glass icon + sizing */}
       <div>
         <div className="m-4">
           <input placeholder="Search..."
