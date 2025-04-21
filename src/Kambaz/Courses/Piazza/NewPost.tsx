@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useState } from "react";
 import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
@@ -18,13 +19,8 @@ export default function NewPostPage() {
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
+   const [postSumary, setPostSummary] = useState("");
    const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
-
-   // keep track of which instructors are selected to see a new post
-   const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
-
-   // if the "instructors" button is selected in the post to of a new post, show the dropdown selection component
-   const [instructorButtonSelected, setInstructorButtonSelected] = useState<boolean>(false);
 
    const navigate = useNavigate();
    const { cid } = useParams();
@@ -34,7 +30,6 @@ export default function NewPostPage() {
      setFullScreen(prev => !prev);
    };
 
-
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
          setCourseFolders(await getFolders(cid ?? ""));
@@ -42,30 +37,20 @@ export default function NewPostPage() {
       fetchFoldersInCourse();
    }, [cid]);
 
-   const [postSummary, setPostSummary] = useState("");
-
    const { fetchPosts } = usePostSidebarContext();
+
 
    const DeleteButton = () => {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
    }
+
 
    const handleChangePostType = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedOption(event.target.value);
    };
 
    const handleChangePostTo = (event: React.ChangeEvent<HTMLInputElement>) => {
-      // if instructors option is selected, show the dropdown for selecting the instructors 
-      if (event.target.value === 'instructor') {
-         setSelectedPostTo(event.target.value);
-         setInstructorButtonSelected(true);
-      }
-      else {
-         // if everyone is selected, we don't want selected instructors to only view post
-         setInstructorButtonSelected(false);
-         setUsersCanViewPost([]);
-         setSelectedPostTo(event.target.value);
-      }
+      setSelectedPostTo(event.target.value);
    };
 
 
@@ -77,8 +62,10 @@ export default function NewPostPage() {
       setEditorValue(value);
    };
 
+
    const handleFolderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = event.target;
+
 
       if (checked) {
          setSelectedFolders((prev) => [...prev, value]);
@@ -90,7 +77,7 @@ export default function NewPostPage() {
 
    const postButton = async () => {
       if (!selectedOption) {
-         alert("Please choose a post type: Question/Note");
+         alert("Please choose a post yype: Question/Note");
          return;
       }
       if (!selectedPostTo) {
@@ -101,7 +88,7 @@ export default function NewPostPage() {
          alert("Please choose a folder(s)");
          return;
       }
-      if (!postSummary) {
+      if (!postSumary) {
          alert("Please put a summary for your post");
          return;
       }
@@ -110,24 +97,22 @@ export default function NewPostPage() {
          return;
       }
 
-      if (cid) {
-         const newPost: Post = {
-            _id: `P${Date.now()}`,
-            folders: selectedFolders,
-            authorId: 'user123', // TODO: update to be logged in user
-            datePosted: new Date().toDateString(),
-            type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
-            instructor: false, // TODO: need to determine if author is an instructor (i.e. logged in user is instructor)
-            title: postSummary,
-            content: editorValue,
-            followupDiscussions: [],
-            studentAnswer: null,
-            instructorAnswer: null,
-            viewers: [],
-            courseId: cid,
-         };
+      const newPost = {
+         _id: `P${Date.now()}`,
+         folderId: selectedFolders,
+         authorId: 'user123',
+         datePosted: new Date().toISOString(),
+         type: 2,
+         instructor: 1,
+         title: postSumary,
+         content: editorValue,
+         followUpQuestions: '',
+         studentAnswer: '',
+         instructorAnswer: '',
+         viewers: '',
+         courseId: cid,
+      };
 
-        
       try {
 
          const response = await fetch("http://localhost:3000/api/post", {
@@ -148,8 +133,7 @@ export default function NewPostPage() {
       } catch (error) {
          console.error("Server Error Katie:", error);
       }
-    }
-};
+   };
 
    return (
 
@@ -164,7 +148,7 @@ export default function NewPostPage() {
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px" }}>
+                  style={{ fontSize: "14px", flex: '0 0 20%', paddingLeft: "20px"}}>
                   Post Type*
                   <div id="">
                      <div className="">
@@ -238,7 +222,8 @@ export default function NewPostPage() {
                         <div className="mt-1 d-flex ms-3">
                            <Form>
                               <Form.Group className="mb-3">
-                                 <div className="d-flex align-items-center">
+
+                                 <div className="d-flex">
                                     <Form.Check
                                        type="radio"
                                        label={
@@ -274,11 +259,12 @@ export default function NewPostPage() {
                                        onChange={handleChangePostTo}
                                        className="me-3"
                                     />
-                                    {instructorButtonSelected && <InstructorDropdown selectedInstructors={usersCanViewPost} setSelectedInstructors={setUsersCanViewPost} />}
                                  </div>
                               </Form.Group>
                            </Form>
                         </div>
+
+
                      </div>
 
 
@@ -321,8 +307,8 @@ export default function NewPostPage() {
                      <Form>
                               <Form.Control id="wd-name" type="text"
                                  placeholder="Enter a one line summary here, 100 characters or less"
-                                 style={{ fontSize: "13px" }}
-                                 value={postSummary}
+                                 style={{ fontSize: "13px", width: '100ch' }}
+                                 value={postSumary}
                                  onChange={handleSummaryChange}
                                  maxLength={100}
                               />
@@ -332,10 +318,10 @@ export default function NewPostPage() {
 
                      <div className="d-flex mt-3">
                         <div id="wd-class-stats" 
-                        className="d-flex wd-text-grey wd-font-bold me-4"
+                        className="d-flex wd-text-grey wd-font-bold me-5"
                            style={{ fontSize: "14px" }}>
 
-                           Summary
+                           Details
                         </div>
                      <Form>
                               <ReactQuill
@@ -353,6 +339,8 @@ export default function NewPostPage() {
                         style={{ fontSize: "14px" }}>
 
                         <span className="wd-rotated-asterick">*</span>Required fields
+
+
 
                      </div>
 
@@ -379,7 +367,9 @@ export default function NewPostPage() {
                </div>
             </div>
          </div>
+         {/* </div> */}
       </div>
+
 
    );
 }
