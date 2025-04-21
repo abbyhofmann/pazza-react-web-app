@@ -23,8 +23,9 @@ export default function RightSidePage() {
   const [enrollmentsCount, setEnrollmentsCount] = useState<Number>(0);
   const [unreadPostCount, setUnreadPostCount] = useState<Number>(0);
 
-  // todo - remove log after implementation.. this is just to pass the build
-  console.log(setUnreadPostCount);
+  // TODO: remove log after merging in the full screen functionality
+  console.log(handleFullScreenToggle);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
