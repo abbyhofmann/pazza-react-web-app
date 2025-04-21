@@ -5,6 +5,10 @@ import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
 
 export default function RightSidePage() {
+  const [isFullScreen, setFullScreen] = useState(false);
+  const handleFullScreenToggle = () => {
+    setFullScreen(prev => !prev);
+  };
 
   const { cid } = useParams();
 
@@ -55,11 +59,20 @@ export default function RightSidePage() {
     fetchData().catch(e => console.log(e));
 
   }, [])
+  
 
   return (
 
-    <div className="wd-right-page-bg">
-      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class" style={{ fontWeight: 500 }}>
+
+    <div className={`wd-right-page-bg ${isFullScreen ? 'fullscreen-content' : ''}`}
+      style={{
+        width: isFullScreen ? '100%' : '100vw',
+        height: isFullScreen ? '100%' : 'auto',
+        transition: 'all 0.3 ease', 
+      }}
+    >
+      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class" 
+      style={{ fontWeight: 500 }}>
         Class at a Glance
       </div>
       <div className="wd-class-glance">

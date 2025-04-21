@@ -14,7 +14,7 @@ import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
 
 export default function NewPostPage() {
-   const [selectedOption, setSelectedOption] = useState<string>('');
+   const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
@@ -28,6 +28,12 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
+   const [isFullScreen, setFullScreen] = useState(false);
+
+   const handleFullScreenToggle = () => {
+     setFullScreen(prev => !prev);
+   };
+
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
@@ -106,6 +112,7 @@ export default function NewPostPage() {
 
       if (cid) {
          const newPost: Post = {
+            _id: `P${Date.now()}`,
             folders: selectedFolders,
             authorId: 'user123', // TODO: update to be logged in user
             datePosted: new Date().toDateString(),
@@ -120,25 +127,39 @@ export default function NewPostPage() {
             courseId: cid,
          };
 
-         try {
-            const newPostFromDb = await createPost(newPost);
+        
+      try {
 
-            if (newPostFromDb && newPostFromDb._id) {
-               navigate(`/Kambaz/Courses/${cid}/Piazza`);
-               await fetchPosts();
-            }
-            else {
-               console.error("Failed to Post");
-            }
-         } catch (error) {
-            console.error("Error creating post: ", error);
+         const response = await fetch("http://localhost:3000/api/post", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newPost),
+         });
+
+         if (response.ok) {
+            console.log("New Post Added");
+            navigate(`/Kambaz/Courses/${cid}/Piazza`);
          }
+         else {
+            console.error("Failed to Post");
+         }
+      } catch (error) {
+         console.error("Server Error Katie:", error);
       }
-   };
+    }
+};
 
    return (
 
-      <div id="wd-new-post" className="new-post-content">
+      <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
+      style={{
+        width: isFullScreen ? '100%' : '100vw',
+        height: isFullScreen ? '100%' : 'auto',
+        transition: 'all 0.3 ease', 
+      }}
+    > 
 
          <div className="">
             <div>
@@ -290,45 +311,42 @@ export default function NewPostPage() {
                      </div>
 
 
-                     <Form>
-                        <Form.Group as={Row} className="mb-4 d-flex align-items-center">
-                           <Col sm={2}>
-                              <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                                 style={{ fontSize: "14px" }}>
+                     <div className="d-flex mt-3">
+                        <div id="wd-class-stats" 
+                        className="d-flex wd-text-grey wd-font-bold me-4"
+                           style={{ fontSize: "14px" }}>
 
-                                 Summary*
-                              </div>
-                           </Col>
-                           <Col sm={9}>
+                           Summary
+                        </div>
+                     <Form>
                               <Form.Control id="wd-name" type="text"
                                  placeholder="Enter a one line summary here, 100 characters or less"
                                  style={{ fontSize: "13px" }}
                                  value={postSummary}
                                  onChange={handleSummaryChange}
+                                 maxLength={100}
                               />
-                           </Col>
-                        </Form.Group>
                      </Form>
+                     </div>
 
+
+                     <div className="d-flex mt-3">
+                        <div id="wd-class-stats" 
+                        className="d-flex wd-text-grey wd-font-bold me-4"
+                           style={{ fontSize: "14px" }}>
+
+                           Summary
+                        </div>
                      <Form>
-                        <Form.Group as={Row} className="mb-3 d-flex ">
-                           <Col sm={2}>
-                              <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
-                                 style={{ fontSize: "14px" }}>
-
-                                 Details*
-                              </div>
-                           </Col>
-                           <Col sm={9}>
                               <ReactQuill
                                  theme="snow"
                                  className="custom-editor"
                                  value={editorValue}
                                  onChange={handleDetailsChange}
+                                 style={{ fontSize: "13px", width: '100ch' }}
                               />
-                           </Col>
-                        </Form.Group>
                      </Form>
+                     </div>
 
 
                      <div id="wd-class-stats" className="mt-5 wd-text-grey wd-font-bold"
@@ -348,7 +366,7 @@ export default function NewPostPage() {
                                  selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)
                                  : "Question"}{" "}
 
-                              to CS4550-02! </button>
+                              {cid}! </button>
                         </div>
 
                         <div className="d-flex">
