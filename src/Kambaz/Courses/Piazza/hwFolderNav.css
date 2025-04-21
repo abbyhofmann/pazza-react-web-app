@@ -16,3 +16,13 @@
   background-color: darkgrey;
   color: white;
 }
+
+.vertical-line {
+  border-left: 1px solid #666; 
+  height: 30px; 
+  margin-top: 1px;
+}
+
+.wd-margin-top {
+  margin-top: 1px;;
+}

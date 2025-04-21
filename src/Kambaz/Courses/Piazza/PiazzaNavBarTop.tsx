@@ -16,8 +16,12 @@ export default function PiazzaNavBarTop() {
         <img src="/images/Piazzalogo.png" height="20px"
           className="wd-logo-height ps-4 w-1/4" />
       </Link>
-      <div className="ps-4 d-flex">
+      <div className="ps-4 ms-5 d-flex">
         <ul className="navbar-nav d-flex">
+        <li className="nav-item  wd-font-bold">
+            <a className="nav-link">{cid}</a>
+          </li>
+          
           <li className="nav-item">
             <Link
               className="nav-link"
