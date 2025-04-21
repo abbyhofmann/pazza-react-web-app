@@ -12,8 +12,14 @@ import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
 import { useSelector } from "react-redux";
 import { createPost } from "./services/postService";
+import { FaCaretRight } from "react-icons/fa";
 
-export default function NewPostPage() {
+type NewPostPageProps = {
+   isFullScreen: boolean;
+   setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+ };
+
+ export default function NewPostPage({ isFullScreen, setIsFullScreen }: NewPostPageProps) {
    const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
@@ -32,7 +38,11 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
-   const [isFullScreen] = useState(false);
+   
+   const handleFullScreenToggle = () => {
+      setIsFullScreen(prev => !prev);
+    };
+ 
 
    
 
@@ -151,6 +161,15 @@ export default function NewPostPage() {
             transition: 'all 0.3 ease',
          }}
       >
+
+<div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+        <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+          {isFullScreen ?  (
+              <FaCaretRight className="ms-1 mb-1 fs-5" />
+          ) : (
+            ""
+          )}
+            </button>
 
          <div className="">
             <div>
@@ -367,5 +386,6 @@ export default function NewPostPage() {
             </div>
          </div>
       </div>
+     </div>
    );
 }

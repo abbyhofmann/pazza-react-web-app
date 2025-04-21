@@ -11,10 +11,17 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import RightSidePage from "../RightSidePage";
 
-// The post feed accordian-style sidebar.
-export default function PostSidebar() {
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
+type PostSidebarProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+
+// The post feed accordian-style sidebar.
+export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSidebarProps) {
+
+
   const {cid } = useParams();
   
   const handleFullScreen = () => {
@@ -23,19 +30,6 @@ export default function PostSidebar() {
 
   
 
-
-  const renderFullScreenContent = () => {
-    const hash = location.hash;
-    if (hash.includes("NewPostPage")) {
-      return <NewPostPage/>;
-    } else if (hash === `#/Kambaz/Courses/${cid}/Piazza`) {
-      return <RightSidePage/>;
-    } else if (hash.includes("Piazza/post")) {
-      return <ViewPostPage/>;
-    } else {
-      return <h2>You're in Full Screen Mode!</h2>;
-    }
-  };
 
 
   const { posts } = usePostSidebarContext();
@@ -84,7 +78,7 @@ export default function PostSidebar() {
           </div>
         )}
         
-        {isFullScreen && <div>{renderFullScreenContent()}</div>}
+    
   </div>
       
 

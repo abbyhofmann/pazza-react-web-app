@@ -3,10 +3,18 @@ import { getPostsCount, getUnansweredPostsCount } from "./services/postService";
 import { useParams } from "react-router";
 import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
+import { FaCaretRight } from "react-icons/fa";
 
+type RightSidePageProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-export default function RightSidePage() {
-  const [isFullScreen] = useState(false);
+export default function RightSidePage({ isFullScreen, setIsFullScreen }: RightSidePageProps) {
+
+  const handleFullScreenToggle = () => {
+    setIsFullScreen(prev => !prev);
+  };
   
 
   const { cid } = useParams();
@@ -69,6 +77,14 @@ export default function RightSidePage() {
         transition: 'all 0.3 ease',
       }}
     >
+ <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+    <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+      {isFullScreen ?  (
+          <FaCaretRight className="ms-1 mb-1 fs-5" />
+      ) : (
+        ""
+      )}
+        </button>
       <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class"
         style={{ fontWeight: 500 }}>
         Class at a Glance
@@ -106,5 +122,6 @@ export default function RightSidePage() {
         </div>
       </div>
     </div>
+  </div>
   );
 }
