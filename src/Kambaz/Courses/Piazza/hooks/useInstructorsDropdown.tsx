@@ -15,7 +15,7 @@ const useInstructorsDropdown = (setSelectedInstructors: React.Dispatch<React.Set
         const fetchData = async () => {
             try {
                 // get all the enrollments of the course 
-                const courseEnrollments: Enrollment[] = await getEnrollments(cid!);
+                const courseEnrollments: Enrollment[] = await getEnrollments(cid ?? "");
 
                 if (courseEnrollments) {
                     // get all the users in the course from the enrollments 

@@ -29,28 +29,28 @@ export default function RightSidePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedUnansweredCount = await getUnansweredPostsCount(cid!);
+        const fetchedUnansweredCount = await getUnansweredPostsCount(cid ?? "");
         if (fetchedUnansweredCount) {
           setUnansweredPostCount(fetchedUnansweredCount);
         }
 
-        const fetchedTotalCount = await getPostsCount(cid!);
+        const fetchedTotalCount = await getPostsCount(cid ?? "");
         if (fetchedTotalCount) {
           setTotalPostsCount(fetchedTotalCount);
         }
 
-        const fetchedResponseCounts = await getResponseCounts(cid!);
+        const fetchedResponseCounts = await getResponseCounts(cid ?? "");
         if (fetchedResponseCounts) {
           setStudentResponseCount(fetchedResponseCounts[0]);
           setInstructorResponseCount(fetchedResponseCounts[1]);
         }
 
-        const fetchedEnrollmentCount = await getStudentEnrollmentsCount(cid!);
+        const fetchedEnrollmentCount = await getStudentEnrollmentsCount(cid ?? "");
         if (fetchedEnrollmentCount) {
           setEnrollmentsCount(fetchedEnrollmentCount);
         }
 
-        const fetchedUnreadCount = await getUnreadPostsCount(cid!, currentUser._id!);
+        const fetchedUnreadCount = await getUnreadPostsCount(cid ?? "", currentUser._id ?? "");
         if (fetchedUnreadCount) {
           setUnreadPostCount(fetchedEnrollmentCount);
         }

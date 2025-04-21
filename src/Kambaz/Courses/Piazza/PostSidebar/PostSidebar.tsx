@@ -133,26 +133,26 @@ export default function PostSidebar() {
               <span>TODAY</span>
             </div>
 
-            {/* Today Collapsible Content */}
-            <div id="collapseToday" className="collapse show">
-              <ul className="list-group list-group-flush">
-                {posts
-                  .filter((post) => formatDate(post.datePosted) === today)
-                  .map((post) => (
-                    <PostListItem
-                      key={post._id}
-                      title={post.title}
-                      content={post.content}
-                      datePosted={post.datePosted}
-                      instructor={post.instructor}
-                      displayDate={extractTime}
-                      onClick={() => handlePostClick(post._id!)} // TODO - is this how to handle the undefined???
-                      isSelected={selectedPostId === post._id}
-                      isUnanswered={isUnanswered(post)}
-                    />
-                  ))}
-              </ul>
-            </div>
+          {/* Today Collapsible Content */}
+          <div id="collapseToday" className="collapse show">
+            <ul className="list-group list-group-flush">
+              {posts
+                .filter((post) => formatDate(post.datePosted) === today)
+                .map((post) => (
+                  <PostListItem
+                    key={post._id}
+                    title={post.title}
+                    content={post.content}
+                    datePosted={post.datePosted}
+                    instructor={post.instructor}
+                    displayDate={extractTime}
+                    onClick={() => handlePostClick(post._id ?? "")}
+                    isSelected={selectedPostId === post._id}
+                    isUnanswered={isUnanswered(post)}
+                  />
+                ))}
+            </ul>
+          </div>
 
             {/* Yesterday Dropdown Header */}
             <div

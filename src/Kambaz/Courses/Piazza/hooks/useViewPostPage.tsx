@@ -33,7 +33,7 @@ const useViewPostPage = () => {
                 // create a new answer
                 const newAnswer: Answer = {
                     postId: post._id,
-                    type: answerType === "student" ? 0 : 1, // TODO - should we keep this as number or change it to a string
+                    type: answerType === "student" ? 0 : 1,
                     authors: [currentUser._id],
                     content: plainTextContent,
                     dateEdited: new Date().toDateString(),
