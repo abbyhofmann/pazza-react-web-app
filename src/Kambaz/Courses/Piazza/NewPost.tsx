@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import { Form, FormCheck, FormGroup } from "react-bootstrap";
 import ReactQuill from "react-quill";
@@ -26,13 +24,19 @@ export default function NewPostPage() {
    const { currentUser } = useSelector((state: any) => state.accountReducer);
    const isFaculty = currentUser.role === "FACULTY";
 
+   // keep track of which instructors are selected to see a new post
+   const [usersCanViewPost, setUsersCanViewPost] = useState<User[]>([]);
+
+   // if the "instructors" button is selected in the post to of a new post, show the dropdown selection component
+   const [instructorButtonSelected, setInstructorButtonSelected] = useState<boolean>(false);
+
    const navigate = useNavigate();
    const { cid } = useParams();
    const [isFullScreen, setFullScreen] = useState(false);
 
-   const handleFullScreenToggle = () => {
-      setFullScreen(prev => !prev);
-   };
+   // const handleFullScreenToggle = () => {
+   //    setFullScreen(prev => !prev);
+   // };
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
@@ -54,7 +58,17 @@ export default function NewPostPage() {
    };
 
    const handleChangePostTo = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSelectedPostTo(event.target.value);
+      // if instructors option is selected, show the dropdown for selecting the instructors 
+      if (event.target.value === 'instructor') {
+         setSelectedPostTo(event.target.value);
+         setInstructorButtonSelected(true);
+      }
+      else {
+         // if everyone is selected, we don't want selected instructors to only view post
+         setInstructorButtonSelected(false);
+         setUsersCanViewPost([]);
+         setSelectedPostTo(event.target.value);
+      }
    };
 
 
@@ -213,12 +227,11 @@ export default function NewPostPage() {
                            Post To*
                         </div>
 
-
                         <div className="mt-1 d-flex ms-3">
                            <Form>
                               <Form.Group className="mb-3">
 
-                                 <div className="d-flex">
+                                 <div className="d-flex align-items-center">
                                     <Form.Check
                                        type="radio"
                                        label={
@@ -254,6 +267,7 @@ export default function NewPostPage() {
                                        onChange={handleChangePostTo}
                                        className="me-3"
                                     />
+                                    {instructorButtonSelected && <InstructorDropdown selectedInstructors={usersCanViewPost} setSelectedInstructors={setUsersCanViewPost} />}
                                  </div>
                               </Form.Group>
                            </Form>
