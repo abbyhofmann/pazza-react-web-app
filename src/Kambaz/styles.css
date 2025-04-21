@@ -302,11 +302,12 @@ input[type="radio"] {
 }
 
 .new-post-content {
-  height: 100%;
+  height: 100vh;
   overflow-y: auto;
   flex-direction: column;
   overflow-x: hidden;
 }
+
 
 .fullscreen-content {
   width: 100vw; 
