@@ -7,9 +7,13 @@ import { getStudentEnrollmentsCount } from "./services/enrollmentService";
 
 export default function RightSidePage() {
   const [isFullScreen, setFullScreen] = useState(false);
-  const handleFullScreenToggle = () => {
-    setFullScreen(prev => !prev);
-  };
+
+  // todo - remove log 
+  console.log(setFullScreen);
+
+  // const handleFullScreenToggle = () => {
+  //   setFullScreen(prev => !prev);
+  // };
 
   const { cid } = useParams();
 

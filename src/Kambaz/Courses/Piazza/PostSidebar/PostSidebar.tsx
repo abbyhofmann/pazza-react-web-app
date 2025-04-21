@@ -9,15 +9,15 @@ import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
+  // const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
   const {pid} = useParams();
-  const locaton = useLocation();
+  // const locaton = useLocation();
   
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev);

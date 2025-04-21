@@ -15,11 +15,14 @@ import { useState } from "react";
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
-      const [isFullScreen, setFullScreen] = useState(false);
-    
-       const handleFullScreenToggle = () => {
-         setFullScreen(prev => !prev);
-       };
+  const [isFullScreen, setFullScreen] = useState(false);
+
+  // todo - remove log 
+  console.log(setFullScreen);
+
+  //  const handleFullScreenToggle = () => {
+  //    setFullScreen(prev => !prev);
+  //  };
 
   const { post,
     setPost,
@@ -37,9 +40,9 @@ const ViewPostPage = () => {
       style={{
         width: isFullScreen ? '100%' : '100vw',
         height: isFullScreen ? '100%' : 'auto',
-        transition: 'all 0.3 ease', 
+        transition: 'all 0.3 ease',
       }}
-    > 
+    >
 
       {/* POST COMPONENT */}
       <PostBox post={post} setPost={setPost} />
