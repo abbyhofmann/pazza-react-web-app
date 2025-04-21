@@ -8,8 +8,6 @@ interface ActionsDropdownProps {
     authors: string[]; // id of the author of the parent component
 }
 
-// TODO - only creator and instructors should be allowed to edit/delete an element 
-// dropdown component for editing and deleting; used for answers, followup discussions, and replies
 export default function ActionsDropdown(props: ActionsDropdownProps) {
     const { showDropdown, setShowDropdown, setIsEditing, handleDelete, authors } = props;
 

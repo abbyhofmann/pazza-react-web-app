@@ -7,6 +7,7 @@ import NewAnswerInputBox from "../NewAnswerInputBox";
 import Answer from "../Answer";
 import useViewPostPage from "../../hooks/useViewPostPage";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 
 /**
@@ -15,11 +16,11 @@ import { useState } from "react";
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
-      const [isFullScreen, setFullScreen] = useState(false);
-    
-       const handleFullScreenToggle = () => {
-         setFullScreen(prev => !prev);
-       };
+  const [isFullScreen, setFullScreen] = useState(false);
+
+  const handleFullScreenToggle = () => {
+    setFullScreen(prev => !prev);
+  };
 
   const { post,
     setPost,
@@ -30,6 +31,15 @@ const ViewPostPage = () => {
     setIsWipStudentAnswer
   } = useViewPostPage();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser.role === "FACULTY";
+  // only show instructor response if there is one to see or user is faculty
+  const showInstructorResponse = (isFaculty || post?.instructorAnswer);
+  // only show student response if there is one to see or user is a student
+  const isStudent = currentUser.role === "STUDENT";
+  const showStudentResponse = (isStudent || post?.studentAnswer);
+
   if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
   return (
@@ -37,18 +47,15 @@ const ViewPostPage = () => {
       style={{
         width: isFullScreen ? '100%' : '100vw',
         height: isFullScreen ? '100%' : 'auto',
-        transition: 'all 0.3 ease', 
+        transition: 'all 0.3 ease',
       }}
-    > 
+    >
 
       {/* POST COMPONENT */}
       <PostBox post={post} setPost={setPost} />
 
-      {/* TODO - add logic for only creating a student response if the user is a student */}
-      {/* only posts of type question should have the student and instructor response components */}
-
       {/* STUDENT ANSWER COMPONENT */}
-      {post.type === 0 &&
+      {post.type === 0 && showStudentResponse &&
         // if the post has a student answer, render the answer 
         (post.studentAnswer !== null ? (
           <Answer answerId={post.studentAnswer} type={"student"} setPost={setPost} />
@@ -64,14 +71,12 @@ const ViewPostPage = () => {
             type={"student"}
           />
         ) : (
-
           // if there is no answer and one is not being created, display the text input box 
           <NewAnswerInputBox setIsEditing={setIsWipStudentAnswer} answerAuthorType="student" />
         ))}
 
-      {/* TODO - add logic for only creating an instructor response if the user is an instructor */}
       {/* INSTRUCTOR ANSWER COMPONENT */}
-      {post.type === 0 &&
+      {post.type === 0 && showInstructorResponse &&
 
         // if the post has an instructor answer, render it 
         (post.instructorAnswer !== null ? (
