@@ -32,11 +32,9 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
-   const [isFullScreen, setFullScreen] = useState(false);
+   const [isFullScreen] = useState(false);
 
-   // const handleFullScreenToggle = () => {
-   //    setFullScreen(prev => !prev);
-   // };
+   
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {

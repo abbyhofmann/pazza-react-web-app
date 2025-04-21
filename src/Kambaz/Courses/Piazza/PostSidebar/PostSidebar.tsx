@@ -1,7 +1,6 @@
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import NewPostPage from '../NewPost';
-import Piazza from '../RightSidePage';
 import ViewPostPage from '../ViewPost/ViewPostPage/ViewPostPage';
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
@@ -9,19 +8,17 @@ import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import RightSidePage from "../RightSidePage";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
-  const {pid} = useParams();
-  const locaton = useLocation();
+  const {cid } = useParams();
   
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev);
-  //  setScreen(handleScreenType(locaton.pathname));
   };
 
   
@@ -31,9 +28,9 @@ export default function PostSidebar() {
     const hash = location.hash;
     if (hash.includes("NewPostPage")) {
       return <NewPostPage/>;
-    } else if (hash.includes("Piazza")) {
-      return <Piazza/>;
-    } else if (pid) {
+    } else if (hash === `#/Kambaz/Courses/${cid}/Piazza`) {
+      return <RightSidePage/>;
+    } else if (hash.includes("Piazza/post")) {
       return <ViewPostPage/>;
     } else {
       return <h2>You're in Full Screen Mode!</h2>;

@@ -9,17 +9,15 @@ import useViewPostPage from "../../hooks/useViewPostPage";
 import { useState } from "react";
 
 
+
 /**
  * Represents the profile page component. Routes to the right view based on the
  * logged in user and profile user relationship.
  * @returns the ProfilePage component.
  */
 const ViewPostPage = () => {
-      const [isFullScreen, setFullScreen] = useState(false);
-    
-       const handleFullScreenToggle = () => {
-         setFullScreen(prev => !prev);
-       };
+      const [isFullScreen] = useState(false);
+
 
   const { post,
     setPost,
