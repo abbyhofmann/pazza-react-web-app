@@ -21,12 +21,21 @@ const SideBar = () => {
 
 }
 
+const FolderNav = () => {
+  const location = useLocation();
+  if (location.pathname.includes("Manage-Class")
+    || location.pathname.includes("manage-class")) {
+    return <></>;
+  }
+  return <HwFolderNav />;
+}
+
 export default function Piazza() {
   return (
     <div>
       <PostSidebarProvider>
         <PiazzaNavBarTop />
-        <HwFolderNav />
+        <FolderNav />
 
         <div className="wd-layout">
           <SideBar />
