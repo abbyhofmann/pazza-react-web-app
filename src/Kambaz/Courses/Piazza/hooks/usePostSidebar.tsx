@@ -181,7 +181,6 @@ const usePostSidebar = () => {
     navigate(`/Kambaz/Courses/${cid}/Piazza/post/${pid}`);
   };
 
-
   return {
     formatDate,
     extractTime,
