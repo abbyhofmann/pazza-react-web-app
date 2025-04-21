@@ -932,7 +932,9 @@ app.get('/api/post/countPosts/:cid', async (req, res) => {
     const { cid } = req.params;
 
     try {
-        const count = await posts.countDocuments({});
+        const count = await posts.countDocuments({
+            courseId: cid
+        });
 
         res.json(count);
     } catch (err) {
