@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
+import { Form, FormCheck, FormGroup } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
 import { useSelector } from "react-redux";
+import { createPost } from "./services/postService";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState('question');
@@ -33,11 +34,8 @@ export default function NewPostPage() {
    const { cid } = useParams();
    const [isFullScreen, setFullScreen] = useState(false);
 
-   const handleFullScreenToggle = () => {
-      setFullScreen(prev => !prev);
-   };
-
-
+   // TODO - delete 
+   console.log(setFullScreen);
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
@@ -115,15 +113,20 @@ export default function NewPostPage() {
       }
 
       if (cid) {
+
+         // convert HTML content from React Quill to plain text before saving in database 
+         // this removes the paragraph tags we were seeing
+         const doc = new DOMParser().parseFromString(editorValue, "text/html");
+         const plainTextContent = doc.body.textContent || "";
+
          const newPost: Post = {
-            _id: `P${Date.now()}`,
             folders: selectedFolders,
             authorId: currentUser._id,
             datePosted: new Date().toDateString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
             instructor: !isFaculty,
             title: postSummary,
-            content: editorValue,
+            content: plainTextContent,
             followupDiscussions: [],
             studentAnswer: null,
             instructorAnswer: null,
@@ -133,23 +136,17 @@ export default function NewPostPage() {
 
          try {
 
-            const response = await fetch("http://localhost:3000/api/post", {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify(newPost),
-            });
+            const newPostFromDb = await createPost(newPost);
 
-            if (response.ok) {
-               console.log("New Post Added");
+            if (newPostFromDb && newPostFromDb._id) {
                navigate(`/Kambaz/Courses/${cid}/Piazza`);
+               await fetchPosts();
             }
             else {
                console.error("Failed to Post");
             }
          } catch (error) {
-            console.error("Server Error Katie:", error);
+            console.error("Error creating post: ", error);
          }
       }
    };
