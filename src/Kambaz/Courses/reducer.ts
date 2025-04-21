@@ -16,6 +16,7 @@ const modulesSlice = createSlice({
         _id: uuidv4(),
         // lessons: [],
         name: course.name,
+        folders: ["hw1", "hw2", "hw3", "hw4", "hw5", "hw6", "project", "exam", "logistics", "office_hours", "other"],
       };
       state.courses = [...state.courses, newCourse] as any;
     },
