@@ -7,7 +7,11 @@ import NewAnswerInputBox from "../NewAnswerInputBox";
 import Answer from "../Answer";
 import useViewPostPage from "../../hooks/useViewPostPage";
 import { useState } from "react";
-
+import { FaCaretRight } from "react-icons/fa";
+type ViewPostProps = {
+   isFullScreen: boolean;
+   setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+ };
 
 
 /**
@@ -15,9 +19,12 @@ import { useState } from "react";
  * logged in user and profile user relationship.
  * @returns the ProfilePage component.
  */
-const ViewPostPage = () => {
-      const [isFullScreen] = useState(false);
-
+const ViewPostPage = ({ isFullScreen, setIsFullScreen }: ViewPostProps) => {
+    const handleFullScreenToggle = () => {
+        setIsFullScreen(prev => !prev);
+      };
+   
+  
 
   const { post,
     setPost,
@@ -38,6 +45,14 @@ const ViewPostPage = () => {
         transition: 'all 0.3 ease', 
       }}
     > 
+    <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+            <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+              {isFullScreen ?  (
+                  <FaCaretRight className="ms-1 mb-1 fs-5" />
+              ) : (
+                ""
+              )}
+                </button>
 
       {/* POST COMPONENT */}
       <PostBox post={post} setPost={setPost} />
@@ -99,6 +114,7 @@ const ViewPostPage = () => {
         postId={post._id!!}
       />{" "}
     </div>
+ </div>
   );
 };
 export default ViewPostPage;

@@ -43,7 +43,7 @@ const FullScreenContent = ({ isFullScreen, setIsFullScreen }: FullScreenContentP
   if (pathname.includes("NewPostPage")) {
     return <NewPostPage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen} />;
   } else if (pathname.includes("/post/")) {
-    return <ViewPostPage />;
+    return <ViewPostPage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>;
   } else {
     return <RightSidePage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen} />;
   }
@@ -83,7 +83,11 @@ export default function Piazza() {
                    setIsFullScreen={setIsFullScreen} />}
   />
               <Route path="/manage-class/*" element={<ManageClassScreen />} />
-              <Route path="/post/:pid" element={<ViewPostPage />} />
+              <Route path="/post/:pid" 
+              element={<ViewPostPage 
+              isFullScreen={isFullScreen} 
+              setIsFullScreen={setIsFullScreen}
+              />} />
             </Routes>
           </div>
         </div>
