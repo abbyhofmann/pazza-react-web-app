@@ -124,7 +124,7 @@ export default function NewPostPage() {
             instructorAnswer: null,
             viewers: [],
             courseId: cid,
-         };
+         }
 
          try {
 
@@ -146,7 +146,8 @@ export default function NewPostPage() {
          } catch (error) {
             console.error("Server Error Katie:", error);
          }
-      };
+      }
+   };
 
       return (
 
@@ -380,4 +381,3 @@ export default function NewPostPage() {
    
       );
    }
-}
