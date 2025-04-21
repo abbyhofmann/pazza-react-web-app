@@ -131,7 +131,6 @@ export default function NewPostPage() {
             courseId: cid,
          };
 
-
          try {
 
             const response = await fetch("http://localhost:3000/api/post", {
