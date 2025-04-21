@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
+import { Form, FormCheck, FormGroup } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
@@ -84,10 +84,10 @@ export default function NewPostPage() {
          alert("Please choose post destination: Everyone/Instructor(s)");
          return;
       }
-      if (selectedFolders.length === 0) {
-         alert("Please choose a folder(s)");
-         return;
-      }
+    //  if (selectedFolders.length === 0) {
+      //   alert("Please choose a folder(s)");
+     //    return;
+   //   }
       if (!postSumary) {
          alert("Please put a summary for your post");
          return;
@@ -98,7 +98,6 @@ export default function NewPostPage() {
       }
 
       const newPost = {
-         _id: `P${Date.now()}`,
          folderId: selectedFolders,
          authorId: 'user123',
          datePosted: new Date().toISOString(),
@@ -106,34 +105,26 @@ export default function NewPostPage() {
          instructor: 1,
          title: postSumary,
          content: editorValue,
-         followUpQuestions: '',
-         studentAnswer: '',
-         instructorAnswer: '',
-         viewers: '',
+         followUpQuestions: [],
+         studentAnswer: null,
+         instructorAnswer: null,
+         viewers: [],
          courseId: cid,
       };
 
       try {
+         const newPostFromDb = await createPost(newPost);
 
-         const response = await fetch("http://localhost:3000/api/post", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newPost),
-         });
-
-         if (response.ok) {
-            console.log("New Post Added");
+         if (newPostFromDb && newPostFromDb._id) {
             navigate(`/Kambaz/Courses/${cid}/Piazza`);
+            await fetchPosts();
          }
          else {
             console.error("Failed to Post");
          }
       } catch (error) {
-         console.error("Server Error Katie:", error);
+         console.error("Error creating post: ", error);
       }
-   };
 
    return (
 
