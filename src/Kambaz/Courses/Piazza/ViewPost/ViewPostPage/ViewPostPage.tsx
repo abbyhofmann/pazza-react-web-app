@@ -17,6 +17,14 @@ import "./ViewPostPage.css";
 const ViewPostPage = () => {
     const { pid } = useParams();
     const [post, setPost] = useState<{ _id: string; folderId: string; authorId: string; datePosted: string; type: number; instructor: number; title: string; content: string; followUpQuestions: string; studentResponse: string; instructorResponse: string; viewers: string; courseId: string; } | null>(null);
+    
+    const [isFullScreen, setFullScreen] = useState(false);
+
+    const handleFullScreenToggle = () => {
+      setFullScreen(prev => !prev);
+    };
+
+
 
     useEffect(() => {
         // TODO - fetch the post details via server based on the postId
@@ -26,7 +34,13 @@ const ViewPostPage = () => {
     if (!post) return <div>Loading...</div>; // TODO - fix to make it the Class at a Glance page
 
     return (
-    <div className="view-post-content">
+    <div className={`view-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
+        style={{
+          width: isFullScreen ? '100%' : '100vw',
+          height: isFullScreen ? '100%' : 'auto',
+          transition: 'all 0.3 ease', 
+        }}
+      >   
         <PostBox post={post} />
         {/* TODO - add logic for only creating a student response if the user is a student */}
         {post.studentResponse !== "" ? <StudentAnswer /> : <NewStudentAnswer />} { /* TODO - equality check may need to change once we have the post data object finalized */}

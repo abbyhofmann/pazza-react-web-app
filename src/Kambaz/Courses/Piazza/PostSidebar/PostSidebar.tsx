@@ -2,15 +2,52 @@ import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import NewPostPage from "../NewPost";
+import Piazza from "..";
+import ViewPostPage from "../ViewPost/ViewPostPage/ViewPostPage";
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import RightSidePage from "../RightSidePage";
 
 // The post feed accordian-style sidebar.
 export default function PostSidebar() {
+  const [isFullScreen, setIsFullScreen] = useState(false);;
+  const {pid} = useParams();
+  //const location = useLocation();
+  
+  const handleFullScreen = () => {
+    setIsFullScreen((prev) => !prev);
+  //  setScreen(handleScreenType(locaton.pathname));
+  };
 
-  function removeParagraphTags(content: string) {
-    return content.replace(/<\/?p>/g, '');
+  
+
+
+  const renderFullScreenContent = () => {
+    const hash = window.location.hash;
+    const path = location.pathname;
+
+    if (hash.includes("NewPostPage")) {
+    return <NewPostPage />;
   }
+
+  else if (hash === `#/Kambaz/Courses/${cid}/Piazza`) {
+    return <RightSidePage/>;
+  }
+
+  else if (hash.includes("Piazza/post")) {
+    return <ViewPostPage />;
+  }else {
+      return <h2>You're in Full Screen Mode!</h2>;
+    }
+  };
+
+
+
+
+ // const { posts } = usePostSidebarContext();
+ 
 
 
   const {
@@ -75,14 +112,49 @@ export default function PostSidebar() {
   }
 
   return (
+
     <div
-      className="d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end"
-      style={{ width: "380px" }}
+    className={`d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end 
+      ${isFullScreen ? 'fullscreen' : ''}`}
+    style={{ width: isFullScreen ? '100%' : '380px',
+             display: isFullScreen ? "none" : "block",
+             transition: "all 0..3s east",
+    }}
+  >
+    <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+    <button id="carrot_button" type="button" onClick={handleFullScreen}>
+      {isFullScreen ?  (
+          <FaCaretRight className="ms-1 mb-1 fs-5" />
+      ) : (
+        <FaCaretLeft className="mb-1 me-1 fs-5" />
+      )}
+        </button>
+
+  
+        <div className="vertical-line"></div>
+          
+        {!isFullScreen && ( 
+          <div className="d-flex wd-carrot-filters ms-2 align-items-center">
+            <div>Unread</div>
+            <div className="ms-2">Updated</div>  
+            <div className="ms-2">Unresolved</div> 
+            <div className="ms-2">Following</div>    
+          </div>
+        )}
+        
+        {isFullScreen && <div>{renderFullScreenContent()}</div>}
+  </div>
+      
+
+        <div id="feed_search_bar" 
+        className={`d-flex ${isFullScreen ? 'fullscreen' : ''}`}
+          style={{ width: isFullScreen ? '100%' : '380px',
+               display: isFullScreen ? "none" : "block",
+               transition: "all 0..3s east",
+      }}
     >
-      <div>
-        <div id="feed_search_bar">
-          <button id="new_post_button" type="button" onClick={navButton}>
-          <BsFileEarmarkPostFill className="me-1 mb-1 fs-6"/>
+            <button id="new_post_button" type="button" onClick={navButton}>
+              <BsFileEarmarkPostFill className="me-1 mb-1 fs-6" />
             New Post
           </button>
           <div id="search_bar" role="search">
@@ -96,7 +168,11 @@ export default function PostSidebar() {
         </div>
 
         {/* Dropdown Section */}
-        <div className="accordion" id="postAccordion">
+        <div className="accordion" id="postAccordion"
+        style={{
+          display: isFullScreen ? 'none' : 'block',
+        }}
+        >
           <div className="card border-0">
             {/* Today Dropdown Header */}
             <div
@@ -121,7 +197,7 @@ export default function PostSidebar() {
                     <PostListItem
                       _id={post._id}
                       title={post.title}
-                      content={removeParagraphTags(post.content)}
+                      content={(post.content)}
                       datePosted={post.datePosted}
                       instructor={post.instructor}
                       displayDate={extractTime}
@@ -266,6 +342,6 @@ export default function PostSidebar() {
           </div>
         </div>
       </div>
-    </div>
+ 
   );
 }
