@@ -7,8 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { folders } from "../../Database";
 import "./../../styles.css";
+import { FaCaretRight } from "react-icons/fa";
+type NewPostPageProps = {
+   isFullScreen: boolean;
+   setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+ };
 
-export default function NewPostPage() {
+ export default function NewPostPage({ isFullScreen, setIsFullScreen }: NewPostPageProps) {
    const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
@@ -17,10 +22,9 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
-   const [isFullScreen, setFullScreen] = useState(false);
 
    const handleFullScreenToggle = () => {
-     setFullScreen(prev => !prev);
+     setIsFullScreen(prev => !prev);
    };
 
 
@@ -123,11 +127,18 @@ export default function NewPostPage() {
 
       <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
       style={{
-        width: isFullScreen ? '100%' : '100vw',
-        height: isFullScreen ? '100%' : 'auto',
+        width: "100%",
         transition: 'all 0.3 ease', 
       }}
     > 
+     <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+        <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+          {isFullScreen ?  (
+              <FaCaretRight className="ms-1 mb-1 fs-5" />
+          ) : (
+            ""
+          )}
+            </button>
 
          <div className="">
             <div>
@@ -354,6 +365,6 @@ export default function NewPostPage() {
          {/* </div> */}
       </div>
 
-
+</div>
    );
 }

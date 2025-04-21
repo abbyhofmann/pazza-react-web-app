@@ -5,45 +5,30 @@ import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import NewPostPage from "../NewPost";
-import Piazza from "..";
 import ViewPostPage from "../ViewPost/ViewPostPage/ViewPostPage";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import RightSidePage from "../RightSidePage";
 
+type PostSidebarProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+
 // The post feed accordian-style sidebar.
-export default function PostSidebar() {
-  const [isFullScreen, setIsFullScreen] = useState(false);;
-  const {pid} = useParams();
-  //const location = useLocation();
+export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSidebarProps) {
   
+  const {pid} = useParams();
+
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev);
-  //  setScreen(handleScreenType(locaton.pathname));
   };
-
   
 
 
-  const renderFullScreenContent = () => {
-    const hash = window.location.hash;
-    const path = location.pathname;
-
-    if (hash.includes("NewPostPage")) {
-    return <NewPostPage />;
-  }
-
-  else if (hash === `#/Kambaz/Courses/${cid}/Piazza`) {
-    return <RightSidePage/>;
-  }
-
-  else if (hash.includes("Piazza/post")) {
-    return <ViewPostPage />;
-  }else {
-      return <h2>You're in Full Screen Mode!</h2>;
-    }
-  };
 
 
+ 
 
 
  // const { posts } = usePostSidebarContext();
@@ -142,7 +127,7 @@ export default function PostSidebar() {
           </div>
         )}
         
-        {isFullScreen && <div>{renderFullScreenContent()}</div>}
+       
   </div>
       
 

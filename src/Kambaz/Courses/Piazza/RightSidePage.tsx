@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 
-export default function RightSidePage() {
-  const [isFullScreen, setFullScreen] = useState(false);
+type RightSidePageProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function RightSidePage({ isFullScreen, setIsFullScreen }: RightSidePageProps) {
 
   const handleFullScreenToggle = () => {
-    setFullScreen(prev => !prev);
+    setIsFullScreen(prev => !prev);
   };
 
   return (
@@ -12,11 +16,19 @@ export default function RightSidePage() {
 
     <div className={`wd-right-page-bg ${isFullScreen ? 'fullscreen-content' : ''}`}
       style={{
-        width: isFullScreen ? '100%' : '100vw',
-        height: isFullScreen ? '100%' : 'auto',
+        width: "100%",
         transition: 'all 0.3 ease', 
       }}
     >
+ <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+    <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+      {isFullScreen ?  (
+          <FaCaretRight className="ms-1 mb-1 fs-5" />
+      ) : (
+        ""
+      )}
+        </button>
+      
       <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class" 
       style={{ fontWeight: 500 }}>
         Class at a Glance
@@ -38,6 +50,6 @@ export default function RightSidePage() {
         </div>
       </div>
     </div>
-
+</div>
   );
 }
