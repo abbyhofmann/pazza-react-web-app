@@ -262,7 +262,7 @@ app.post('/api/answer/createAnswer', async (req, res) => {
         req.body.postId !== '' &&
         req.body.type !== undefined &&
         req.body.authors !== undefined &&
-        // req.body.authors.length !== 0 && // TODO - uncomment once we have author added
+        req.body.authors.length !== 0 &&
         req.body.content !== undefined &&
         req.body.content !== '' &&
         req.body.dateEdited !== undefined &&
@@ -989,7 +989,7 @@ app.post('/api/reply/createReply', async (req, res) => {
     if (!(req.body.followupDiscussionId !== undefined &&
         req.body.followupDiscussionId !== '' &&
         req.body.authorId !== undefined &&
-        // req.body.authorId !== '' && // TODO - uncomment when we add author
+        req.body.authorId !== '' &&
         req.body.content !== undefined &&
         req.body.content !== '' &&
         req.body.datePosted !== undefined &&
