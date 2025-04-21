@@ -6,6 +6,7 @@ import ActionsDropdown from "./ActionsDropdown";
 interface AnswerProps {
     answerId: string;
     type: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setPost: (post: any) => void;
 }
 
@@ -52,7 +53,12 @@ export default function Answer(props: AnswerProps) {
                         <div className="g-0 row">
                             <div className="col">
                                 {/* dropdown for editing and deleting */}
-                                <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                                <ActionsDropdown
+                                    showDropdown={showDropdown}
+                                    setShowDropdown={setShowDropdown}
+                                    setIsEditing={setIsEditing}
+                                    handleDelete={handleDelete}
+                                    authors={answer?.authors ?? []} />
                                 <div className="py-3 history-selection">
                                     <div id="m7h0iykfwym12r_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{answer?.content}</div>
                                 </div>

@@ -49,7 +49,13 @@ export default function PostBox(props: PostBoxProps) {
                     <div className="col">
                         <div className="float-end dropdown">
                             {/* actions dropdown */}
-                            <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                            <ActionsDropdown
+                                showDropdown={showDropdown}
+                                setShowDropdown={setShowDropdown}
+                                setIsEditing={setIsEditing}
+                                handleDelete={handleDelete}
+                                authors={[post.authorId]}
+                            />
                         </div>
                         <div className="py-3 history-selection">
                             {/* post title */}

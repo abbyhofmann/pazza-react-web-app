@@ -9,6 +9,7 @@ import EditingResponse from "./EditingResponse";
 
 interface FollowupDiscussionProps {
     fudId: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setPost: (post: any) => void;
 }
 
@@ -46,7 +47,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                 </div>
                 <div className="col-auto ms-auto me-0">
                     {/* dropdown for editing and deleting */}
-                    <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                    <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} authors={[fud?.authorId ?? ""]} />
                 </div>
             </div>
             <div className="mx-0 col-auto">
@@ -77,7 +78,7 @@ export default function FollowupDiscussion(props: FollowupDiscussionProps) {
                     )}
                 </div>
                 {/* loop through the replies list to render each reply */}
-                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} setFud={setFud}/>)))}
+                {fud?.replies.map((replyId => (<FollowupReply replyId={replyId} setFud={setFud} />)))}
 
                 <div className="gx-1 followup comment pr-0 pl-0 pb-0 row">
                     <div className="pr-0 mr-0 pl-0 pb-0 col">

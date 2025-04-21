@@ -13,7 +13,7 @@ export default function FollowupReply(props: FollowupReplyProps) {
 
     const { replyId, setFud } = props;
 
-    const { 
+    const {
         isStudent,
         author,
         formatDate,
@@ -54,7 +54,7 @@ export default function FollowupReply(props: FollowupReplyProps) {
                     </div>
                     <div className="col-auto ms-auto me-0">
                         {/* dropdown for editing and deleting */}
-                        <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} />
+                        <ActionsDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setIsEditing={setIsEditing} handleDelete={handleDelete} authors={[reply?.authorId ?? ""]} />
                     </div>
                 </div>
                 <div>
