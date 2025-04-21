@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from "react";
-import { Col, Form, FormCheck, FormGroup, Row } from "react-bootstrap";
+import { Form, FormCheck, FormGroup } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +11,14 @@ import { Post, User } from "../../types";
 import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
 import { useSelector } from "react-redux";
+import { createPost } from "./services/postService";
 
 export default function NewPostPage() {
    const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
    const [editorValue, setEditorValue] = useState("");
+   const [postSummary, setPostSummary] = useState("");
    const [courseFolders, setCourseFolders] = useState<Folder[]>([]);
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -33,11 +34,9 @@ export default function NewPostPage() {
    const { cid } = useParams();
    const [isFullScreen, setFullScreen] = useState(false);
 
-   const handleFullScreenToggle = () => {
-      setFullScreen(prev => !prev);
-   };
-
-
+   // const handleFullScreenToggle = () => {
+   //    setFullScreen(prev => !prev);
+   // };
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
@@ -46,13 +45,13 @@ export default function NewPostPage() {
       fetchFoldersInCourse();
    }, [cid]);
 
-   const [postSummary, setPostSummary] = useState("");
-
    const { fetchPosts } = usePostSidebarContext();
+
 
    const DeleteButton = () => {
       navigate(`/Kambaz/Courses/${cid}/Piazza/`);
    }
+
 
    const handleChangePostType = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedOption(event.target.value);
@@ -81,9 +80,9 @@ export default function NewPostPage() {
       setEditorValue(value);
    };
 
+
    const handleFolderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = event.target;
-
       if (checked) {
          setSelectedFolders((prev) => [...prev, value]);
       }
@@ -94,7 +93,7 @@ export default function NewPostPage() {
 
    const postButton = async () => {
       if (!selectedOption) {
-         alert("Please choose a post type: Question/Note");
+         alert("Please choose a post yype: Question/Note");
          return;
       }
       if (!selectedPostTo) {
@@ -116,7 +115,6 @@ export default function NewPostPage() {
 
       if (cid) {
          const newPost: Post = {
-            _id: `P${Date.now()}`,
             folders: selectedFolders,
             authorId: currentUser._id,
             datePosted: new Date().toDateString(),
@@ -130,27 +128,18 @@ export default function NewPostPage() {
             viewers: [],
             courseId: cid,
          };
-
-
          try {
+            const newPostFromDb = await createPost(newPost);
 
-            const response = await fetch("http://localhost:3000/api/post", {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify(newPost),
-            });
-
-            if (response.ok) {
-               console.log("New Post Added");
+            if (newPostFromDb && newPostFromDb._id) {
                navigate(`/Kambaz/Courses/${cid}/Piazza`);
+               await fetchPosts();
             }
             else {
                console.error("Failed to Post");
             }
          } catch (error) {
-            console.error("Server Error Katie:", error);
+            console.error("Error creating post: ", error);
          }
       }
    };
@@ -238,10 +227,10 @@ export default function NewPostPage() {
                            Post To*
                         </div>
 
-
                         <div className="mt-1 d-flex ms-3">
                            <Form>
                               <Form.Group className="mb-3">
+
                                  <div className="d-flex align-items-center">
                                     <Form.Check
                                        type="radio"
@@ -285,7 +274,6 @@ export default function NewPostPage() {
                         </div>
                      </div>
 
-
                      <div className="d-flex mt-3">
                         <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
                            style={{ fontSize: "14px" }}>
@@ -325,7 +313,7 @@ export default function NewPostPage() {
                         <Form>
                            <Form.Control id="wd-name" type="text"
                               placeholder="Enter a one line summary here, 100 characters or less"
-                              style={{ fontSize: "13px" }}
+                              style={{ fontSize: "13px", width: '100ch' }}
                               value={postSummary}
                               onChange={handleSummaryChange}
                               maxLength={100}
@@ -336,10 +324,9 @@ export default function NewPostPage() {
 
                      <div className="d-flex mt-3">
                         <div id="wd-class-stats"
-                           className="d-flex wd-text-grey wd-font-bold me-4"
+                           className="d-flex wd-text-grey wd-font-bold me-5"
                            style={{ fontSize: "14px" }}>
-
-                           Summary
+                           Details
                         </div>
                         <Form>
                            <ReactQuill
@@ -350,14 +337,12 @@ export default function NewPostPage() {
                               style={{ fontSize: "13px", width: '100ch' }}
                            />
                         </Form>
-                     </div>
+                     </div >
 
 
                      <div id="wd-class-stats" className="mt-5 wd-text-grey wd-font-bold"
                         style={{ fontSize: "14px" }}>
-
                         <span className="wd-rotated-asterick">*</span>Required fields
-
                      </div>
 
                      <div className="d-flex">
@@ -384,6 +369,5 @@ export default function NewPostPage() {
             </div>
          </div>
       </div>
-
    );
 }
