@@ -4,7 +4,8 @@ import useFolders from "./hooks/useFolders";
 import usePostSidebar from "./hooks/usePostSidebar";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { getPostsInFolder } from "./services/postService";
+import { getPostsInCourse, getPostsInFolder } from "./services/postService";
+import { FaXmark } from "react-icons/fa6";
 
 export default function HwFolderNav() {
 
@@ -14,8 +15,13 @@ export default function HwFolderNav() {
   const [filterBy, setFilterBy] = useState("");
 
   const filterByFolder = async (folderName: string) => {
-    const filteredPosts = await getPostsInFolder(cid ?? "", folderName);
-    setPosts(filteredPosts);
+    if (filterBy === "") {
+      const allPosts = await getPostsInCourse(cid ?? "");
+      setPosts(allPosts);
+    } else {
+      const filteredPosts = await getPostsInFolder(cid ?? "", folderName);
+      setPosts(filteredPosts);
+    }
   }
 
   useEffect(() => {
@@ -27,7 +33,10 @@ export default function HwFolderNav() {
     if (filterBy == "") {
       return <></>;
     } else {
-      return <div className="wd-filter-chip">filter: {filterBy}</div>;
+      return <div className="wd-filter-chip">
+        <FaXmark onClick={() => setFilterBy("")} />
+        {filterBy}
+      </div>;
     }
   }
 
