@@ -22,6 +22,14 @@
     "name": "hw3",
     "courseId": "RS101",
     "posts": []
-  }
-
+  },
+  {
+    "_id": {
+      "$oid": "68018ab436f6f4eaf7b4b189"
+    },
+    "courseId": "RS102",
+    "name": "project",
+    "posts": []
+  },
+  
 ]
