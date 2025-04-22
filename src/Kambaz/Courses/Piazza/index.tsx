@@ -33,6 +33,15 @@ const SideBar = ({ isFullScreen, setIsFullScreen }: SideBarProps) => {
 
 
 
+const FolderNav = () => {
+  const location = useLocation();
+  if (location.pathname.includes("Manage-Class")
+    || location.pathname.includes("manage-class")) {
+    return <></>;
+  }
+  return <HwFolderNav />;
+}
+
 export default function Piazza() {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -40,7 +49,7 @@ export default function Piazza() {
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <PostSidebarProvider>
         <PiazzaNavBarTop />
-        <HwFolderNav />
+        <FolderNav />
 
         <div className="wd-layout" style={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
           {!isFullScreen && (
