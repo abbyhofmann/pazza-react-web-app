@@ -323,3 +323,16 @@ input[type="radio"] {
   z-index: 1000; 
   background-color: #fff; 
 }
+
+
+.wd-details-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.5em;
+  line-height: 1.5;
+  padding-bottom: 8px;
+ }
+ 

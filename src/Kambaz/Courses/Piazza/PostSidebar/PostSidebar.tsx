@@ -127,9 +127,10 @@ export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSideb
             {/* Today Collapsible Content */}
             <div id="collapseToday" className="collapse show">
               <ul className="list-group list-group-flush">
-                {posts
-                  .filter((post) => formatDate(post.datePosted) === today)
-                  .map((post) => (
+              {posts
+              .filter((post) => formatDate(post.datePosted) === today)
+              .sort((a, b) => new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime())
+              .map((post) => (
                     <PostListItem
                       key={post._id}
                       title={post.title}

@@ -108,8 +108,8 @@ type NewPostPageProps = {
          alert("Please choose post destination: Everyone/Instructor(s)");
          return;
       }
-      if (selectedFolders.length === 0) {
-         alert("Please choose a folder(s)");
+      if (!selectedFolders) {
+         alert("Please choose a Folder(s)");
          return;
       }
       if (!postSummary) {
@@ -125,7 +125,7 @@ type NewPostPageProps = {
          const newPost: Post = {
             folders: selectedFolders,
             authorId: currentUser._id,
-            datePosted: new Date().toDateString(),
+            datePosted: new Date().toISOString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
             instructor: !isFaculty,
             title: postSummary,
@@ -170,7 +170,7 @@ type NewPostPageProps = {
             ""
           )}
             </button>
-
+</div>
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
@@ -386,6 +386,6 @@ type NewPostPageProps = {
             </div>
          </div>
       </div>
-     </div>
+  
    );
 }

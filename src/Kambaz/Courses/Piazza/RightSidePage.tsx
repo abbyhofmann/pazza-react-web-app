@@ -85,7 +85,8 @@ export default function RightSidePage({ isFullScreen, setIsFullScreen }: RightSi
         ""
       )}
         </button>
-      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class"
+        </div>
+      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class mt-5"
         style={{ fontWeight: 500 }}>
         Class at a Glance
       </div>
@@ -122,6 +123,6 @@ export default function RightSidePage({ isFullScreen, setIsFullScreen }: RightSi
         </div>
       </div>
     </div>
-  </div>
+ 
   );
 }

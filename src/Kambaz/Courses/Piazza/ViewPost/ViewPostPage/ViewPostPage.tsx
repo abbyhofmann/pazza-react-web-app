@@ -53,7 +53,7 @@ const ViewPostPage = ({ isFullScreen, setIsFullScreen }: ViewPostProps) => {
                 ""
               )}
                 </button>
-
+</div>
       {/* POST COMPONENT */}
       <PostBox post={post} setPost={setPost} />
 
@@ -114,7 +114,7 @@ const ViewPostPage = ({ isFullScreen, setIsFullScreen }: ViewPostProps) => {
         postId={post._id!!}
       />{" "}
     </div>
- </div>
+
   );
 };
 export default ViewPostPage;
