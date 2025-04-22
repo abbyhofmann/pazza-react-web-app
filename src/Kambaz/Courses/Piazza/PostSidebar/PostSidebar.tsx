@@ -1,44 +1,28 @@
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
-import NewPostPage from '../NewPost';
-import Piazza from '../RightSidePage';
-import ViewPostPage from '../ViewPost/ViewPostPage/ViewPostPage';
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
-import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+
+
+type PostSidebarProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 
 // The post feed accordian-style sidebar.
-export default function PostSidebar() {
+export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSidebarProps) {
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [screen, setScreen] = useState<'NewPostPage' | 'Piazza' | 'ViewPostPage' | 'defaults' | null>(null);
-  const {pid} = useParams();
-  const locaton = useLocation();
   
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev);
-  //  setScreen(handleScreenType(locaton.pathname));
   };
 
   
 
-
-  const renderFullScreenContent = () => {
-    const hash = location.hash;
-    if (hash.includes("NewPostPage")) {
-      return <NewPostPage/>;
-    } else if (hash.includes("Piazza")) {
-      return <Piazza/>;
-    } else if (pid) {
-      return <ViewPostPage/>;
-    } else {
-      return <h2>You're in Full Screen Mode!</h2>;
-    }
-  };
 
 
   const { posts } = usePostSidebarContext();
@@ -61,7 +45,7 @@ export default function PostSidebar() {
     <div
       className={`d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end 
         ${isFullScreen ? 'fullscreen' : ''}`}
-      style={{ width: isFullScreen ? '100%' : '380px',
+      style={{ width: isFullScreen ? '100vh' : '380px',
                display: isFullScreen ? "none" : "block",
                transition: "all 0..3s east",
       }}
@@ -87,7 +71,7 @@ export default function PostSidebar() {
           </div>
         )}
         
-        {isFullScreen && <div>{renderFullScreenContent()}</div>}
+    
   </div>
       
 
@@ -136,9 +120,10 @@ export default function PostSidebar() {
             {/* Today Collapsible Content */}
             <div id="collapseToday" className="collapse show">
               <ul className="list-group list-group-flush">
-                {posts
-                  .filter((post) => formatDate(post.datePosted) === today)
-                  .map((post) => (
+              {posts
+              .filter((post) => formatDate(post.datePosted) === today)
+              .sort((a, b) => new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime())
+              .map((post) => (
                     <PostListItem
                       key={post._id}
                       title={post.title}

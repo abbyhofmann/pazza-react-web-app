@@ -28,7 +28,7 @@ export default function PostListItem(props: PostListItemProps) {
                 </div>
                 <div className="small text-muted">{displayDate(datePosted)}</div>
             </div>
-            <div className="text-muted small wd-details-content">{content}</div>
+            <div className="text-muted small wd-details-content">{content.replace(/<\/?p>/g, '')}</div>
         </li>
     );
 }

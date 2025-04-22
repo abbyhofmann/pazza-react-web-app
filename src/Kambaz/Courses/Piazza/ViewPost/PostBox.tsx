@@ -57,9 +57,14 @@ export default function PostBox(props: PostBoxProps) {
                             {/* post content */}
                             <div>
                                 {isEditing ? (
-                                    <EditingResponse initialFud={post ? post.content : ""} onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
+                                    <EditingResponse initialFud={post ? post.content : ""} 
+                                    onSave={handleOnSave} onCancel={() => { setIsEditing(false); setShowDropdown(false); }} />
                                 ) : (
-                                    <div id="m7h0gkl83kj3m3_render" data-id="renderHtmlId" className="render-html-content overflow-hidden latex_process">{post.content}</div>
+                                    <div id="m7h0gkl83kj3m3_render" 
+                                    data-id="renderHtmlId" 
+                                    className="render-html-content overflow-hidden latex_process" dangerouslySetInnerHTML={{ __html: post.content }}
+                                    >
+                                    </div>
 
                                 )}
                             </div>

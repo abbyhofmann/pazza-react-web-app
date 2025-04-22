@@ -12,8 +12,14 @@ import { usePostSidebarContext } from "./hooks/usePostSidebarContext";
 import InstructorDropdown from "./InstructorsDropdown";
 import { useSelector } from "react-redux";
 import { createPost } from "./services/postService";
+import { FaCaretRight } from "react-icons/fa";
 
-export default function NewPostPage() {
+type NewPostPageProps = {
+   isFullScreen: boolean;
+   setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+ };
+
+ export default function NewPostPage({ isFullScreen, setIsFullScreen }: NewPostPageProps) {
    const [selectedOption, setSelectedOption] = useState('question');
    const [selectedPostTo, setSelectedPostTo] = useState<string>('');
    const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
@@ -32,11 +38,13 @@ export default function NewPostPage() {
 
    const navigate = useNavigate();
    const { cid } = useParams();
-   const [isFullScreen, setFullScreen] = useState(false);
+   
+   const handleFullScreenToggle = () => {
+      setIsFullScreen(prev => !prev);
+    };
+ 
 
-   // const handleFullScreenToggle = () => {
-   //    setFullScreen(prev => !prev);
-   // };
+   
 
    useEffect(() => {
       const fetchFoldersInCourse = async () => {
@@ -100,8 +108,8 @@ export default function NewPostPage() {
          alert("Please choose post destination: Everyone/Instructor(s)");
          return;
       }
-      if (selectedFolders.length === 0) {
-         alert("Please choose a folder(s)");
+      if (!selectedFolders) {
+         alert("Please choose a Folder(s)");
          return;
       }
       if (!postSummary) {
@@ -117,7 +125,7 @@ export default function NewPostPage() {
          const newPost: Post = {
             folders: selectedFolders,
             authorId: currentUser._id,
-            datePosted: new Date().toDateString(),
+            datePosted: new Date().toISOString(),
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
             instructor: !isFaculty,
             title: postSummary,
@@ -149,11 +157,20 @@ export default function NewPostPage() {
       <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
          style={{
             width: isFullScreen ? '100%' : '100vw',
-            height: isFullScreen ? '100%' : 'auto',
+            height: isFullScreen ? '100%' : '100vh',
             transition: 'all 0.3 ease',
          }}
       >
 
+<div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+        <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+          {isFullScreen ?  (
+              <FaCaretRight className="ms-1 mb-1 fs-5" />
+          ) : (
+            ""
+          )}
+            </button>
+</div>
          <div className="">
             <div>
                <div id="wd-class-stats" className="d-flex wd-text-grey wd-font-bold"
@@ -369,5 +386,6 @@ export default function NewPostPage() {
             </div>
          </div>
       </div>
+  
    );
 }
