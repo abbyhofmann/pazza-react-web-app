@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, FormCheck, FormGroup } from "react-bootstrap";
-import { Form, FormCheck, FormGroup } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
