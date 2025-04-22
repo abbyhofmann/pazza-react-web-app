@@ -37,12 +37,12 @@ export default function Piazza() {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   return (
-    <div>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <PostSidebarProvider>
         <PiazzaNavBarTop />
         <HwFolderNav />
 
-        <div className="wd-layout">
+        <div className="wd-layout" style={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
           {!isFullScreen && (
             <SideBar
               isFullScreen={isFullScreen}
@@ -50,7 +50,7 @@ export default function Piazza() {
             />
           )}
 
-          <div className="wd-main-content">
+<div className="wd-main-content" style={{ flexGrow: 1, overflowY: 'auto' }}>
                 
           <Routes>
                   <Route
