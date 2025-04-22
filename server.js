@@ -14,17 +14,17 @@ app.use(cors({
 }));
 
 const sessionOptions = {
-    secret: process.env.SESSION_SECRET || "kambaz",
+    secret: import.meta.env.SESSION_SECRET || "kambaz",
     resave: false,
     saveUninitialized: false,
 };
 
-if (process.env.NODE_ENV !== "development") {
+if (import.meta.env.NODE_ENV !== "development") {
     sessionOptions.proxy = true;
     sessionOptions.cookie = {
         sameSite: "none",
         secure: true,
-        domain: process.env.NODE_SERVER_DOMAIN,
+        domain: import.meta.env.NODE_SERVER_DOMAIN,
         maxAge: 1000 * 60 * 60 * 24,
     };
 }
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV !== "development") {
 app.use(session(sessionOptions));
 app.use(express.json());
 
-const dbConn = process.env.DB_CONN_STRING;
+const dbConn = import.meta.env.DB_CONN_STRING;
 const client = new mongoDB.MongoClient(dbConn);
 
 // connect to the DB once at startup
@@ -1180,6 +1180,6 @@ app.get('/api/enrollments/:cid', async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
-    console.log(`Server running on Port ${process.env.PORT || 3000}`);
+app.listen(import.meta.env.PORT || 3000, '0.0.0.0', () => {
+    console.log(`Server running on Port ${import.meta.env.PORT || 3000}`);
 });
