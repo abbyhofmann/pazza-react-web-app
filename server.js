@@ -287,34 +287,6 @@ app.get('/api/answer/responseCounts/:cid', async (req, res) => {
         // answer id is a request parameter 
         const { cid } = req.params;
 
-        // const countsArray = await answers.aggregate([
-        //     {
-        //         // join answers with posts 
-        //         $lookup: {
-        //             from: 'posts',
-        //             localField: 'postId',
-        //             foreignField: '_id',
-        //             as: 'post'
-        //         }
-        //     },
-        //     {
-        //         // unwind the joined post array
-        //         $unwind: '$post'
-        //     },
-        //     {
-        //         // match only posts from the specific course
-        //         $match: {
-        //             'post.courseId': cid
-        //         }
-        //     },
-        //     {
-        //         // group by 'type' of answer: 0 = student, 1 = instructor
-        //         $group: {
-        //             _id: '$type',
-        //             count: { $sum: 1 }
-        //         }
-        //     }
-        // ]).toArray();
         const countsArray = await answers.aggregate([
             {
                 // convert postId string to ObjectId
@@ -391,14 +363,23 @@ app.get('/api/user/:uid', async (req, res) => {
 });
 
 // get all the instructors and TAs of a course 
-app.get('/api/user/getInstructors', async (req, res) => {
+app.get('/api/user/getInstructors/:cid', async (req, res) => {
     try {
-        const { cid } = req.body;
+        const { cid } = req.query;
 
-        const fetchedInstructors = (await users.find({}))
+        // get user IDs enrolled in course with cid
+        const enrolledUsers = await enrollments.find({ course: cid }).toArray();
+        const userIds = enrolledUsers.map(e => e.user);
 
+        // get the users who are enrolled and have role "faculty" or "TA"
+        const fetchedInstructors = await users.find({
+            _id: { $in: userIds },
+            role: { $in: ['faculty', 'TA'] }
+        }).toArray();
+
+        res.status(200).json(fetchedInstructors);
     } catch (err) {
-        res.status(500).send(`Error when fetching instructors: ${err}`);
+        res.status(500).send(`Error when fetching instructors of course ${cid}: ${err}`);
     }
 });
 
@@ -932,7 +913,9 @@ app.get('/api/post/countPosts/:cid', async (req, res) => {
     const { cid } = req.params;
 
     try {
-        const count = await posts.countDocuments({});
+        const count = await posts.countDocuments({
+            courseId: cid
+        });
 
         res.json(count);
     } catch (err) {
