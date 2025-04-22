@@ -10,32 +10,76 @@ import "./index.css";
 import NewPostPage from "./NewPost";
 import RightSidePage from "./RightSidePage";
 import { PostSidebarProvider } from "./PostSidebarContext";
+import { useState } from "react";
 
-const SideBar = () => {
+
+type SideBarProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const SideBar = ({ isFullScreen, setIsFullScreen }: SideBarProps) => {
+  const location = useLocation();
+  if (location.pathname.includes("Manage-Class") || location.pathname.includes("manage-class")) {
+    return <></>;
+  }
+  return (
+    <NoteQuestionSidebar
+      isFullScreen={isFullScreen}
+      setIsFullScreen={setIsFullScreen}
+    />
+  );
+};
+
+
+
+const FolderNav = () => {
   const location = useLocation();
   if (location.pathname.includes("Manage-Class")
     || location.pathname.includes("manage-class")) {
     return <></>;
   }
-  return <NoteQuestionSidebar />;
-
+  return <HwFolderNav />;
 }
 
 export default function Piazza() {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
   return (
-    <div>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <PostSidebarProvider>
         <PiazzaNavBarTop />
-        <HwFolderNav />
+        <FolderNav />
 
-        <div className="wd-layout">
-          <SideBar />
-          <div className="wd-main-content">
-            <Routes>
-              <Route path="/" element={<RightSidePage />} />
-              <Route path="/NewPostPage" element={<NewPostPage />} />
+        <div className="wd-layout" style={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
+          {!isFullScreen && (
+            <SideBar
+              isFullScreen={isFullScreen}
+              setIsFullScreen={setIsFullScreen}
+            />
+          )}
+
+<div className="wd-main-content" style={{ flexGrow: 1, overflowY: 'auto' }}>
+                
+          <Routes>
+                  <Route
+                  path="/"
+               element={<RightSidePage 
+                isFullScreen={isFullScreen} 
+                setIsFullScreen={setIsFullScreen} />}
+                    />
+                 <Route
+                  path="/NewPostPage"
+                 element={<NewPostPage
+                   isFullScreen={isFullScreen} 
+                   setIsFullScreen={setIsFullScreen} />}
+  />
               <Route path="/manage-class/*" element={<ManageClassScreen />} />
-              <Route path="/post/:pid" element={<ViewPostPage />} />
+              <Route path="/post/:pid" 
+              element={<ViewPostPage 
+              isFullScreen={isFullScreen} 
+              setIsFullScreen={setIsFullScreen}
+              />} />
             </Routes>
           </div>
         </div>

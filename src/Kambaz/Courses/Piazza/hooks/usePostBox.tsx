@@ -96,9 +96,7 @@ const usePostBox = (post: Post, setPost: (postToSet: Post | null) => void) => {
     // handle saving a post when it is being edited 
     const handleOnSave = async (updatedContent: string) => {
         try {
-            // convert HTML content from React Quill to plain text before saving in database 
-            const doc = new DOMParser().parseFromString(updatedContent, "text/html");
-            const plainTextContent = doc.body.textContent || "";
+            const plainTextContent = updatedContent;
 
             if (post && post._id) {
                 // update existing post

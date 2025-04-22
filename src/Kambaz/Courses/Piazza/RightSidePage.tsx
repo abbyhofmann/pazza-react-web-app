@@ -3,17 +3,19 @@ import { getPostsCount, getUnansweredPostsCount } from "./services/postService";
 import { useParams } from "react-router";
 import { getResponseCounts } from "./services/answerService";
 import { getStudentEnrollmentsCount } from "./services/enrollmentService";
+import { FaCaretRight } from "react-icons/fa";
 
+type RightSidePageProps = {
+  isFullScreen: boolean;
+  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-export default function RightSidePage() {
-  const [isFullScreen, setFullScreen] = useState(false);
+export default function RightSidePage({ isFullScreen, setIsFullScreen }: RightSidePageProps) {
 
-  // todo - remove log 
-  console.log(setFullScreen);
-
-  // const handleFullScreenToggle = () => {
-  //   setFullScreen(prev => !prev);
-  // };
+  const handleFullScreenToggle = () => {
+    setIsFullScreen(prev => !prev);
+  };
+  
 
   const { cid } = useParams();
 
@@ -75,7 +77,16 @@ export default function RightSidePage() {
         transition: 'all 0.3 ease',
       }}
     >
-      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class"
+ <div id="carrot_bar" className={`${isFullScreen ? 'fullscreen-header' : ''}`}>
+    <button id="carrot_button" type="button" onClick={handleFullScreenToggle}>
+      {isFullScreen ?  (
+          <FaCaretRight className="ms-1 mb-1 fs-5" />
+      ) : (
+        ""
+      )}
+        </button>
+        </div>
+      <div id="wd-class-stats" className="wd-text-grey wd-font-family fs-3 wd-padding-left-class mt-5"
         style={{ fontWeight: 500 }}>
         Class at a Glance
       </div>
@@ -112,5 +123,6 @@ export default function RightSidePage() {
         </div>
       </div>
     </div>
+ 
   );
 }
