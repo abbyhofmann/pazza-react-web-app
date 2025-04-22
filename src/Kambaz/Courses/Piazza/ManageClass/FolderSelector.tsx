@@ -2,15 +2,20 @@ import { FaPencil } from "react-icons/fa6";
 import { Form } from "react-bootstrap";
 import { useState } from "react";
 import { FaBars, FaSave, FaTrash } from "react-icons/fa";
-import useFolders from "../hooks/useFolders";
+import { Folder } from "../../../types";
 
 interface Props {
   name: string;
 }
 
-export default function FolderSelector() {
+interface OuterProps {
+  folders: Folder[];
+  handleDeleteFolders: (folders: string[]) => void;
+  handleEditFolder: (oldName: string, newName: string) => void;
+}
+
+export default function FolderSelector({ folders, handleDeleteFolders, handleEditFolder }: OuterProps) {
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
-  const { folders, deleteFoldersHook, editFolderName } = useFolders();
 
   const Folder = ({ name }: Props) => {
     const [editing, setEditing] = useState(false);
@@ -18,7 +23,7 @@ export default function FolderSelector() {
     const editFolderOnClick = () => {
       if (editing) {
         // if we are currently editing, then we save the new folder name
-        editFolderName(name, editedName);
+        handleEditFolder(name, editedName);
       }
       // flip the editing state
       setEditing(!(editing));
@@ -78,7 +83,8 @@ export default function FolderSelector() {
       <div className="d-flex">
         <button className="manage_folders_button" disabled={selectedFolders.length === 0}
           onClick={() => {
-            deleteFoldersHook(selectedFolders);
+            handleDeleteFolders(selectedFolders);
+            setSelectedFolders([]);
           }}>
           <FaTrash />
           Delete selected folders
