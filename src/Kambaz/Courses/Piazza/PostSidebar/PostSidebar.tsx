@@ -52,7 +52,7 @@ export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSideb
     <div
       className={`d-flex flex-column align-items-stretch flex-shrink-0 bg-white border-end 
         ${isFullScreen ? 'fullscreen' : ''}`}
-      style={{ width: isFullScreen ? '100%' : '380px',
+      style={{ width: isFullScreen ? '100vh' : '380px',
                display: isFullScreen ? "none" : "block",
                transition: "all 0..3s east",
       }}

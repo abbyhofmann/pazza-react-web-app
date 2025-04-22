@@ -157,7 +157,7 @@ type NewPostPageProps = {
       <div id="wd-new-post" className={`new-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
          style={{
             width: isFullScreen ? '100%' : '100vw',
-            height: isFullScreen ? '100%' : 'auto',
+            height: isFullScreen ? '100%' : '100vh',
             transition: 'all 0.3 ease',
          }}
       >

@@ -41,7 +41,7 @@ const ViewPostPage = ({ isFullScreen, setIsFullScreen }: ViewPostProps) => {
     <div className={`view-post-content ${isFullScreen ? 'fullscreen-content' : ''}`}
       style={{
         width: isFullScreen ? '100%' : '100vw',
-        height: isFullScreen ? '100%' : 'auto',
+        height: isFullScreen ? '100%' : '100vh',
         transition: 'all 0.3 ease', 
       }}
     > 
