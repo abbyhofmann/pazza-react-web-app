@@ -264,4 +264,4 @@ export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSideb
 
     </div>
   );
-  }
+}
