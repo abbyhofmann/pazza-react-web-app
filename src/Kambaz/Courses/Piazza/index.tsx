@@ -31,23 +31,6 @@ const SideBar = ({ isFullScreen, setIsFullScreen }: SideBarProps) => {
   );
 };
 
-type FullScreenContentProps = {
-  isFullScreen: boolean;
-  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const FullScreenContent = ({ isFullScreen, setIsFullScreen }: FullScreenContentProps) => {
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  if (pathname.includes("NewPostPage")) {
-    return <NewPostPage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen} />;
-  } else if (pathname.includes("/post/")) {
-    return <ViewPostPage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>;
-  } else {
-    return <RightSidePage isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen} />;
-  }
-};
 
 
 export default function Piazza() {
