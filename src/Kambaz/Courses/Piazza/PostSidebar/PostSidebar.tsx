@@ -1,15 +1,10 @@
 import PostListItem from "./PostListItem";
 import "./PostSidebar.css";
-import NewPostPage from '../NewPost';
-import ViewPostPage from '../ViewPost/ViewPostPage/ViewPostPage';
 import usePostSidebar from "../hooks/usePostSidebar";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
 import { Post } from "../../../types";
 import { usePostSidebarContext } from "../hooks/usePostSidebarContext";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import RightSidePage from "../RightSidePage";
 
 
 type PostSidebarProps = {
@@ -21,8 +16,6 @@ type PostSidebarProps = {
 // The post feed accordian-style sidebar.
 export default function PostSidebar({ isFullScreen, setIsFullScreen }: PostSidebarProps) {
 
-
-  const {cid } = useParams();
   
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev);

@@ -6,7 +6,6 @@ import ".././ViewPost.css";
 import NewAnswerInputBox from "../NewAnswerInputBox";
 import Answer from "../Answer";
 import useViewPostPage from "../../hooks/useViewPostPage";
-import { useState } from "react";
 import { FaCaretRight } from "react-icons/fa";
 type ViewPostProps = {
    isFullScreen: boolean;
