@@ -27,6 +27,11 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
   color: black;
 }
 
+body, html, #root {
+  height: 100vh;
+  overflow: hidden;
+}
+
 .list-group.wd > .list-group-item.active {
   color: black;
   background-color: white;
