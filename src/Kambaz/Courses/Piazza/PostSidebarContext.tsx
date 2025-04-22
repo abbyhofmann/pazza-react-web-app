@@ -6,8 +6,10 @@ import { useParams } from "react-router";
 // Context items that need to be used across the application. 
 type PostSidebarContextType = {
   posts: Post[];
-  fetchPosts: () => Promise<void>;
+  fetchPosts: (override?: boolean) => Promise<void>;
   setPosts: (newPosts: Post[]) => void;
+  filterBy: string;
+  setFilterBy: (folderName: string) => void;
 };
 
 // Context for sharing the posts data across the application. This is needed because as answers get added to a post, the 
@@ -16,10 +18,12 @@ const PostSidebarContext = createContext<PostSidebarContextType | null>(null);
 
 export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [filterBy, setFilterBy] = useState<string>("");
   const { cid } = useParams();
 
   // function for fetching the posts 
-  const fetchPosts = async () => {
+  const fetchPosts = async (override = true) => {
+    if (!override && filterBy !== "") return; // skip fetch if filtering
     try {
       const res = await getPostsInCourse(cid ?? "");
       setPosts(res);
@@ -29,12 +33,12 @@ export const PostSidebarProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cid]);
 
   return (
-    <PostSidebarContext.Provider value={{ posts, fetchPosts, setPosts }}>
+    <PostSidebarContext.Provider value={{ posts, fetchPosts, setPosts, filterBy, setFilterBy }}>
       {children}
     </PostSidebarContext.Provider>
   );

@@ -20,7 +20,7 @@ const usePostSidebar = () => {
   }
 
   useEffect(() => {
-    fetchPosts().catch(e => console.log(e));
+    fetchPosts(false).catch(e => console.log(e));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

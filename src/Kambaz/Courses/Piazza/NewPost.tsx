@@ -122,6 +122,12 @@ type NewPostPageProps = {
       }
 
       if (cid) {
+
+         // convert HTML content from React Quill to plain text before saving in database 
+         // this removes the paragraph tags we were seeing
+         const doc = new DOMParser().parseFromString(editorValue, "text/html");
+         const plainTextContent = doc.body.textContent || "";
+
          const newPost: Post = {
             folders: selectedFolders,
             authorId: currentUser._id,
@@ -129,7 +135,7 @@ type NewPostPageProps = {
             type: selectedOption === 'question' ? 0 : 1, // 0 for question, 1 for note
             instructor: !isFaculty,
             title: postSummary,
-            content: editorValue,
+            content: plainTextContent,
             followupDiscussions: [],
             studentAnswer: null,
             instructorAnswer: null,

@@ -1,44 +1,26 @@
 [
   {
-    "id": "1",
+    "_id": {
+      "$oid": "67f16dddcb8a803b894d07b3"
+    },
+    "posts": [],
     "name": "hw1",
-    "course_id": "101",
-    "posts": []
+    "courseId": "RS101"
   },
   {
-    "id": "2",
+    "_id": {
+      "$oid": "67f75c2fdf070e8b32e2caec"
+    },
     "name": "hw2",
-    "course_id": "101",
+    "courseId": "RS101",
     "posts": []
   },
   {
-    "id": "3",
+    "_id": {
+      "$oid": "67f84c6da976a1c31464ce36"
+    },
     "name": "hw3",
-    "course_id": "101",
-    "posts": []
-  },
-  {
-    "id": "5",
-    "name": "hw5",
-    "course_id": "101",
-    "posts": []
-  },
-  {
-    "id": "6",
-    "name": "office-hours",
-    "course_id": "101",
-    "posts": []
-  },
-  {
-    "id": "7",
-    "name": "logistics",
-    "course_id": "101",
-    "posts": []
-  },
-  {
-    "id": "8",
-    "name": "project",
-    "course_id": "101",
+    "courseId": "RS101",
     "posts": []
   }
 ]
